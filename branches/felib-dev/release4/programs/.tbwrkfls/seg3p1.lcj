@@ -1,0 +1,485 @@
+ DETERMINATION OF LINEAR CODE SEQUENCE AND JUMP TRIPLES
+ ------------------------------------------------------
+
+ =======================================================================================================================
+ START  FINISH   LINE                                                                            LCSAJ
+ LABEL   LABEL  NUMBER            STATEMENT                                                     DENSITY
+ =======================================================================================================================
+ -----------------------------------------------------------------------------------------------------------------------
+                    1  *$PL$ CMMODE=SKIP_LEADING_BLANKS                                              0
+                    2  C**********************************************************************       0
+                    3  C                                                                             0
+                    4  C    COPYRIGHT (C) 1990 : SERC, RUTHERFORD APPLETON LABORATORY                0
+                    5  C                         CHILTON, DIDCOT, OXFORDSHIRE OX11 0QX               0
+                    6  C                                                                             0
+                    7        PROGRAM SEG3P1                                                          0
+                    8  C                                                                             0
+                    9  C     .. Parameters ..                                                        0
+                   10        INTEGER IABSS , IDTPD , IELK , IELQ , IFUN , IGDER , IGDERT ,           0
+                   11       *IGEOM , IJAC , IJACIN , ILDER , IP , IPD , ISCVEC , ISTEER , IWGHT      0
+                   12       *, JABSS , JCOORD , JDTPD , JELK , JGDER , JGDERT , JGEOM , JJAC ,       0
+                   13       *JJACIN , JLDER , JNF , JP , JPD                                         0
+                   14        DOUBLEPRECISION SCALE                                                   0
+                   15        PARAMETER ( IABSS = 3 , IDTPD = 8 , IELK = 8 , IELQ = 8 , IFUN = 8      0
+                   16       *, IGDER = 3 , IGDERT = 8 , IGEOM = 8 , IJAC = 3 , IJACIN = 3 ,          0
+                   17       *ILDER = 3 , IP = 3 , IPD = 3 , ISCVEC = 8 , ISTEER = 8 , IWGHT = 9      0
+                   18       *, JABSS = 9 , JCOORD = 3 , JDTPD = 8 , JELK = 8 , JGDER = 8 ,           0
+                   19       *JGDERT = 3 , JGEOM = 3 , JJAC = 3 , JJACIN = 3 , JLDER = 8 , JNF =      0
+                   20       *1 , JP = 3 , JPD = 8 , SCALE = 1.0D+10 )                                0
+                   21        INTEGER ICOORD , IELTOP , INF , IRHS , ISYSK , JELTOP , JSYSK           0
+                   22        PARAMETER ( ICOORD = 100 , IELTOP = 100 , INF = 100 , IRHS = 100 ,      0
+                   23       *ISYSK = 100 , JELTOP = 10 , JSYSK = 25 )                                0
+                   24        INTEGER NIN , NOUT                                                      0
+                   25        PARAMETER ( NIN = 5 , NOUT = 6 )                                        0
+                   26  C     ..                                                                      0
+                   27  C     .. Local Scalars ..                                                     0
+                   28        DOUBLEPRECISION DET , ETA , QUOT , STRGTH , X , XI , Y                  0
+                   29        INTEGER BNDNOD , DIF , DIMEN , DOFEL , DOFNOD , ELNUM , ELTYP ,         0
+                   30       *HBAND , I , IQUAD , ITEST , J , NELE , NODEL , NODNUM , NQP ,           0
+                   31       *TOTDOF , TOTELS , TOTNOD                                                0
+                   32        LOGICAL FIRST                                                           0
+                   33  C     ..                                                                      0
+                   34  C     .. Local Arrays ..                                                      0
+                   35        DOUBLEPRECISION ABSS ( IABSS , JABSS ) , BVAL ( 30 ) , COORD (          0
+                   36       *ICOORD , JCOORD ) , DTPD ( IDTPD , JDTPD ) , ELK ( IELK , JELK ) ,      0
+                   37       *ELQ ( IELQ ) , FUN ( IFUN ) , GDER ( IGDER , JGDER ) , GDERT (          0
+                   38       *IGDERT , JGDERT ) , GEOM ( IGEOM , JGEOM ) , JAC ( IJAC , JJAC ) ,      0
+                   39       *JACIN ( IJACIN , JJACIN ) , LDER ( ILDER , JLDER ) , P ( IP , JP )      0
+                   40       *, PD ( IPD , JPD ) , RHS ( IRHS ) , SCVEC ( ISCVEC ) , SYSK (           0
+                   41       *ISYSK , JSYSK ) , WGHT ( IWGHT )                                        0
+                   42        INTEGER BNODE ( 30 ) , ELTOP ( IELTOP , JELTOP ) , NF ( INF , JNF       0
+                   43       *) , STEER ( ISTEER )                                                    0
+                   44  C     ..                                                                      0
+                   45  C     .. External Functions ..                                                0
+                   46        DOUBLEPRECISION SRC                                                     0
+                   47        EXTERNAL SRC                                                            0
+                   48  C     ..                                                                      0
+                   49  C     .. External Subroutines ..                                              0
+                   50        EXTERNAL ASRHS , ASSYM , CHOSOL , DIRECT , ELGEOM , FREDIF ,            0
+                   51       *MATADD , MATINV , MATMUL , MATNUL , MATRAN , PRTVAL , QQUA4 ,           0
+                   52       *QUAM4 , SCAPRD , VECADD , VECNUL                                        0
+                   53  C     ..                                                                      0
+                   54  C     .. Intrinsic Functions ..                                               0
+                   55        INTRINSIC ABS                                                           0
+                   56  C     ..                                                                      0
+ -----------------------------------------------------------------------------------------------------------------------
+ START             57        ITEST = 0                                                              18
+                   58  C                                                                            18
+                   59  C                           **********************                           18
+                   60  C                           *                    *                           18
+                   61  C                           * INPUT DATA SECTION *                           18
+                   62  C                           *                    *                           18
+                   63  C                           **********************                           18
+                   64  C                                                                            18
+                   65  C                            INPUT OF NODAL GEOMETRY                         18
+                   66  C                                                                            18
+                   67        WRITE ( NOUT , FMT = 9040 )                                            18
+                   68        READ ( NIN , FMT = 9000 ) TOTNOD , DIMEN                               18
+                   69        WRITE ( NOUT , FMT = 9050 ) TOTNOD , DIMEN                             18
+        FINISH     70        DO 1000 I = 1 , TOTNOD                                                 18
+ START             71           READ ( NIN , FMT = 9010 ) NODNUM , ( COORD ( NODNUM , J ) , J =     34
+                   72       *   1 , DIMEN )                                                         34
+                   73           WRITE ( NOUT , FMT = 9060 ) NODNUM , ( COORD ( NODNUM , J ) , J     34
+                   74       *   = 1 , DIMEN )                                                       34
+        FINISH     75   1000 CONTINUE                                                               34
+ START             76  C                                                                            48
+                   77  C                            INPUT OF ELEMENT TOPOLOGY                       48
+                   78  C                                                                            48
+                   79        WRITE ( NOUT , FMT = 9070 )                                            48
+                   80        READ ( NIN , FMT = 9000 ) ELTYP , TOTELS , NODEL                       48
+                   81        WRITE ( NOUT , FMT = 9050 ) ELTYP , TOTELS , NODEL                     48
+        FINISH     82        DO 1010 I = 1 , TOTELS                                                 48
+ START             83           READ ( NIN , FMT = 9000 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) , J     60
+                   84       *   = 1 , NODEL )                                                       60
+                   85           WRITE ( NOUT , FMT = 9050 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) ,     60
+                   86       *   J = 1 , NODEL )                                                     60
+                   87           ELTOP ( ELNUM , 1 ) = ELTYP                                         60
+                   88           ELTOP ( ELNUM , 2 ) = NODEL                                         60
+        FINISH     89   1010 CONTINUE                                                               60
+ START             90  C                                                                            70
+                   91  C                            INPUT OF PERMEABILITIES, CON-                   70
+                   92  C                            STRUCTION OF PERMEABILITY MATRIX P AND          70
+                   93  C                            SOURCE STRENGTH                                 70
+                   94  C                                                                            70
+                   95        WRITE ( NOUT , FMT = 9080 )                                            70
+                   96        CALL MATNUL ( P , IP , JP , DIMEN , DIMEN , ITEST )                    70
+                   97        READ ( NIN , FMT = 9020 ) ( P ( I , I ) , I = 1 , DIMEN )              70
+                   98        WRITE ( NOUT , FMT = 9090 ) ( P ( I , I ) , I = 1 , DIMEN )            70
+                   99  C                                                                            70
+                  100        WRITE ( NOUT , FMT = 9100 )                                            70
+                  101        READ ( NIN , FMT = 9020 ) STRGTH                                       70
+                  102        WRITE ( NOUT , FMT = 9090 ) STRGTH                                     70
+                  103  C                                                                            70
+                  104  C                            INPUT OF NUMBER OF DEGREES OF FREEDOM           70
+                  105  C                            PER NODE, INPUT OF BOUNDARY CON-                70
+                  106  C                            DITIONS AND CONSTRUCTION OF NODAL               70
+                  107  C                            FREEDOM ARRAY NF                                70
+                  108  C                                                                            70
+                  109        WRITE ( NOUT , FMT = 9110 )                                            70
+                  110        READ ( NIN , FMT = 9000 ) DOFNOD                                       70
+                  111        WRITE ( NOUT , FMT = 9050 ) DOFNOD                                     70
+                  112        READ ( NIN , FMT = 9000 ) BNDNOD                                       70
+                  113        WRITE ( NOUT , FMT = 9050 ) BNDNOD                                     70
+        FINISH    114        DO 1020 I = 1 , BNDNOD                                                 70
+ START            115           READ ( NIN , FMT = 9030 ) BNODE ( I ) , BVAL ( I )                  78
+                  116           WRITE ( NOUT , FMT = 9060 ) BNODE ( I ) , BVAL ( I )                78
+        FINISH    117   1020 CONTINUE                                                               78
+ START            118        TOTDOF = 0                                                             84
+        FINISH    119        DO 1040 I = 1 , TOTNOD                                                 84
+ START  FINISH    120           DO 1030 J = 1 , DOFNOD                                              88
+ START            121              TOTDOF = TOTDOF + 1                                              90
+                  122              NF ( I , J ) = TOTDOF                                            90
+        FINISH    123   1030    CONTINUE                                                            90
+ START  FINISH    124   1040 CONTINUE                                                               90
+ START            125  C                                                                            88
+                  126  C                            CALCULATION OF SEMI-BANDWIDTH                   88
+                  127  C                                                                            88
+                  128        FIRST = .TRUE.                                                         88
+        FINISH    129        DO 1050 NELE = 1 , TOTELS                                              88
+ START            130           CALL FREDIF ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,     84
+                  131       *   DOFNOD , FIRST , DIF , ITEST )                                      84
+        FINISH    132   1050 CONTINUE                                                               84
+ START            133        HBAND = DIF + 1                                                        78
+                  134  C                                                                            78
+                  135  C                           ************************************             78
+                  136  C                           *                                  *             78
+                  137  C                           * SYSTEM STIFFNESS MATRIX ASSEMBLY *             78
+                  138  C                           *                                  *             78
+                  139  C                           ************************************             78
+                  140  C                                                                            78
+                  141        CALL VECNUL ( RHS , IRHS , TOTDOF , ITEST )                            78
+                  142        CALL MATNUL ( SYSK , ISYSK , JSYSK , TOTDOF , HBAND , ITEST )          78
+                  143        DOFEL = NODEL * DOFNOD                                                 78
+                  144        CALL QQUA4 ( WGHT , IWGHT , ABSS , IABSS , JABSS , NQP , ITEST )       78
+        FINISH    145        DO 1090 NELE = 1 , TOTELS                                              78
+ START            146           CALL ELGEOM ( NELE , ELTOP , IELTOP , JELTOP , COORD , ICOORD ,     70
+                  147       *   JCOORD , GEOM , IGEOM , JGEOM , DIMEN , ITEST )                     70
+                  148  C                                                                            70
+                  149  C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS          70
+                  150  C                            USING NQP QUADRATURE POINTS                     70
+                  151  C                                                                            70
+                  152           CALL MATNUL ( ELK , IELK , JELK , DOFEL , DOFEL , ITEST )           70
+                  153           CALL VECNUL ( ELQ , IELQ , DOFEL , ITEST )                          70
+        FINISH    154           DO 1080 IQUAD = 1 , NQP                                             70
+ START            155  C                                                                            60
+                  156  C                            FORM LINEAR SHAPE FUNCTION AND SPACE            60
+                  157  C                            DERIVATIVES IN THE LOCAL CORRDINATES.           60
+                  158  C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL           60
+                  159  C                            COORDINATE SYSTEM                               60
+                  160  C                                                                            60
+                  161              XI = ABSS ( 1 , IQUAD )                                          60
+                  162              ETA = ABSS ( 2 , IQUAD )                                         60
+                  163              CALL QUAM4 ( FUN , IFUN , LDER , ILDER , JLDER , XI , ETA ,      60
+                  164       *      ITEST )                                                          60
+                  165  C                                                                            60
+                  166              CALL SCAPRD ( GEOM ( 1 , 1 ) , IGEOM , FUN , IFUN , NODEL ,      60
+                  167       *      X , ITEST )                                                      60
+                  168              CALL SCAPRD ( GEOM ( 1 , 2 ) , IGEOM , FUN , IFUN , NODEL ,      60
+                  169       *      Y , ITEST )                                                      60
+                  170  C                                                                            60
+                  171              CALL MATMUL ( LDER , ILDER , JLDER , GEOM , IGEOM , JGEOM ,      60
+                  172       *      JAC , IJAC , JJAC , DIMEN , NODEL , DIMEN , ITEST )              60
+                  173              CALL MATINV ( JAC , IJAC , JJAC , JACIN , IJACIN , JJACIN ,      60
+                  174       *      DIMEN , DET , ITEST )                                            60
+                  175              CALL MATMUL ( JACIN , IJACIN , JJACIN , LDER , ILDER , JLDER     60
+                  176       *      , GDER , IGDER , JGDER , DIMEN , DIMEN , NODEL , ITEST )         60
+                  177  C                                                                            60
+                  178  C                            FORMATION OF ELEMENT STIFFNESS ELK              60
+                  179  C                                                                            60
+                  180              CALL MATMUL ( P , IP , JP , GDER , IGDER , JGDER , PD , IPD      60
+                  181       *      , JPD , DIMEN , DIMEN , DOFEL , ITEST )                          60
+                  182              CALL MATRAN ( GDER , IGDER , JGDER , GDERT , IGDERT , JGDERT     60
+                  183       *      , DIMEN , DOFEL , ITEST )                                        60
+                  184              CALL MATMUL ( GDERT , IGDERT , JGDERT , PD , IPD , JPD ,         60
+                  185       *      DTPD , IDTPD , JDTPD , DOFEL , DIMEN , DOFEL , ITEST )           60
+                  186              QUOT = ABS ( DET ) * WGHT ( IQUAD )                              60
+        FINISH    187              DO 1070 I = 1 , DOFEL                                            60
+ START  FINISH    188                 DO 1060 J = 1 , DOFEL                                         48
+ START            189                    DTPD ( I , J ) = DTPD ( I , J ) * QUOT                     34
+        FINISH    190   1060          CONTINUE                                                      34
+ START  FINISH    191                 SCVEC ( I ) = FUN ( I ) * SRC                                 18
+ -----------------------------------------------------------------------------------------------------------------------
+ START            192       *                                       ( X , Y , STRGTH ) * QUOT        6
+        FINISH    193   1070       CONTINUE                                                          6
+ START            194              CALL MATADD ( ELK , IELK , JELK , DTPD , IDTPD , JDTPD ,         10
+                  195       *      DOFEL , DOFEL , ITEST )                                          10
+                  196              CALL VECADD ( ELQ , IELQ , SCVEC , ISCVEC , DOFEL , ITEST )      10
+        FINISH    197   1080    CONTINUE                                                            10
+ START            198  C                                                                            12
+                  199  C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX             12
+                  200  C                                                                            12
+                  201           CALL DIRECT ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,     12
+                  202       *   DOFNOD , STEER , ISTEER , ITEST )                                   12
+                  203           CALL ASSYM ( SYSK , ISYSK , JSYSK , ELK , IELK , JELK , STEER ,     12
+                  204       *   ISTEER , HBAND , DOFEL , ITEST )                                    12
+                  205           CALL ASRHS ( RHS , IRHS , ELQ , IELQ , STEER , ISTEER , DOFEL ,     12
+                  206       *   ITEST )                                                             12
+        FINISH    207   1090 CONTINUE                                                               12
+ START            208  C                                                                            12
+                  209  C                           *********************                            12
+                  210  C                           *                   *                            12
+                  211  C                           * EQUATION SOLUTION *                            12
+                  212  C                           *                   *                            12
+                  213  C                           *********************                            12
+                  214  C                                                                            12
+                  215  C                            MODIFICATION OF STIFFNESS MATRIX AND            12
+                  216  C                            RIGHT-HAND SIDE TO IMPLEMENT BOUNDARY           12
+                  217  C                            CONDITIONS                                      12
+                  218  C                                                                            12
+        FINISH    219        DO 1100 I = 1 , BNDNOD                                                 12
+ START            220           J = BNODE ( I )                                                     10
+                  221           SYSK ( J , HBAND ) = SYSK ( J , HBAND ) * SCALE                     10
+                  222           RHS ( J ) = SYSK ( J , HBAND ) * BVAL ( I )                         10
+        FINISH    223   1100 CONTINUE                                                               10
+ START            224  C                                                                             6
+                  225  C                            SOLUTION OF SYSTEM MATRIX FOR THE                6
+                  226  C                            NODAL VALUES OF THE POTENTIAL                    6
+                  227  C                                                                             6
+                  228        CALL CHOSOL ( SYSK , ISYSK , JSYSK , RHS , IRHS , TOTDOF , HBAND ,      6
+                  229       *ITEST )                                                                 6
+                  230        WRITE ( NOUT , FMT = 9120 )                                             6
+                  231        CALL PRTVAL ( RHS , IRHS , NF , INF , JNF , DOFNOD , TOTNOD , NOUT      6
+                  232       *, ITEST )                                                               6
+        FINISH    233        STOP                                                                    6
+ -----------------------------------------------------------------------------------------------------------------------
+                  234   9000 FORMAT ( 16 I5 )                                                        0
+                  235   9010 FORMAT ( I5 , 6 F10 .0 )                                                0
+                  236   9020 FORMAT ( 2 F10 .0 )                                                     0
+                  237   9030 FORMAT ( I5 , 6 F10 .0 )                                                0
+                  238   9040 FORMAT ( // ' **** NODAL GEOMETRY ****' , // ' ' )                      0
+                  239   9050 FORMAT ( ' ' , 16 I5 )                                                  0
+                  240   9060 FORMAT ( ' ' , I5 , 6 F10 .5 )                                          0
+                  241   9070 FORMAT ( // ' **** ELEMENT TOPOLOGY ****' , // ' ' )                    0
+                  242   9080 FORMAT ( // ' **** PERMEABILITIES ****' , // ' ' )                      0
+                  243   9090 FORMAT ( ' ' , 2 F10 .5 )                                               0
+                  244   9100 FORMAT ( // ' **** SOURCE STRENGTH ****' , // ' ' )                     0
+                  245   9110 FORMAT ( // ' **** BOUNDARY CONDITIONS ****' , // ' ' )                 0
+                  246   9120 FORMAT ( // ' **** NODAL POTENTIALS ****' , // ' ' )                    0
+                  247        END                                                                     0
+                  248  C                                                                             0
+                  249        DOUBLEPRECISION FUNCTION SRC ( X , Y , STRGTH )                         0
+                  250  C     .. Scalar Arguments ..                                                  0
+                  251        DOUBLEPRECISION STRGTH , X , Y                                          0
+                  252  C     ..                                                                      0
+ -----------------------------------------------------------------------------------------------------------------------
+ START            253        SRC = 0.0D0                                                             2
+                  254        IF ( ( X .GT. 1.0D0 ) .AND. ( X .LT. 2.0D0 ) .AND. ( Y .GT. 1.0D0       2
+        FINISH    255       *) .AND. ( Y .LT. 2.0D0 ) )                                              2
+                  256       *   SRC = STRGTH                                                         1
+ START  FINISH    257        RETURN                                                                  2
+ -----------------------------------------------------------------------------------------------------------------------
+                  258        END                                                                     0
+
+
+
+
+
+ LINEAR CODE SEQUENCE AND JUMP TRIPLES
+ -------------------------------------
+
+ ======================
+ START  FINISH  JUMP TO
+  LINE   LINE     LINE
+ ======================
+
+    57      70      76
+    57      75      71
+    57      82      90
+    57      89      83
+    57     114     118
+    57     117     115
+    57     119     125
+    57     120     124
+    57     123     121
+    57     124     120
+    57     129     133
+    57     132     130
+    57     145     208
+    57     154     198
+    57     187     194
+    57     188     191
+    57     190     189
+    57     191     253
+    71      75      71
+    71      82      90
+    71      89      83
+    71     114     118
+    71     117     115
+    71     119     125
+    71     120     124
+    71     123     121
+    71     124     120
+    71     129     133
+    71     132     130
+    71     145     208
+    71     154     198
+    71     187     194
+    71     188     191
+    71     190     189
+    71     191     253
+    76      82      90
+    76      89      83
+    76     114     118
+    76     117     115
+    76     119     125
+    76     120     124
+    76     123     121
+    76     124     120
+    76     129     133
+    76     132     130
+    76     145     208
+    76     154     198
+    76     187     194
+    76     188     191
+    76     190     189
+    76     191     253
+    83      89      83
+    83     114     118
+    83     117     115
+    83     119     125
+    83     120     124
+    83     123     121
+    83     124     120
+    83     129     133
+    83     132     130
+    83     145     208
+    83     154     198
+    83     187     194
+    83     188     191
+    83     190     189
+    83     191     253
+    90     114     118
+    90     117     115
+    90     119     125
+    90     120     124
+    90     123     121
+    90     124     120
+    90     129     133
+    90     132     130
+    90     145     208
+    90     154     198
+    90     187     194
+    90     188     191
+    90     190     189
+    90     191     253
+   115     117     115
+   115     119     125
+   115     120     124
+   115     123     121
+   115     124     120
+   115     129     133
+   115     132     130
+   115     145     208
+   115     154     198
+   115     187     194
+   115     188     191
+   115     190     189
+   115     191     253
+   118     119     125
+   118     120     124
+   118     123     121
+   118     124     120
+   118     129     133
+   118     132     130
+   118     145     208
+   118     154     198
+   118     187     194
+   118     188     191
+   118     190     189
+   118     191     253
+   120     120     124
+   120     123     121
+   120     124     120
+   120     129     133
+   120     132     130
+   120     145     208
+   120     154     198
+   120     187     194
+   120     188     191
+   120     190     189
+   120     191     253
+   121     123     121
+   121     124     120
+   121     129     133
+   121     132     130
+   121     145     208
+   121     154     198
+   121     187     194
+   121     188     191
+   121     190     189
+   121     191     253
+   124     124     120
+   124     129     133
+   124     132     130
+   124     145     208
+   124     154     198
+   124     187     194
+   124     188     191
+   124     190     189
+   124     191     253
+   125     129     133
+   125     132     130
+   125     145     208
+   125     154     198
+   125     187     194
+   125     188     191
+   125     190     189
+   125     191     253
+   130     132     130
+   130     145     208
+   130     154     198
+   130     187     194
+   130     188     191
+   130     190     189
+   130     191     253
+   133     145     208
+   133     154     198
+   133     187     194
+   133     188     191
+   133     190     189
+   133     191     253
+   146     154     198
+   146     187     194
+   146     188     191
+   146     190     189
+   146     191     253
+   155     187     194
+   155     188     191
+   155     190     189
+   155     191     253
+   188     188     191
+   188     190     189
+   188     191     253
+   189     190     189
+   189     191     253
+   191     191     253
+   192     193     188
+   192     197     155
+   192     207     146
+   192     219     224
+   192     223     220
+   192     233      -1
+   194     197     155
+   194     207     146
+   194     219     224
+   194     223     220
+   194     233      -1
+   198     207     146
+   198     219     224
+   198     223     220
+   198     233      -1
+   208     219     224
+   208     223     220
+   208     233      -1
+   220     223     220
+   220     233      -1
+   224     233      -1
+   253     255     257
+   253     257     192
+   257     257     192
+
+
+
+
+
+ NUMBER OF LCSAJS IN PROGRAM =  195

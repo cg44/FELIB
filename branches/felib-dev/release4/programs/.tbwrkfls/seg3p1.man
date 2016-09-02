@@ -1,0 +1,61 @@
+ NO STANDARDS VIOLATIONS IN STATIC ANALYSIS
+
+
+ -------------------------------------------------------------------------------
+
+ TOTAL NUMBER OF LINES IN PROGRAM      =  258
+
+ NUMBER OF EXECUTABLE LINES IN PROGRAM =  115
+
+ TOTAL PENALTY FROM STATIC ANALYSIS    =    0
+
+
+          THE PROGRAM CONTAINS  195 LCSAJS
+
+          THE MAXIMUM LCSAJ DENSITY IS   90 AT LINE  121
+
+ COMPLEXITY ANALYSIS PRODUCES THE FOLLOWING TABLE OF RESULTS
+ -----------------------------------------------------------
+
+ =====================================================================================================================
+                  EXECUTABLE     BASIC   AVERAGE   ORDER 1 MAX ORDER                               ESSENTIAL ESSENTIAL
+ PROCEDURE             LINES    BLOCKS    LENGTH INTERVALS INTERVALS REDUCIBLE    MCCABE     KNOTS    MCCABE     KNOTS
+ =====================================================================================================================
+
+ *MAIN                  110        23      4.78        23         5       YES        23         0         1         0
+ SRC                      5         3      1.67         1         1       YES         2         0         1         0
+
+ ---------------------------------------------------------------------------------------------------------------------
+
+ TOTAL FOR PROGRAM      115        26      4.42        23         5       YES        24         0         1         0
+
+
+ THE PROGRAM CONTAINS    2 PROCEDURES
+
+
+ THE ESSENTIAL MCCABE MEASURE OF 1 INDICATES THAT THE PROGRAM IS WELL STRUCTURED
+
+ STANDARDS VIOLATIONS IN COMPLEXITY ANALYSIS
+ -------------------------------------------
+
+ ===============================================================================
+ PROCEDURE                       VIOLATION                               PENALTY
+ ===============================================================================
+
+ *MAIN               McCabe measure greater than 10                          1
+
+
+
+ TOTAL PENALTY FROM COMPLEXITY ANALYSIS =    1
+
+ STANDARDS VIOLATIONS FOUND DURING DATA FLOW ANALYSIS
+ ----------------------------------------------------
+
+ ==============================================================================
+ PROCEDURE                       VIOLATION                              PENALTY
+ ==============================================================================
+
+ *GLOBAL*             2  Variables were declared but never used              1
+                     28  UR data flow anomalies found                        1
+                      5  DU data flow anomalies found                        1
+                      1  DD data flow anomalies found                        1

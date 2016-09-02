@@ -1,0 +1,34 @@
+
+ COMPLEXITY ANALYSIS PRODUCES THE FOLLOWING TABLE OF RESULTS
+ -----------------------------------------------------------
+
+ =====================================================================================================================
+                  EXECUTABLE     BASIC   AVERAGE   ORDER 1 MAX ORDER                               ESSENTIAL ESSENTIAL
+ PROCEDURE             LINES    BLOCKS    LENGTH INTERVALS INTERVALS REDUCIBLE    MCCABE     KNOTS    MCCABE     KNOTS
+ =====================================================================================================================
+
+ *MAIN                  110        23      4.78        23         5       YES        23         0         1         0
+ SRC                      5         3      1.67         1         1       YES         2         0         1         0
+
+ ---------------------------------------------------------------------------------------------------------------------
+
+ TOTAL FOR PROGRAM      115        26      4.42        23         5       YES        24         0         1         0
+
+
+ THE PROGRAM CONTAINS    2 PROCEDURES
+
+
+ THE ESSENTIAL MCCABE MEASURE OF 1 INDICATES THAT THE PROGRAM IS WELL STRUCTURED
+
+ STANDARDS VIOLATIONS IN COMPLEXITY ANALYSIS
+ -------------------------------------------
+
+ ===============================================================================
+ PROCEDURE                       VIOLATION                               PENALTY
+ ===============================================================================
+
+ *MAIN               McCabe measure greater than 10                          1
+
+
+
+ TOTAL PENALTY FROM COMPLEXITY ANALYSIS =    1

@@ -1,0 +1,12 @@
+
+ STANDARDS VIOLATIONS FOUND DURING DATA FLOW ANALYSIS
+ ----------------------------------------------------
+
+ ==============================================================================
+ PROCEDURE                       VIOLATION                              PENALTY
+ ==============================================================================
+
+ *GLOBAL*             2  Variables were declared but never used              1
+                     28  UR data flow anomalies found                        1
+                      5  DU data flow anomalies found                        1
+                      1  DD data flow anomalies found                        1

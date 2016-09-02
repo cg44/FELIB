@@ -1,0 +1,686 @@
+     3SRC
+     1X
+     1Y
+     6STRGTH
+    -1
+     3
+   253   255
+     1X
+     0   254
+     1Y
+     0   254
+    -1
+   256   256
+     6STRGTH
+     0   256
+    -1
+   257   257
+    -1
+     5*MAIN
+     3FMT
+     3ABS
+     3SRC
+     5STEER
+     2NF
+     5ELTOP
+     5BNODE
+     4WGHT
+     4SYSK
+     5SCVEC
+     3RHS
+     2PD
+     1P
+     4LDER
+     5JACIN
+     3JAC
+     4GEOM
+     5GDERT
+     4GDER
+     3FUN
+     3ELQ
+     3ELK
+     4DTPD
+     5COORD
+     4BVAL
+     4ABSS
+     5FIRST
+     6TOTNOD
+     6TOTELS
+     6TOTDOF
+     3NQP
+     6NODNUM
+     5NODEL
+     4NELE
+     1J
+     5ITEST
+     5IQUAD
+     1I
+     5HBAND
+     5ELTYP
+     5ELNUM
+     6DOFNOD
+     5DOFEL
+     5DIMEN
+     3DIF
+     6BNDNOD
+     1Y
+     2XI
+     1X
+     6STRGTH
+     4QUOT
+     3ETA
+     3DET
+     4NOUT
+     3NIN
+     5JSYSK
+     6JELTOP
+     5ISYSK
+     4IRHS
+     3INF
+     6IELTOP
+     6ICOORD
+     5SCALE
+     3JPD
+     2JP
+     3JNF
+     5JLDER
+     6JJACIN
+     4JJAC
+     5JGEOM
+     6JGDERT
+     5JGDER
+     4JELK
+     5JDTPD
+     6JCOORD
+     5JABSS
+     5IWGHT
+     6ISTEER
+     6ISCVEC
+     3IPD
+     2IP
+     5ILDER
+     6IJACIN
+     4IJAC
+     5IGEOM
+     6IGDERT
+     5IGDER
+     4IFUN
+     4IELQ
+     4IELK
+     5IDTPD
+     5IABSS
+    -1
+    23
+    57    70
+     5IABSS
+    15     0
+     5IDTPD
+    15     0
+     4IELK
+    15     0
+     4IELQ
+    15     0
+     4IFUN
+    15     0
+     5IGDER
+    15     0
+     6IGDERT
+    15     0
+     5IGEOM
+    15     0
+     4IJAC
+    15     0
+     6IJACIN
+    15     0
+     5ILDER
+    15     0
+     2IP
+    15     0
+     3IPD
+    15     0
+     6ISCVEC
+    15     0
+     6ISTEER
+    15     0
+     5IWGHT
+    15     0
+     5JABSS
+    15     0
+     6JCOORD
+    15     0
+     5JDTPD
+    15     0
+     4JELK
+    15     0
+     5JGDER
+    15     0
+     6JGDERT
+    15     0
+     5JGEOM
+    15     0
+     4JJAC
+    15     0
+     6JJACIN
+    15     0
+     5JLDER
+    15     0
+     3JNF
+    15     0
+     2JP
+    15     0
+     3JPD
+    15     0
+     5SCALE
+    15     0
+     6ICOORD
+    22     0
+     6IELTOP
+    22     0
+     3INF
+    22     0
+     4IRHS
+    22     0
+     5ISYSK
+    22     0
+     6JELTOP
+    22     0
+     5JSYSK
+    22     0
+     3NIN
+    25     0
+     4NOUT
+    25     0
+     5DIMEN
+    68     0
+     1I
+    70     0
+     5ITEST
+    57     0
+     6TOTNOD
+    68     0
+    -1
+    71    75
+     1J
+    73     0
+     3NIN
+     0    71
+     3FMT
+     0    71
+     6NODNUM
+    71     0
+     5COORD
+    71     0
+     5DIMEN
+     0    71
+     4NOUT
+     0    73
+    -1
+    79    82
+     4NOUT
+     0    79
+     3FMT
+     0    79
+     3NIN
+     0    80
+     5ELTYP
+    80     0
+     6TOTELS
+    80     0
+     5NODEL
+    80     0
+     1I
+    82     0
+    -1
+    83    89
+     1J
+    85     0
+     3NIN
+     0    83
+     3FMT
+     0    83
+     5ELNUM
+    83     0
+     5ELTOP
+    88     0
+     5NODEL
+     0    83
+     4NOUT
+     0    85
+     5ELTYP
+     0    87
+    -1
+    95   114
+     4NOUT
+     0    95
+     3FMT
+     0    95
+     1P
+    97    96
+     2IP
+     0    96
+     2JP
+     0    96
+     5DIMEN
+     0    96
+     5ITEST
+     0    96
+     1I
+   114     0
+     3NIN
+     0    97
+     6STRGTH
+   101     0
+     6DOFNOD
+   110     0
+     6BNDNOD
+   112     0
+    -1
+   115   117
+     3NIN
+     0   115
+     3FMT
+     0   115
+     5BNODE
+   115     0
+     1I
+     0   115
+     4BVAL
+   115     0
+     4NOUT
+     0   116
+    -1
+   118   119
+     6TOTDOF
+   118     0
+     1I
+   119     0
+     6TOTNOD
+     0   119
+    -1
+   120   120
+     1J
+   120     0
+     6DOFNOD
+     0   120
+    -1
+   121   123
+     6TOTDOF
+   121   121
+     1I
+     0   122
+     1J
+     0   122
+     2NF
+   122     0
+    -1
+   124   124
+    -1
+   128   129
+     5FIRST
+   128     0
+     4NELE
+   129     0
+     6TOTELS
+     0   129
+    -1
+   130   132
+     4NELE
+     0   130
+     5ELTOP
+     0   130
+     6IELTOP
+     0   130
+     6JELTOP
+     0   130
+     2NF
+     0   130
+     3INF
+     0   130
+     3JNF
+     0   130
+     6DOFNOD
+     0   130
+     5FIRST
+     0   130
+     3DIF
+     0   130
+     5ITEST
+     0   130
+    -1
+   133   145
+     3DIF
+     0   133
+     5HBAND
+   133     0
+     3RHS
+     0   141
+     4IRHS
+     0   141
+     6TOTDOF
+     0   141
+     5ITEST
+     0   141
+     4SYSK
+     0   142
+     5ISYSK
+     0   142
+     5JSYSK
+     0   142
+     5NODEL
+     0   143
+     6DOFNOD
+     0   143
+     5DOFEL
+   143     0
+     4WGHT
+     0   144
+     5IWGHT
+     0   144
+     4ABSS
+     0   144
+     5IABSS
+     0   144
+     5JABSS
+     0   144
+     3NQP
+     0   144
+     4NELE
+   145     0
+     6TOTELS
+     0   145
+    -1
+   146   154
+     4NELE
+     0   146
+     5ELTOP
+     0   146
+     6IELTOP
+     0   146
+     6JELTOP
+     0   146
+     5COORD
+     0   146
+     6ICOORD
+     0   146
+     6JCOORD
+     0   146
+     4GEOM
+     0   146
+     5IGEOM
+     0   146
+     5JGEOM
+     0   146
+     5DIMEN
+     0   146
+     5ITEST
+     0   146
+     3ELK
+     0   152
+     4IELK
+     0   152
+     4JELK
+     0   152
+     5DOFEL
+     0   152
+     3ELQ
+     0   153
+     4IELQ
+     0   153
+     5IQUAD
+   154     0
+     3NQP
+     0   154
+    -1
+   161   187
+     3NQP
+     0   161
+     4ABSS
+     0   161
+     5IQUAD
+     0   161
+     2XI
+   161     0
+     3ETA
+   162     0
+     3FUN
+     0   163
+     4IFUN
+     0   163
+     4LDER
+     0   163
+     5ILDER
+     0   163
+     5JLDER
+     0   163
+     5ITEST
+     0   163
+     4GEOM
+     0   166
+     5IGEOM
+     0   166
+     5NODEL
+     0   166
+     1X
+     0   166
+     1Y
+     0   168
+     5JGEOM
+     0   171
+     3JAC
+     0   171
+     4IJAC
+     0   171
+     4JJAC
+     0   171
+     5DIMEN
+     0   171
+     5JACIN
+     0   173
+     6IJACIN
+     0   173
+     6JJACIN
+     0   173
+     3DET
+     0   173
+     4GDER
+     0   175
+     5IGDER
+     0   175
+     5JGDER
+     0   175
+     1P
+     0   180
+     2IP
+     0   180
+     2JP
+     0   180
+     2PD
+     0   180
+     3IPD
+     0   180
+     3JPD
+     0   180
+     5DOFEL
+     0   180
+     5GDERT
+     0   182
+     6IGDERT
+     0   182
+     6JGDERT
+     0   182
+     4DTPD
+     0   184
+     5IDTPD
+     0   184
+     5JDTPD
+     0   184
+     4WGHT
+     0   186
+     4QUOT
+   186     0
+     1I
+   187     0
+    -1
+   188   188
+     1J
+   188     0
+     5DOFEL
+     0   188
+    -1
+   189   190
+     1I
+     0   189
+     1J
+     0   189
+     4DTPD
+   189   189
+     4QUOT
+     0   189
+    -1
+   191   193
+     1I
+     0   191
+     3FUN
+     0   191
+     1X
+     0  -191
+     1Y
+     0  -191
+     6STRGTH
+     0  -191
+     4QUOT
+     0   191
+     5SCVEC
+   191     0
+    -1
+   194   197
+     3ELK
+     0   194
+     4IELK
+     0   194
+     4JELK
+     0   194
+     4DTPD
+     0   194
+     5IDTPD
+     0   194
+     5JDTPD
+     0   194
+     5DOFEL
+     0   194
+     5ITEST
+     0   194
+     3ELQ
+     0   196
+     4IELQ
+     0   196
+     5SCVEC
+     0   196
+     6ISCVEC
+     0   196
+    -1
+   201   207
+     4NELE
+     0   201
+     5ELTOP
+     0   201
+     6IELTOP
+     0   201
+     6JELTOP
+     0   201
+     2NF
+     0   201
+     3INF
+     0   201
+     3JNF
+     0   201
+     6DOFNOD
+     0   201
+     5STEER
+     0   201
+     6ISTEER
+     0   201
+     5ITEST
+     0   201
+     4SYSK
+     0   203
+     5ISYSK
+     0   203
+     5JSYSK
+     0   203
+     3ELK
+     0   203
+     4IELK
+     0   203
+     4JELK
+     0   203
+     5HBAND
+     0   203
+     5DOFEL
+     0   203
+     3RHS
+     0   205
+     4IRHS
+     0   205
+     3ELQ
+     0   205
+     4IELQ
+     0   205
+    -1
+   219   219
+     1I
+   219     0
+     6BNDNOD
+     0   219
+    -1
+   220   223
+     5BNODE
+     0   220
+     1I
+     0   220
+     1J
+   220     0
+     5HBAND
+     0   221
+     4SYSK
+   221   221
+     5SCALE
+     0   221
+     4BVAL
+     0   222
+     3RHS
+   222     0
+    -1
+   228   233
+     4SYSK
+     0   228
+     5ISYSK
+     0   228
+     5JSYSK
+     0   228
+     3RHS
+     0   228
+     4IRHS
+     0   228
+     6TOTDOF
+     0   228
+     5HBAND
+     0   228
+     5ITEST
+     0   228
+     4NOUT
+     0   230
+     3FMT
+     0   230
+     2NF
+     0   231
+     3INF
+     0   231
+     3JNF
+     0   231
+     6DOFNOD
+     0   231
+     6TOTNOD
+     0   231
+    -1
+    -1

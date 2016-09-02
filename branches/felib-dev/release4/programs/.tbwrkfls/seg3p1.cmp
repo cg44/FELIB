@@ -1,0 +1,988 @@
+ STRUCTURED PROGRAMMING VERIFICATION WILL USE THE FOLLOWING 12 STRUCTURES
+ ------------------------------------------------------------------------
+
+ SIMPLE COLLAPSE     
+
+ REPEAT              
+
+ CASE WITH SKIP      
+
+ CASE WITHOUT SKIP   
+
+ WHILE DO            
+
+ IF THEN             
+
+ DO WHILE UNTIL      
+
+ IF THEN ELSE        
+
+ WHILE DO (ZERO TRIP)
+
+ FOR UNTIL(ZERO TRIP)
+
+ DO LOOP WITH EXIT   
+
+ DO LOOP WITH EXIT   
+
+
+
+
+
+                                  *****************************************************
+                                  *****************************************************
+                                  **                                                 **
+                                  **                                                 **
+                                  **             COMPLEXITY ANALYSIS FOR             **
+                                  **                                                 **
+                                  **                                                 **
+                                  **                 PROCEDURE *MAIN                 **
+                                  **                                                 **
+                                  **                                                 **
+                                  *****************************************************
+                                  *****************************************************
+
+
+
+
+
+ THE PROCEDURE HAS NO KNOTS
+
+ BASIC BLOCK DISPLAY
+ -------------------
+
+ =======================================================================================================================
+  LINE                                                                                                       BASIC BLOCK
+ NUMBER                                                 STATEMENT                                                 NUMBER
+ =======================================================================================================================
+
+    57       ITEST = 0                                                                                                 1
+    67       WRITE ( NOUT , FMT = 9040 )                                                                               1
+    68       READ ( NIN , FMT = 9000 ) TOTNOD , DIMEN                                                                  1
+    69       WRITE ( NOUT , FMT = 9050 ) TOTNOD , DIMEN                                                                1
+    70       DO 1000 I = 1 , TOTNOD                                                                                    1
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+    71          READ ( NIN , FMT = 9010 ) NODNUM , ( COORD ( NODNUM , J ) , J =                                        2
+    72      *   1 , DIMEN )                                                                                            2
+    73          WRITE ( NOUT , FMT = 9060 ) NODNUM , ( COORD ( NODNUM , J ) , J                                        2
+    74      *   = 1 , DIMEN )                                                                                          2
+    75  1000 CONTINUE                                                                                                  2
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+    79       WRITE ( NOUT , FMT = 9070 )                                                                               3
+    80       READ ( NIN , FMT = 9000 ) ELTYP , TOTELS , NODEL                                                          3
+    81       WRITE ( NOUT , FMT = 9050 ) ELTYP , TOTELS , NODEL                                                        3
+    82       DO 1010 I = 1 , TOTELS                                                                                    3
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+    83          READ ( NIN , FMT = 9000 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) , J                                        4
+    84      *   = 1 , NODEL )                                                                                          4
+    85          WRITE ( NOUT , FMT = 9050 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) ,                                        4
+    86      *   J = 1 , NODEL )                                                                                        4
+    87          ELTOP ( ELNUM , 1 ) = ELTYP                                                                            4
+    88          ELTOP ( ELNUM , 2 ) = NODEL                                                                            4
+    89  1010 CONTINUE                                                                                                  4
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+    95       WRITE ( NOUT , FMT = 9080 )                                                                               5
+    96       CALL MATNUL ( P , IP , JP , DIMEN , DIMEN , ITEST )                                                       5
+    97       READ ( NIN , FMT = 9020 ) ( P ( I , I ) , I = 1 , DIMEN )                                                 5
+    98       WRITE ( NOUT , FMT = 9090 ) ( P ( I , I ) , I = 1 , DIMEN )                                               5
+   100       WRITE ( NOUT , FMT = 9100 )                                                                               5
+   101       READ ( NIN , FMT = 9020 ) STRGTH                                                                          5
+   102       WRITE ( NOUT , FMT = 9090 ) STRGTH                                                                        5
+   109       WRITE ( NOUT , FMT = 9110 )                                                                               5
+   110       READ ( NIN , FMT = 9000 ) DOFNOD                                                                          5
+   111       WRITE ( NOUT , FMT = 9050 ) DOFNOD                                                                        5
+   112       READ ( NIN , FMT = 9000 ) BNDNOD                                                                          5
+   113       WRITE ( NOUT , FMT = 9050 ) BNDNOD                                                                        5
+   114       DO 1020 I = 1 , BNDNOD                                                                                    5
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   115          READ ( NIN , FMT = 9030 ) BNODE ( I ) , BVAL ( I )                                                     6
+   116          WRITE ( NOUT , FMT = 9060 ) BNODE ( I ) , BVAL ( I )                                                   6
+   117  1020 CONTINUE                                                                                                  6
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   118       TOTDOF = 0                                                                                                7
+   119       DO 1040 I = 1 , TOTNOD                                                                                    7
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   120          DO 1030 J = 1 , DOFNOD                                                                                 8
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   121             TOTDOF = TOTDOF + 1                                                                                 9
+   122             NF ( I , J ) = TOTDOF                                                                               9
+   123  1030    CONTINUE                                                                                               9
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   124  1040 CONTINUE                                                                                                 10
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   128       FIRST = .TRUE.                                                                                           11
+   129       DO 1050 NELE = 1 , TOTELS                                                                                11
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   130          CALL FREDIF ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,                                       12
+   131      *   DOFNOD , FIRST , DIF , ITEST )                                                                        12
+   132  1050 CONTINUE                                                                                                 12
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   133       HBAND = DIF + 1                                                                                          13
+   141       CALL VECNUL ( RHS , IRHS , TOTDOF , ITEST )                                                              13
+   142       CALL MATNUL ( SYSK , ISYSK , JSYSK , TOTDOF , HBAND , ITEST )                                            13
+   143       DOFEL = NODEL * DOFNOD                                                                                   13
+   144       CALL QQUA4 ( WGHT , IWGHT , ABSS , IABSS , JABSS , NQP , ITEST )                                         13
+   145       DO 1090 NELE = 1 , TOTELS                                                                                13
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   146          CALL ELGEOM ( NELE , ELTOP , IELTOP , JELTOP , COORD , ICOORD ,                                       14
+   147      *   JCOORD , GEOM , IGEOM , JGEOM , DIMEN , ITEST )                                                       14
+   152          CALL MATNUL ( ELK , IELK , JELK , DOFEL , DOFEL , ITEST )                                             14
+   153          CALL VECNUL ( ELQ , IELQ , DOFEL , ITEST )                                                            14
+   154          DO 1080 IQUAD = 1 , NQP                                                                               14
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   161             XI = ABSS ( 1 , IQUAD )                                                                            15
+   162             ETA = ABSS ( 2 , IQUAD )                                                                           15
+   163             CALL QUAM4 ( FUN , IFUN , LDER , ILDER , JLDER , XI , ETA ,                                        15
+   164      *      ITEST )                                                                                            15
+   166             CALL SCAPRD ( GEOM ( 1 , 1 ) , IGEOM , FUN , IFUN , NODEL ,                                        15
+   167      *      X , ITEST )                                                                                        15
+   168             CALL SCAPRD ( GEOM ( 1 , 2 ) , IGEOM , FUN , IFUN , NODEL ,                                        15
+   169      *      Y , ITEST )                                                                                        15
+   171             CALL MATMUL ( LDER , ILDER , JLDER , GEOM , IGEOM , JGEOM ,                                        15
+   172      *      JAC , IJAC , JJAC , DIMEN , NODEL , DIMEN , ITEST )                                                15
+   173             CALL MATINV ( JAC , IJAC , JJAC , JACIN , IJACIN , JJACIN ,                                        15
+   174      *      DIMEN , DET , ITEST )                                                                              15
+   175             CALL MATMUL ( JACIN , IJACIN , JJACIN , LDER , ILDER , JLDER                                       15
+   176      *      , GDER , IGDER , JGDER , DIMEN , DIMEN , NODEL , ITEST )                                           15
+   180             CALL MATMUL ( P , IP , JP , GDER , IGDER , JGDER , PD , IPD                                        15
+   181      *      , JPD , DIMEN , DIMEN , DOFEL , ITEST )                                                            15
+   182             CALL MATRAN ( GDER , IGDER , JGDER , GDERT , IGDERT , JGDERT                                       15
+   183      *      , DIMEN , DOFEL , ITEST )                                                                          15
+   184             CALL MATMUL ( GDERT , IGDERT , JGDERT , PD , IPD , JPD ,                                           15
+   185      *      DTPD , IDTPD , JDTPD , DOFEL , DIMEN , DOFEL , ITEST )                                             15
+   186             QUOT = ABS ( DET ) * WGHT ( IQUAD )                                                                15
+   187             DO 1070 I = 1 , DOFEL                                                                              15
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   188                DO 1060 J = 1 , DOFEL                                                                           16
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   189                   DTPD ( I , J ) = DTPD ( I , J ) * QUOT                                                       17
+   190  1060          CONTINUE                                                                                        17
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   191                SCVEC ( I ) = FUN ( I ) * SRC                                                                   18
+   192      *                                       ( X , Y , STRGTH ) * QUOT                                         18
+   193  1070       CONTINUE                                                                                           18
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   194             CALL MATADD ( ELK , IELK , JELK , DTPD , IDTPD , JDTPD ,                                           19
+   195      *      DOFEL , DOFEL , ITEST )                                                                            19
+   196             CALL VECADD ( ELQ , IELQ , SCVEC , ISCVEC , DOFEL , ITEST )                                        19
+   197  1080    CONTINUE                                                                                              19
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   201          CALL DIRECT ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,                                       20
+   202      *   DOFNOD , STEER , ISTEER , ITEST )                                                                     20
+   203          CALL ASSYM ( SYSK , ISYSK , JSYSK , ELK , IELK , JELK , STEER ,                                       20
+   204      *   ISTEER , HBAND , DOFEL , ITEST )                                                                      20
+   205          CALL ASRHS ( RHS , IRHS , ELQ , IELQ , STEER , ISTEER , DOFEL ,                                       20
+   206      *   ITEST )                                                                                               20
+   207  1090 CONTINUE                                                                                                 20
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   219       DO 1100 I = 1 , BNDNOD                                                                                   21
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   220          J = BNODE ( I )                                                                                       22
+   221          SYSK ( J , HBAND ) = SYSK ( J , HBAND ) * SCALE                                                       22
+   222          RHS ( J ) = SYSK ( J , HBAND ) * BVAL ( I )                                                           22
+   223  1100 CONTINUE                                                                                                 22
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   228       CALL CHOSOL ( SYSK , ISYSK , JSYSK , RHS , IRHS , TOTDOF , HBAND ,                                       23
+   229      *ITEST )                                                                                                  23
+   230       WRITE ( NOUT , FMT = 9120 )                                                                              23
+   231       CALL PRTVAL ( RHS , IRHS , NF , INF , JNF , DOFNOD , TOTNOD , NOUT                                       23
+   232      *, ITEST )                                                                                                23
+   233       STOP                                                                                                     23
+
+
+
+
+
+ AVERAGE LENGTH OF BASIC BLOCK =  4.78 EXECUTABLE LINES
+
+
+ PROCEDURE ENTRY AT BASIC BLOCK    1
+
+ PROCEDURE EXIT  AT BASIC BLOCK   23
+
+
+
+
+
+ NUMBER OF BLOCK CONNECTIONS  =   44
+ NUMBER OF BLOCKS             =   23
+
+ COMPLEXITY MEASURE OF MCCABE =   23
+ ***********************************
+
+ NUMBER OF KNOTS              =    0
+ ***********************************
+
+ INTERVAL ANALYSIS
+ -----------------
+
+
+
+
+
+ INTERVALS OF ORDER    1
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1
+ EXIT BLOCK         1
+
+
+ HEADER BLOCK       2 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    2
+ EXIT BLOCK         2
+
+
+ HEADER BLOCK       3
+ INTERVAL BLOCKS    3
+ EXIT BLOCK         3
+
+
+ HEADER BLOCK       4 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    4
+ EXIT BLOCK         4
+
+
+ HEADER BLOCK       5
+ INTERVAL BLOCKS    5
+ EXIT BLOCK         5
+
+
+ HEADER BLOCK       6 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    6
+ EXIT BLOCK         6
+
+
+ HEADER BLOCK       7
+ INTERVAL BLOCKS    7
+ EXIT BLOCK         7
+
+
+ HEADER BLOCK       8 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    8
+ EXIT BLOCK         8
+
+
+ HEADER BLOCK       9 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    9
+ EXIT BLOCK         9
+
+
+ HEADER BLOCK      10
+ INTERVAL BLOCKS   10
+ EXIT BLOCK        10
+
+
+ HEADER BLOCK      11
+ INTERVAL BLOCKS   11
+ EXIT BLOCK        11
+
+
+ HEADER BLOCK      12 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   12
+ EXIT BLOCK        12
+
+
+ HEADER BLOCK      13
+ INTERVAL BLOCKS   13
+ EXIT BLOCK        13
+
+
+ HEADER BLOCK      14 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   14
+ EXIT BLOCK        14
+
+
+ HEADER BLOCK      15 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   15
+ EXIT BLOCK        15
+
+
+ HEADER BLOCK      16 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   16
+ EXIT BLOCK        16
+
+
+ HEADER BLOCK      17 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   17
+ EXIT BLOCK        17
+
+
+ HEADER BLOCK      18
+ INTERVAL BLOCKS   18
+ EXIT BLOCK        18
+
+
+ HEADER BLOCK      19
+ INTERVAL BLOCKS   19
+ EXIT BLOCK        19
+
+
+ HEADER BLOCK      20
+ INTERVAL BLOCKS   20
+ EXIT BLOCK        20
+
+
+ HEADER BLOCK      21
+ INTERVAL BLOCKS   21
+ EXIT BLOCK        21
+
+
+ HEADER BLOCK      22 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   22
+ EXIT BLOCK        22
+
+
+ HEADER BLOCK      23
+ INTERVAL BLOCKS   23
+ EXIT BLOCK        23
+
+
+ NUMBER OF INTERVALS =   23
+ AVERAGE LENGTH OF INTERVAL =  1.00 BLOCKS
+
+
+
+
+
+ INTERVALS OF ORDER    2
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1    2    3    4    5    6    7
+ EXIT BLOCK         7
+
+
+ HEADER BLOCK       8 ( HEAD OF LOOP )
+ INTERVAL BLOCKS    8    9   10
+ EXIT BLOCK        10
+
+
+ HEADER BLOCK      11
+ INTERVAL BLOCKS   11   12   13
+ EXIT BLOCK        13
+
+
+ HEADER BLOCK      14 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   14
+ EXIT BLOCK        14
+
+
+ HEADER BLOCK      15 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   15
+ EXIT BLOCK        15
+
+
+ HEADER BLOCK      16 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   16   17   18
+ EXIT BLOCK        18
+
+
+ HEADER BLOCK      19
+ INTERVAL BLOCKS   19
+ EXIT BLOCK        19
+
+
+ HEADER BLOCK      20
+ INTERVAL BLOCKS   20
+ EXIT BLOCK        20
+
+
+ HEADER BLOCK      21
+ INTERVAL BLOCKS   21   22   23
+ EXIT BLOCK        23
+
+
+ NUMBER OF INTERVALS =    9
+ AVERAGE LENGTH OF INTERVAL =  2.56 BLOCKS
+
+
+
+
+
+ INTERVALS OF ORDER    3
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1    8   11
+ EXIT BLOCK        11
+
+
+ HEADER BLOCK      14 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   14
+ EXIT BLOCK        14
+
+
+ HEADER BLOCK      15 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   15   16   19
+ EXIT BLOCK        19
+
+
+ HEADER BLOCK      20
+ INTERVAL BLOCKS   20
+ EXIT BLOCK        20
+
+
+ HEADER BLOCK      21
+ INTERVAL BLOCKS   21
+ EXIT BLOCK        21
+
+
+ NUMBER OF INTERVALS =    5
+ AVERAGE LENGTH OF INTERVAL =  1.80 BLOCKS
+
+
+
+
+
+ INTERVALS OF ORDER    4
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1
+ EXIT BLOCK         1
+
+
+ HEADER BLOCK      14 ( HEAD OF LOOP )
+ INTERVAL BLOCKS   14   15   20
+ EXIT BLOCK        20
+
+
+ HEADER BLOCK      21
+ INTERVAL BLOCKS   21
+ EXIT BLOCK        21
+
+
+ NUMBER OF INTERVALS =    3
+ AVERAGE LENGTH OF INTERVAL =  1.67 BLOCKS
+
+
+
+
+
+ INTERVALS OF ORDER    5
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1   14   21
+ EXIT BLOCK        21
+
+
+ NUMBER OF INTERVALS =    1
+ AVERAGE LENGTH OF INTERVAL =  3.00 BLOCKS
+
+
+ PROCEDURE REDUCIBLE IN THE INTERVAL SENSE
+ *****************************************
+
+ STRUCTURED PROGRAMMING VERIFICATION
+ -----------------------------------
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS    2    3
+ BLOCK    2 CONNECTS TO BLOCKS    2    3
+ BLOCK    3 CONNECTS TO BLOCKS    4    5
+ BLOCK    4 CONNECTS TO BLOCKS    4    5
+ BLOCK    5 CONNECTS TO BLOCKS    6    7
+ BLOCK    6 CONNECTS TO BLOCKS    6    7
+ BLOCK    7 CONNECTS TO BLOCKS    8   11
+ BLOCK    8 CONNECTS TO BLOCKS    9   10
+ BLOCK    9 CONNECTS TO BLOCKS    9   10
+ BLOCK   10 CONNECTS TO BLOCKS    8   11
+ BLOCK   11 CONNECTS TO BLOCKS   12   13
+ BLOCK   12 CONNECTS TO BLOCKS   12   13
+ BLOCK   13 CONNECTS TO BLOCKS   14   21
+ BLOCK   14 CONNECTS TO BLOCKS   15   20
+ BLOCK   15 CONNECTS TO BLOCKS   16   19
+ BLOCK   16 CONNECTS TO BLOCKS   17   18
+ BLOCK   17 CONNECTS TO BLOCKS   17   18
+ BLOCK   18 CONNECTS TO BLOCKS   16   19
+ BLOCK   19 CONNECTS TO BLOCKS   15   20
+ BLOCK   20 CONNECTS TO BLOCKS   14   21
+ BLOCK   21 CONNECTS TO BLOCKS   22   23
+ BLOCK   22 CONNECTS TO BLOCKS   22   23
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES   57 TO   70    -   BLOCK    1
+ BLOCK    2 CONTAINS LINES   71 TO   75    -   BLOCK    2
+ BLOCK    3 CONTAINS LINES   79 TO   82    -   BLOCK    3
+ BLOCK    4 CONTAINS LINES   83 TO   89    -   BLOCK    4
+ BLOCK    5 CONTAINS LINES   95 TO  114    -   BLOCK    5
+ BLOCK    6 CONTAINS LINES  115 TO  117    -   BLOCK    6
+ BLOCK    7 CONTAINS LINES  118 TO  119    -   BLOCK    7
+ BLOCK    8 CONTAINS LINES  120 TO  120    -   BLOCK    8
+ BLOCK    9 CONTAINS LINES  121 TO  123    -   BLOCK    9
+ BLOCK   10 CONTAINS LINES  124 TO  124    -   BLOCK   10
+ BLOCK   11 CONTAINS LINES  128 TO  129    -   BLOCK   11
+ BLOCK   12 CONTAINS LINES  130 TO  132    -   BLOCK   12
+ BLOCK   13 CONTAINS LINES  133 TO  145    -   BLOCK   13
+ BLOCK   14 CONTAINS LINES  146 TO  154    -   BLOCK   14
+ BLOCK   15 CONTAINS LINES  161 TO  187    -   BLOCK   15
+ BLOCK   16 CONTAINS LINES  188 TO  188    -   BLOCK   16
+ BLOCK   17 CONTAINS LINES  189 TO  190    -   BLOCK   17
+ BLOCK   18 CONTAINS LINES  191 TO  193    -   BLOCK   18
+ BLOCK   19 CONTAINS LINES  194 TO  197    -   BLOCK   19
+ BLOCK   20 CONTAINS LINES  201 TO  207    -   BLOCK   20
+ BLOCK   21 CONTAINS LINES  219 TO  219    -   BLOCK   21
+ BLOCK   22 CONTAINS LINES  220 TO  223    -   BLOCK   22
+ BLOCK   23 CONTAINS LINES  228 TO  233    -   BLOCK   23
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS   21   22   23
+       THE FOLLOWING BLOCKS ARE MERGED   21   22
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS   16   17   18
+       THE FOLLOWING BLOCKS ARE MERGED   16   17
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS   11   12   13
+       THE FOLLOWING BLOCKS ARE MERGED   11   12
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    8    9   10
+       THE FOLLOWING BLOCKS ARE MERGED    8    9
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    5    6    7
+       THE FOLLOWING BLOCKS ARE MERGED    5    6
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    3    4    5
+       THE FOLLOWING BLOCKS ARE MERGED    3    4
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    1    2    3
+       THE FOLLOWING BLOCKS ARE MERGED    1    2
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS    3
+ BLOCK    3 CONNECTS TO BLOCKS    5
+ BLOCK    5 CONNECTS TO BLOCKS    7
+ BLOCK    7 CONNECTS TO BLOCKS    8   11
+ BLOCK    8 CONNECTS TO BLOCKS   10
+ BLOCK   10 CONNECTS TO BLOCKS    8   11
+ BLOCK   11 CONNECTS TO BLOCKS   13
+ BLOCK   13 CONNECTS TO BLOCKS   14   21
+ BLOCK   14 CONNECTS TO BLOCKS   15   20
+ BLOCK   15 CONNECTS TO BLOCKS   16   19
+ BLOCK   16 CONNECTS TO BLOCKS   18
+ BLOCK   18 CONNECTS TO BLOCKS   16   19
+ BLOCK   19 CONNECTS TO BLOCKS   15   20
+ BLOCK   20 CONNECTS TO BLOCKS   14   21
+ BLOCK   21 CONNECTS TO BLOCKS   23
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES   57 TO   75    -  BLOCKS    1 TO    2
+ BLOCK    3 CONTAINS LINES   79 TO   89    -  BLOCKS    3 TO    4
+ BLOCK    5 CONTAINS LINES   95 TO  117    -  BLOCKS    5 TO    6
+ BLOCK    7 CONTAINS LINES  118 TO  119    -   BLOCK    7
+ BLOCK    8 CONTAINS LINES  120 TO  123    -  BLOCKS    8 TO    9
+ BLOCK   10 CONTAINS LINES  124 TO  124    -   BLOCK   10
+ BLOCK   11 CONTAINS LINES  128 TO  132    -  BLOCKS   11 TO   12
+ BLOCK   13 CONTAINS LINES  133 TO  145    -   BLOCK   13
+ BLOCK   14 CONTAINS LINES  146 TO  154    -   BLOCK   14
+ BLOCK   15 CONTAINS LINES  161 TO  187    -   BLOCK   15
+ BLOCK   16 CONTAINS LINES  188 TO  190    -  BLOCKS   16 TO   17
+ BLOCK   18 CONTAINS LINES  191 TO  193    -   BLOCK   18
+ BLOCK   19 CONTAINS LINES  194 TO  197    -   BLOCK   19
+ BLOCK   20 CONTAINS LINES  201 TO  207    -   BLOCK   20
+ BLOCK   21 CONTAINS LINES  219 TO  223    -  BLOCKS   21 TO   22
+ BLOCK   23 CONTAINS LINES  228 TO  233    -   BLOCK   23
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS   21   23
+       THE FOLLOWING BLOCKS ARE MERGED   21   23
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS   16   18
+       THE FOLLOWING BLOCKS ARE MERGED   16   18
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS   15   16   19
+       THE FOLLOWING BLOCKS ARE MERGED   15   16
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS   11   13
+       THE FOLLOWING BLOCKS ARE MERGED   11   13
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    8   10
+       THE FOLLOWING BLOCKS ARE MERGED    8   10
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    7    8   11
+       THE FOLLOWING BLOCKS ARE MERGED    7    8
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    5    7
+       THE FOLLOWING BLOCKS ARE MERGED    5    7
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    5   11
+       THE FOLLOWING BLOCKS ARE MERGED    5   11
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    3    5
+       THE FOLLOWING BLOCKS ARE MERGED    3    5
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    1    3
+       THE FOLLOWING BLOCKS ARE MERGED    1    3
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS   14   21
+ BLOCK   14 CONNECTS TO BLOCKS   15   20
+ BLOCK   15 CONNECTS TO BLOCKS   19
+ BLOCK   19 CONNECTS TO BLOCKS   15   20
+ BLOCK   20 CONNECTS TO BLOCKS   14   21
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES   57 TO  145    -  BLOCKS    1 TO   13
+ BLOCK   14 CONTAINS LINES  146 TO  154    -   BLOCK   14
+ BLOCK   15 CONTAINS LINES  161 TO  193    -  BLOCKS   15 TO   18
+ BLOCK   19 CONTAINS LINES  194 TO  197    -   BLOCK   19
+ BLOCK   20 CONTAINS LINES  201 TO  207    -   BLOCK   20
+ BLOCK   21 CONTAINS LINES  219 TO  233    -  BLOCKS   21 TO   23
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS   15   19
+       THE FOLLOWING BLOCKS ARE MERGED   15   19
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS   14   15   20
+       THE FOLLOWING BLOCKS ARE MERGED   14   15
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS   14   21
+ BLOCK   14 CONNECTS TO BLOCKS   20
+ BLOCK   20 CONNECTS TO BLOCKS   14   21
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES   57 TO  145    -  BLOCKS    1 TO   13
+ BLOCK   14 CONTAINS LINES  146 TO  197    -  BLOCKS   14 TO   19
+ BLOCK   20 CONTAINS LINES  201 TO  207    -   BLOCK   20
+ BLOCK   21 CONTAINS LINES  219 TO  233    -  BLOCKS   21 TO   23
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS   14   20
+       THE FOLLOWING BLOCKS ARE MERGED   14   20
+
+ FOR UNTIL(ZERO TRIP) FORMED OF BLOCKS    1   14   21
+       THE FOLLOWING BLOCKS ARE MERGED    1   14
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS   21
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES   57 TO  207    -  BLOCKS    1 TO   20
+ BLOCK   21 CONTAINS LINES  219 TO  233    -  BLOCKS   21 TO   23
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    1   21
+       THE FOLLOWING BLOCKS ARE MERGED    1   21
+
+
+
+
+
+ STRUCTURE REDUCED TO 1 BLOCK
+
+
+
+
+
+ ESSENTIAL KNOTS =    0
+ **********************
+
+ ESSENTIAL COMPLEXITY OF MCCABE =    1
+ *************************************
+
+
+ PROCEDURE STRUCTURED
+ ********************
+
+
+
+
+
+                                  *****************************************************
+                                  *****************************************************
+                                  **                                                 **
+                                  **                                                 **
+                                  **             COMPLEXITY ANALYSIS FOR             **
+                                  **                                                 **
+                                  **                                                 **
+                                  **                  PROCEDURE SRC                  **
+                                  **                                                 **
+                                  **                                                 **
+                                  *****************************************************
+                                  *****************************************************
+
+
+
+
+
+ THE PROCEDURE HAS NO KNOTS
+
+ BASIC BLOCK DISPLAY
+ -------------------
+
+ =======================================================================================================================
+  LINE                                                                                                       BASIC BLOCK
+ NUMBER                                                 STATEMENT                                                 NUMBER
+ =======================================================================================================================
+
+   253       SRC = 0.0D0                                                                                               1
+   254       IF ( ( X .GT. 1.0D0 ) .AND. ( X .LT. 2.0D0 ) .AND. ( Y .GT. 1.0D0                                         1
+   255      *) .AND. ( Y .LT. 2.0D0 ) )                                                                                1
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   256      *   SRC = STRGTH                                                                                           2
+
+ -----------------------------------------------------------------------------------------------------------------------
+
+   257       RETURN                                                                                                    3
+
+
+
+
+
+ AVERAGE LENGTH OF BASIC BLOCK =  1.67 EXECUTABLE LINES
+
+
+ PROCEDURE ENTRY AT BASIC BLOCK    1
+
+ PROCEDURE EXIT  AT BASIC BLOCK    3
+
+
+
+
+
+ NUMBER OF BLOCK CONNECTIONS  =    3
+ NUMBER OF BLOCKS             =    3
+
+ COMPLEXITY MEASURE OF MCCABE =    2
+ ***********************************
+
+ NUMBER OF KNOTS              =    0
+ ***********************************
+
+ INTERVAL ANALYSIS
+ -----------------
+
+
+
+
+
+ INTERVALS OF ORDER    1
+ -----------------------
+
+
+
+ HEADER BLOCK       1
+ INTERVAL BLOCKS    1    2    3
+ EXIT BLOCK         3
+
+
+ NUMBER OF INTERVALS =    1
+ AVERAGE LENGTH OF INTERVAL =  3.00 BLOCKS
+
+
+ PROCEDURE REDUCIBLE IN THE INTERVAL SENSE
+ *****************************************
+
+ STRUCTURED PROGRAMMING VERIFICATION
+ -----------------------------------
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS    2    3
+ BLOCK    2 CONNECTS TO BLOCKS    3
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES  253 TO  255    -   BLOCK    1
+ BLOCK    2 CONTAINS LINES  256 TO  256    -   BLOCK    2
+ BLOCK    3 CONTAINS LINES  257 TO  257    -   BLOCK    3
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ IF THEN              FORMED OF BLOCKS    1    2    3
+       THE FOLLOWING BLOCKS ARE MERGED    1    2
+
+
+
+
+
+ ----- CONNECTION DISPLAY -----
+
+ BLOCK    1 CONNECTS TO BLOCKS    3
+
+
+
+ THE LINES OF CODE CONTAINED IN EACH BLOCK ARE
+
+ BLOCK    1 CONTAINS LINES  253 TO  256    -  BLOCKS    1 TO    2
+ BLOCK    3 CONTAINS LINES  257 TO  257    -   BLOCK    3
+
+
+
+
+
+ ----- STRUCTURED CODE FOUND -----
+
+ SIMPLE COLLAPSE      FORMED OF BLOCKS    1    3
+       THE FOLLOWING BLOCKS ARE MERGED    1    3
+
+
+
+
+
+ STRUCTURE REDUCED TO 1 BLOCK
+
+
+
+
+
+ ESSENTIAL KNOTS =    0
+ **********************
+
+ ESSENTIAL COMPLEXITY OF MCCABE =    1
+ *************************************
+
+
+ PROCEDURE STRUCTURED
+ ********************
+
+ =====================================================================================================================
+                  EXECUTABLE     BASIC   AVERAGE   ORDER 1 MAX ORDER                               ESSENTIAL ESSENTIAL
+ PROCEDURE             LINES    BLOCKS    LENGTH INTERVALS INTERVALS REDUCIBLE    MCCABE     KNOTS    MCCABE     KNOTS
+ =====================================================================================================================
+
+ *MAIN                  110        23      4.78        23         5       YES        23         0         1         0
+ SRC                      5         3      1.67         1         1       YES         2         0         1         0
+
+ ---------------------------------------------------------------------------------------------------------------------
+
+ TOTAL FOR PROGRAM      115        26      4.42        23         5       YES        24         0         1         0
+
+
+ THE PROGRAM CONTAINS    2 PROCEDURES
+
+
+ THE ESSENTIAL MCCABE MEASURE OF 1 INDICATES THAT THE PROGRAM IS WELL STRUCTURED
