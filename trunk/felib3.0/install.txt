@@ -1,0 +1,86 @@
+=========================================================================
+
+@@@@@@@ @@@@@@@ @         @@@   @@@@@@
+@       @       @          @    @     @
+@       @       @          @    @     @
+@@@@@   @@@@@   @          @    @@@@@@     
+@       @       @          @    @     @
+@       @       @          @    @     @
+@       @@@@@@@ @@@@@@@   @@@   @@@@@@
+
+The Finite Element Library -  Release 3.0
+
+(C) 2014 Chris Greenough 
+
+
+=======================================================================
+
+The Finite Element Library (FELIB) is a program and subroutine 
+library for the solution of partial differential equations using 
+the finite element method.
+
+This software is for the use of the academic community in their
+personal research and not for commercial exploitation. It comes
+with no guarantees in any form concerning it correctness or fitness
+for purpose.
+
+Anyone wishing to make commercial use the software should contact
+the Head of the Mathematical Software Group.
+
+=======================================================================
+
+Please address all bugs or problems to author : 
+ 
+   Prof Chris Greenough
+   Head, Software Engineering Group
+   Rutherford Appleton Laboratory
+   Chilton
+   DIDCOT OX11 0QX
+
+   Tel: +44 (0) 1235 445307
+   Fax: +44 (0) 1235 446626
+   Email: christopher.greenough@stfc.ac.uk
+
+=======================================================================
+
+1.Introduction
+
+FELIB is very simple to install and only requires a Fortran 77 compiler.
+It should also be possbile to use a Fortran 90/95 compiler.
+
+The library has the following directories:
+
+	* machine - machine dependent routines (defaults should work ok)
+	* library - basic library routines
+	* programs - example programs
+	* data - example data
+	* results - results generated on Redhat 7.2 using g77
+	* Makefile - make file
+	* install.txt - this file
+
+2.Installation
+
+The version on the web has been compiled and tested under Linux 
+(Redhat 7.2) using g77 and the Lahey Fortran 95 compiler.
+
+* Copy the tar file to a suitable area
+* Extract the contents - this will produce a directory felib3.0
+* Change directory to felib3.0
+* You will need to modify the machine dependent routines in directory
+  machine with the necessary values for your system.
+* Type make FC=<compiler> - the default is f77
+* If you use g77 or a Fortran 90/95 compiler there will be complaints
+  about the intrinsic function MATMUL and a few CHARACTER based warnings
+* Change directory to programs 
+* Type ./test-run.sh - this will run all the programs and compare the
+  results with those provide with 'diff'. If the files are not empty
+  have a look at the differences.
+
+3.Help
+
+You can always drop me an Email and I will do what I can.
+
+Best of luck
+
+Chris Greenough
+

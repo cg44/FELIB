@@ -1,0 +1,420 @@
+C $Id: seg5p1.f,v 1.3 2009/02/26 15:05:33 cg44 Exp $
+      PROGRAM SEG5P1
+C***********************************************************************
+C
+C    COPYRIGHT (C) 1997 : CLRC, RUTHERFORD APPLETON LABORATORY
+C                         CHILTON, DIDCOT, OXFORDSHIRE OX11 0QX
+C
+C***********************************************************************
+C
+      INTEGER BNDNOD, BNODE, DIMEN, DOFEL, DOFNOD, ELNUM, ELTOP,
+     *     ELTYP, HBAND, I, IABSS, IB, IBTB, ICOORD, IDTSD,
+     *     IELJ, IELK, IELPOT, IELT, IELTOP, IFUN, IGDER, IGDERT,
+     *     IGEOM, IJAC, IJACIN, IJVAL, ILDER, ILOADS, INF,
+     *     IQUAD, IRHS, IS, ISCVEC, ISD, ISTEER, ISYSK, ISYST,
+     *     ITER, ITEST, IVEC, IWGHT, IWORK, J, JABSS, JBTB,
+     *     JCOORD, JDTSD, JELK, JELT, JELTOP, JGDER, JGDERT,
+     *     JGEOM, JJAC, JJACIN, JLDER, JNF, JS, JSD, JSYSK,
+     *     JSYST, NELE, NF, NIN, MAXIT, NJV, NODEL, NODNUM,
+     *     NOUT, NQP, STEER, TOTDOF, TOTELS, TOTNOD, IBNODE
+      DOUBLE PRECISION ABSS, B, B2, BMOD, BTB, BVAL, CFACTR,
+     *     COORD, DET, DNU, DTSD, DUMMY, ELJ, ELK, ELPOT, ELT,
+     *     EPS, ETA, FUN, GDER, GDERT, GEOM, JAC, JACIN, JVAL,
+     *     LDER, LOADS, MAX, NU, NU0, PI, QUOT, RHS, S, SCALE,
+     *     SCVEC, SD, SYSK, SYST, VEC, VEPS, WGHT, WORK, XI
+      DIMENSION ABSS(3,9), B(8), BTB(8,8), DTSD(8,8), ELJ(8),
+     *     ELK(8,8), ELPOT(8), ELT(8,8), FUN(8), GDER(3,8),
+     *     GDERT(8,3), GEOM(8,3), JAC(3,3), JACIN(3,3),
+     *     LDER(3,8), S(3,3), SCVEC(8), SD(3,8), STEER(8),
+     *     WGHT(9), WORK(8)
+C
+C                            PROBLEM SIZE DEPENDENT ARRAYS
+C
+      DIMENSION BNODE(30), BVAL(30), COORD(100,3),
+     *     ELTOP(100,10), JVAL(100), LOADS(100), NF(100,1),
+     *     RHS(100), SYSK(100,25), SYST(100,25), VEC(100)
+C
+      DATA IABSS /3/, IB /8/, IBTB /8/, IDTSD /8/,
+     *     IELJ /8/, IELK /8/, IELPOT /8/, IELT /8/, IFUN /8/,
+     *     IGDER /3/, IGDERT /8/, IGEOM /8/, IJAC /3/, IJACIN /3/,
+     *     ILDER /3/, IS /3/, ISCVEC /8/, ISD /3/, ISTEER /8/,
+     *     IWGHT /9/, IWORK /8/, JABSS /9/, JBTB /8/, JCOORD /3/,
+     *     JDTSD /8/, JELK /8/, JELT /8/, JGDER /8/, JGDERT /3/,
+     *     JGEOM /3/, JJAC /3/, JJACIN /3/, JLDER /8/, JNF /1/,
+     *     JS /3/, JSD /8/, SCALE /1.0D+10/
+C
+C                            PROBLEM SIZE DEPENDENT DATA STATEMENTS
+C
+      DATA ICOORD /100/, IELTOP /100/, IJVAL /100/, ILOADS /100/,
+     *     INF /100/, IRHS /100/, ISYSK /100/, ISYST /100/,
+     *     IVEC /100/, JELTOP /10/, JSYSK /25/, JSYST /25/,
+     *     IBNODE /30/
+C
+      DATA NIN /5/, NOUT /6/
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0
+C
+C                            SET VALUES OF PI AND NU0
+C
+      PI = DATAN(1.0D0)*4.0D0
+      NU0 = 1.0D0/(4.0D0*PI*1.0D-07)
+      EPS = VEPS(DUMMY)
+C
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)
+      READ (NIN,8010) TOTNOD, DIMEN
+      WRITE (NOUT,9020) TOTNOD, DIMEN
+C
+      IF(TOTNOD.GT.0 .AND. TOTNOD.LE.ICOORD) GO TO 1015
+      WRITE(NOUT,7010)
+ 7010 FORMAT(' *** ERROR : TOTNOD.LE.0 OR TOTNOD.GT.ICOORD')
+      STOP
+C
+ 1015 DO 1010 I=1,TOTNOD
+      READ (NIN,8020) NODNUM, (COORD(NODNUM,J),J=1,DIMEN)
+      WRITE (NOUT,9030) NODNUM, (COORD(NODNUM,J),J=1,DIMEN)
+ 1010 CONTINUE
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)
+      READ (NIN,8010) TOTELS
+      WRITE (NOUT,9020) TOTELS
+C
+      IF (TOTELS.GT.0 .AND. TOTELS.LE.IELTOP) GO TO 1025
+      WRITE(NOUT,7020)
+      STOP
+ 7020 FORMAT(' *** ERROR : TOTELS.LE.0 OR TOTELS.GT.IELTOP')
+C
+ 1025 DO 1020 I=1,TOTELS
+      READ (NIN,8010) ELNUM, ELTYP, NODEL, (ELTOP(ELNUM,J+2),J=1,
+     *     NODEL)
+      WRITE (NOUT,9020) ELNUM, ELTYP, NODEL, (ELTOP(ELNUM,J+2),J=1,
+     *     NODEL)
+      ELTOP(ELNUM,1) = ELTYP
+      ELTOP(ELNUM,2) = NODEL
+ 1020 CONTINUE
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF BOUNDARY CON-
+C                            DITIONS AND CONSTRUCTION OF NODAL
+C                            FREEDOM ARRAY NF
+C
+      WRITE (NOUT,9050)
+      READ (NIN,8010) DOFNOD
+      WRITE (NOUT,9020) DOFNOD
+C
+      READ (NIN,8010) BNDNOD
+      WRITE (NOUT,9020) BNDNOD
+C
+      IF (BNDNOD.GT.0 .AND. BNDNOD.LE.IBNODE) GO TO 1035
+      WRITE(NOUT,7030)
+ 7030 FORMAT(' *** ERROR : BNDNOD.LE.0 OR BNDNOD.GT.IBNODE')
+      STOP
+C
+ 1035 DO 1030 I=1,BNDNOD
+      READ (NIN,8020) BNODE(I), BVAL(I)
+      WRITE (NOUT,9030) BNODE(I), BVAL(I)
+ 1030 CONTINUE
+C
+C                            INPUT NUMBER OF CURRENT CARRYING
+C                            ELEMENTS, ELEMENT NUMBER, AND VALUE OF
+C                            CURRENT
+C
+      WRITE (NOUT,9060)
+      READ (NIN,8010) NJV
+      WRITE (NOUT,9020) NJV
+      CALL VECNUL(JVAL, IJVAL, TOTELS, ITEST)
+C
+      IF (NJV.EQ.0) GO TO 1050
+      IF (NJV.LE.IJVAL) GO TO 1045
+      WRITE(NOUT,7040)
+ 7040 FORMAT(' *** ERROR : NJV.GT.IJVAL')
+      STOP
+C
+ 1045 DO 1040 I=1,NJV
+      READ (NIN,8030) ELNUM, JVAL(ELNUM)
+      WRITE (NOUT,9070) ELNUM, JVAL(ELNUM)
+ 1040 CONTINUE
+ 1050 CONTINUE
+C
+C INPUT ITERATION CONTROL PARAMETERS
+C
+      READ (NIN,8030) MAXIT, CFACTR
+      WRITE (NOUT,9080) MAXIT, CFACTR
+C
+C FORM NODAL FREEDOM ARRAY
+C
+      TOTDOF = 0
+      DO 1070 I=1,TOTNOD
+      DO 1060 J=1,DOFNOD
+      TOTDOF = TOTDOF + 1
+      NF(I,J) = TOTDOF
+ 1060 CONTINUE
+ 1070 CONTINUE
+C
+C                            CALCULATION OF SEMI-BANDWIDTH
+C
+      CALL BNDWTH(ELTOP, IELTOP, JELTOP, NF, INF, JNF, DOFNOD,
+     *     TOTELS, HBAND, ITEST)
+      IF (HBAND.LE.JSYSK) GO TO 1080
+      WRITE (NOUT,9090) HBAND, JSYSK
+      STOP
+C
+C*                           ************************************
+C*                           *                                  *
+C*                           *  SYSTEM STIFFNESS AND TANGENT    *
+C*                           *          MATRIX ASSEMBLY         *
+C*                           *                                  *
+C*                           ************************************
+C
+ 1080 CALL VECNUL(RHS, IRHS, TOTDOF, ITEST)
+      CALL QTRI4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)
+      DOFEL = NODEL*DOFNOD
+C
+C                            NON-LINEAR ITERATION STARTS HERE
+C
+      ITER = 0
+1170  ITER = ITER + 1
+C
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)
+      CALL MATNUL(SYST, ISYST, JSYST, TOTDOF, HBAND, ITEST)
+      CALL VECNUL(LOADS, ILOADS, TOTDOF, ITEST)
+      DO 1140 NELE=1,TOTELS
+      ELTYP = ELTOP(NELE,1)
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)
+C
+C                            INITIALISE ELPOT - NODAL VALUES OF
+C                            POTENTIAL
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,
+     *     DOFNOD, STEER, ISTEER, ITEST)
+      CALL SELECT (RHS, IRHS, STEER, ISTEER, DOFEL, ELPOT, IELPOT,
+     * ITEST)
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            USING NQP QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)
+      CALL MATNUL(ELT, IELT, JELT, DOFEL, DOFEL, ITEST)
+      CALL VECNUL(ELJ, IELJ, DOFEL, ITEST)
+      CALL MATNUL(S, IS, JS, DIMEN, DIMEN, ITEST)
+      DO 1130 IQUAD=1,NQP
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)
+      ETA = ABSS(2,IQUAD)
+      CALL TRIM3(FUN, IFUN, LDER, ILDER, JLDER, XI, ETA, ITEST)
+      CALL MATMUL(LDER, ILDER, JLDER, GEOM, IGEOM, JGEOM, JAC,
+     *     IJAC, JJAC, DIMEN, NODEL, DIMEN, ITEST)
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,
+     *     DET, ITEST)
+      CALL MATMUL(JACIN, IJACIN, JJACIN, LDER, ILDER, JLDER, GDER,
+     *     IGDER, JGDER, DIMEN, DIMEN, NODEL, ITEST)
+C
+C                            GENERATE MAGNETIC FLUX FROM PREVIOUS
+C                            SOLUTION, WITH MODULUS IN BMOD
+C
+      CALL MATVEC(GDER, IGDER, JGDER, ELPOT, IELPOT, DIMEN, DOFEL,
+     *     WORK, IWORK, ITEST)
+      CALL SCAPRD(WORK, IWORK, WORK, IWORK, DIMEN, B2, ITEST)
+      BMOD = DSQRT(B2)
+C
+C                            FORMATION OF ELEMENT TANGENT ELT
+C
+      CALL VECMAT(WORK, IWORK, GDER, IGDER, JGDER, DIMEN, DOFEL,
+     *     B, IB, ITEST)
+      CALL DYAD(B, IB, B, IB, BTB, IBTB, JBTB, DOFEL, ITEST)
+C
+C                            FORMATION OF ELEMENT STIFFNESS ELK
+C                            OBTAIN NU AND DNU FOR ELEMENT
+C
+      NU = NU0
+      DNU = 0.0D0
+      IF (ELTYP.EQ.2) CALL BHCURV(BMOD, NU, DNU)
+      DO 1100 I=1,DIMEN
+      S(I,I) = NU
+ 1100 CONTINUE
+      CALL MATMUL(S, IS, JS, GDER, IGDER, JGDER, SD, ISD, JSD,
+     *     DIMEN, DIMEN, DOFEL, ITEST)
+      CALL MATRAN(GDER, IGDER, JGDER, GDERT, IGDERT, JGDERT,
+     *     DIMEN, DOFEL, ITEST)
+      CALL MATMUL(GDERT, IGDERT, JGDERT, SD, ISD, JSD, DTSD,
+     *     IDTSD, JDTSD, DOFEL, DIMEN, DOFEL, ITEST)
+C
+      QUOT = DABS(DET)*WGHT(IQUAD)
+      DO 1120 I=1,DOFEL
+      DO 1110 J=1,DOFEL
+      DTSD(I,J) = DTSD(I,J)*QUOT
+      IF (BMOD.LT.EPS) BTB(I,J) = 0.0D0
+      IF (BMOD.GT.EPS) BTB(I,J) = BTB(I,J)*QUOT*DNU/BMOD
+ 1110 CONTINUE
+      SCVEC(I) = -FUN(I)*JVAL(NELE)*QUOT
+ 1120 CONTINUE
+C
+      CALL MATADD(ELK, IELK, JELK, DTSD, IDTSD, JDTSD, DOFEL,
+     *     DOFEL, ITEST)
+      CALL MATADD(ELT, IELT, JELT, BTB, IBTB, JBTB, DOFEL, DOFEL,
+     *     ITEST)
+      CALL VECADD(ELJ, IELJ, SCVEC, ISCVEC, DOFEL, ITEST)
+ 1130 CONTINUE
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS AND
+C                            TANGENT MATRIX, AND SOURCE VECTOR
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,
+     *     DOFNOD, STEER, ISTEER, ITEST)
+      CALL ASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+      CALL ASSYM(SYST, ISYST, JSYST, ELT, IELT, JELT, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+      CALL ASSYM(SYST, ISYST, JSYST, ELK, IELK, JELK, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+      CALL ASRHS(LOADS, ILOADS, ELJ, IELJ, STEER, ISTEER, DOFEL,
+     *     ITEST)
+ 1140 CONTINUE
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+C                            GENERATE  K*A + F
+C
+      CALL MVSYB(SYSK, ISYSK, JSYSK, RHS, IRHS, VEC, IVEC, TOTDOF,
+     *     HBAND, ITEST)
+      CALL VECADD(VEC, IVEC, LOADS, ILOADS, TOTDOF, ITEST)
+C
+C                            MODIFY TANGENT MATRIX AND RESIDUAL TO
+C                            IMPLEMENT BOUNDARY CONDITIONS
+C
+      DO 1150 I=1,BNDNOD
+      J = BNODE(I)
+      SYST(J,HBAND) = SYST(J,HBAND)*SCALE
+      VEC(J) = VEC(J) + SYST(J,HBAND)*(RHS(J)-BVAL(I))
+ 1150 CONTINUE
+C
+C                            FORM LU DECOMPOSITION AND SOLVE FOR
+C                            UPDATE
+C
+      CALL CHOSOL(SYST, ISYST, JSYST, VEC, IVEC, TOTDOF, HBAND,
+     *     ITEST)
+      CALL VECSUB(RHS, IRHS, VEC, IVEC, TOTDOF, ITEST)
+      WRITE (NOUT,9100) ITER
+      CALL PRTVEC(RHS, IRHS, TOTDOF, NOUT, ITEST)
+C
+C                            CHECK FOR CONVERGENCE AND NUMBER OF
+C                            ITERATIONS PERFORMED
+C
+      MAX = 0.0D0
+      DO 1160 I=1,TOTDOF
+      IF (DABS(VEC(I)).GT.MAX) MAX = DABS(VEC(I))
+ 1160 CONTINUE
+C
+      IF (MAX.GT.CFACTR .AND. ITER.LT.MAXIT) GO TO 1170
+C
+      STOP
+C
+ 8010 FORMAT (16I5)
+ 8020 FORMAT (I5, 6F10.0)
+ 8030 FORMAT (I5, D10.3)
+ 9010 FORMAT (//25H **** NODAL GEOMETRY ****/1H )
+ 9020 FORMAT (1H , 16I5)
+ 9030 FORMAT (1H , I5, 6F10.5)
+ 9040 FORMAT (//27H **** ELEMENT TOPOLOGY ****/1H )
+ 9050 FORMAT (//30H **** BOUNDARY CONDITIONS ****/1H )
+ 9060 FORMAT (//27H **** CURRENT SOURCES **** /1H )
+ 9070 FORMAT (1H , I5, D15.6)
+ 9080 FORMAT (//30H MAXIMUM NUMBER OF ITERATIONS , I5/
+     120H CONVERGENCE FACTOR , D12.3/)
+ 9090 FORMAT (//24H **** ERROR : HBAND WAS , I5/15H **** ERROR - J,
+     *     12HSYSK IS ONLY, I5/1H )
+ 9100 FORMAT (//27H **** NODAL POTENTIALS ****, 10X, 10H ITERATION,
+     *     4H NO., I5/1H )
+      END
+C
+C***********************************************************
+C
+      SUBROUTINE BHCURV(BMOD, NU, DNU)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      SUBROUTINE TO RETURN VALUES OF NU AND DNU FOR
+C      A GIVEN VALUE OF BMOD
+C
+C METHOD
+C      NU VS. BMOD IS AN HYPERBOLIC TANGENT FUNCTION,
+C      CALCULATED FROM:
+C      1)  RELATIVE NU AT BMOD=0 IS SET TO 1.0D-03
+C      2)  WHEN BMOD=2, NU=0.99D0 AND WILL TEND TO 1.0D0
+C          AS BMOD INCREASES
+C
+C HISTORY
+C      RELEASE 3.0  24 OCTOBER 1984 (CRIE)
+C
+C ARGUMENTS IN
+C      BMOD    MODULUS OF MAGNETIC FLUX
+C
+C ARGUMENTS OUT
+C      NU      INVERSE PERMEABILITY
+C      DNU     RATE OF CHANGE OF NU WITH RESPECT TO BMOD
+C
+C      SUBROUTINE BHCURV(BMOD, NU, DNU)
+C***********************************************************************
+C
+      DOUBLE PRECISION A, ATANH, BMOD, C, COSH, DNU, NU, NU0,
+     *     PI, TANH
+C
+C
+      PI = DATAN(1.0D0)*4.0D0
+      NU0 = 1.0D0/(4.0D0*PI*1.0D-07)
+      C = TANH(1.0D-3)
+      A = 0.5D0*(ATANH(0.99D0)-C)
+      NU = TANH(A*BMOD+C)*NU0
+      DNU = COSH(A*BMOD+C)
+      DNU = A/DNU/DNU*NU0
+      RETURN
+      END
+C***********************************************************************
+C
+      DOUBLE PRECISION FUNCTION TANH(X)
+C
+      DOUBLE PRECISION X
+C
+      TANH = (1.0D0-DEXP(-2.0D0*X))/(1.0D0+DEXP(-2.0D0*X))
+C
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION ATANH(X)
+C
+      DOUBLE PRECISION X
+C
+      ATANH= 0.5D0*DLOG((1.0D0+X)/(1.0D0-X))
+C
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION COSH(X)
+C
+      DOUBLE PRECISION X
+C
+      COSH= 0.5D0*(DEXP(X)+DEXP(-X))
+C
+      RETURN
+      END
