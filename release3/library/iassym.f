@@ -1,0 +1,82 @@
+C***********************************************************************
+      SUBROUTINE IASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      FOR REAL SYMMETRIC SYSTEM MATRIX, ADDS THE CONTRIBUTION
+C      FROM AN ELEMENT MATRIX INTO REAL PART OF COMPLEX SYSK
+C
+C HISTORY
+C
+C      COPYRIGHT (C) 1997 : CLRC, RUTHERFORD APPLETON LABORATORY
+C                           CHILTON, DIDCOT, OXFORDSHIRE OX11 0QX
+C
+C      RELEASE 3.0  29 OCT 1985 (CRIE)
+C      COMMENTED     7 NOV 1985 (CG)
+C
+C ARGUMENTS IN
+C      SYSK    CONTAINS SYSTEM MATRIX PRIOR TO ADDITION OF
+C              CURRENT ELEMENT MATRIX CONTRIBUTION
+C      ISYSK   FIRST DIMENSION OF SYSK (.GE. TOTAL NUMBER OF
+C              UNCONSTRAINED DEGREES OF FREEDOM)
+C      JSYSK   SECOND DIMENSION OF SYSK (.GE. HBAND)
+C      ELK     ELEMENT MATRIX
+C      IELK    FIRST DIMENSION OF ELK (.GE. DOFEL)
+C      JELK    SECOND DIMENSION OF ELK (.GE. DOFEL)
+C      STEER   CONTAINS FREEDOM NUMBERS ASSOCIATED WITH ELEMENT
+C              MATRIX CONTRIBUTIONS TO SYSTEM MATRIX
+C      ISTEER  FIRST DIMENSION OF STEER (.GE. DOFEL)
+C      HBAND   SEMI-BANDWIDTH OF SYSTEM MATRIX, INCLUDING
+C              DIAGONAL
+C      DOFEL   MAXIMUM DEGREES OF FREEDOM ASSOCIATED WITH
+C              ELEMENT TYPE
+C      ITEST   ERROR CHECKING OPTION
+C
+C ARGUMENTS OUT
+C      SYSK    SYSTEM MATRIX -   ORDERED PAIRS
+C
+C ROUTINES CALLED
+C      ERRMES
+C
+C     SUBROUTINE IASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK,
+C    *     STEER, ISTEER, HBAND, DOFEL, ITEST)
+C***********************************************************************
+C
+      INTEGER CD, DOFEL, ERRMES, HBAND, I, IELK, IERROR, ISTEER,
+     *     ISYSK, ITEST, J, JELK, JSYSK, STEER, STEERI, JTEST
+      DOUBLE PRECISION ELK, SRNAME, SYSK
+      DIMENSION ELK(IELK,JELK), STEER(ISTEER),
+     *     SYSK(2,ISYSK,JSYSK)
+      DATA SRNAME /8H IASSYM /
+C
+C     PARAMETER CHECKING
+C
+      JTEST = ITEST
+                        IF (ITEST.EQ.-1) GO TO 1010
+                        IERROR = 0
+                        IF (ISTEER.LT.DOFEL) IERROR = 4
+                        IF (IELK.LT.DOFEL .OR. JELK.LT.DOFEL)
+     *                      IERROR = 3
+                        IF (JSYSK.LT.HBAND) IERROR = 2
+                        IF (HBAND.LE.0 .OR. DOFEL.LE.0) IERROR = 1
+                        ITEST = ERRMES(ITEST,IERROR,SRNAME)
+                        IF (ITEST.NE.0) RETURN
+ 1010 DO 1040 I=1,DOFEL
+      IF (STEER(I).EQ.0) GO TO 1040
+      DO 1030 J=1,DOFEL
+      IF (STEER(J).EQ.0) GO TO 1030
+      CD = STEER(J) - STEER(I) + HBAND
+      IF (CD.GT.HBAND) GO TO 1030
+      STEERI = STEER(I)
+                        IF (JTEST.EQ.-1) GO TO 1020
+                        IERROR = 0
+                        IF (ISYSK.LT.STEERI) IERROR = 5
+                        ITEST = ERRMES(ITEST,IERROR,SRNAME)
+                        IF (ITEST.NE.0) RETURN
+ 1020 SYSK(2,STEERI,CD) = SYSK(2,STEERI,CD) + ELK(I,J)
+ 1030 CONTINUE
+ 1040 CONTINUE
+      RETURN
+C
+      END
+C***********************************************************************

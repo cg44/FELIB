@@ -1,0 +1,61 @@
+      
+                    Finite  Element Library - Release 3
+      
+                      Chris Greenough - December 1987
+      
+      
+      1. Introduction
+      This release of the Finite Element Library is contained in four 
+      sub-directories: 
+      
+        * programs - the Level 1 Example Programs (13 programs)
+        * machine-dep - the machine dependent library routines
+        * library - the main library
+        * data - data for the example programs
+        * results - the results from running the programs
+      
+      Within programs, machine-dep and library is a Makefile to enable the
+      user to build and run the library and the example programs. Within
+      machine-dep and library the Makefile has no arguments and the local
+      variable FLAGS contained in these Makefiles should be changed as
+      necessary.
+   
+      The software is written in FORTRAN 66 and uses DOUBLE PRECISION 
+      throughout. The subroutine names are stored in DOUBLE PRECISION
+      variables (e.g. SRNAME). This will cause most compilers to comment.
+       
+      All the machine dependencies should be confined to the routines in
+      the machine dependant library (machine-dep.a).
+      
+      2. Building the Library
+      The first step is to build the machine dependent library by running 
+      the Makefile in directory machine-dep. This will produce the library
+      machine-dep.a. The constants contained in this routines should be
+      changed to suite the particular machine.
+      
+      The second step is to build the main library by running the Makefile 
+      in directory library. This will use the library machine-dep.a and 
+      produces the main library - felib.a.
+      
+      3. Using the Example Programs
+      The Makefile within programs take one argument: the name of the
+      program to be built. For example
+      
+          make seg3p1
+      
+      This will build the example program Segment 3.1 using the main library
+      felib.a. The program is run  using the following command sequence:
+      
+          seg3p1 <../data/dat3p1
+      
+      The results will be displayed on the screen and can be redirected to a
+      file if required.
+      
+      The programs assume channel 5 for input, channel 6 for output and 
+      channel 7 for a temporary binary file. These can be changed by altering
+      the DATA statements at the start of each program.
+   
+     4. Bugs and Problems
+     If you should have any problems or find any bugs please report them
+     to me as soon as possible. Any information about the implementations
+     and timings would be gratefully received.
