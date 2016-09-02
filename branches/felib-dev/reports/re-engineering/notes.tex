@@ -1,0 +1,175 @@
+% Notes on seg3p1 Fortran 90
+For each Level~1 Programs  a set of {\it Notes} has been developed. 
+These indicate how a programmer could modify the Level~1 Programs to use 
+more fully the features of Fortran~90/95. These include the use of
+explicit {\tt ALLOCATE} statements for memory allocations and the use
+of other Fortran~90/95 intrinsics.
+\begin{description}
+%
+\item[Statement 15:] The routine {\tt getgeo} allocates memory for {\tt coord} depending
+on the data. The total number of nodes, {\tt totnod} and the dimensionality
+of the problem, {\tt dimen} are returned. 
+The array {\tt coord} can be defined and initailised using the statements 
+\begin{quote}
+\source
+ALLOCATE(coord(totnod,dimen))\\
+coord=0.0
+\end{quote}
+provided {\tt totnod} and {\tt dimen} are known.
+%
+\item[Statement 17:] The routine {\tt gettop} allocates memory for {\tt eltop}
+depending on the data. The total number of elements, {\tt totels} is returned.
+The array {\tt eltop} can be defined and initialised using the statements
+\begin{quote}
+\source
+ALLOCATE(eltop(totels,max\_nodel+2))\\
+eltop=0
+\end{quote}
+provided {\tt totels} and {\tt max\_nodel} are known. {\tt max\_nodel} is set to
+the largest number of nodes in an element ({\tt nodel}) for the given mesh. For
+simple meshes this will be equal to {\tt nodel}.
+%
+\item[Statement 19:] The routine {\tt matnul} allocates memory and initialises
+the array {\tt p}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(p(dimen,dimen))\\
+p=0.0
+\end{quote}
+\item[Statement 32:] The routine {\tt vecnul} allocates memory and initialises
+the array {\tt bnode}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(bnode(bndnod))\\
+bonde=0
+\end{quote}
+\item[Statement 33:]  The routine {\tt vecnul} allocates memory and initialises
+the array {\tt bval}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(bval(bnnod))\\
+bval=0.0
+\end{quote}
+\item[Statement 38:]  The routine {\tt matnul} allocates memory and initialises
+the array {\tt nf}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(nf(totnod,dofnod))\\
+nf=0
+\end{quote}
+\item[Statement 47:]  The routine {\tt matnul} allocates memory and initialises
+the array {\tt sysk}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(sysk(totdof,hband))\\
+sysk=0.0
+\end{quote}
+\item[Statement 48:] The routine {\tt vecnul} allocates memory and initialises
+the array {\tt rhs}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(rhs(totdof)\\
+rhs=0.0
+\end{quote}
+\item[Statement 54:] The routine {\tt matnul} allocates memory and initialises
+the array {\tt elk}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(elk(dofel,dofel))\\
+elk=0.0
+\end{quote}
+\item[Statement 55:] The routine {\tt vecnul} allocates memory and initialises
+the array {\tt elq}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(elq(dofel))\\
+elq = 0.0
+\end{quote}
+\item[Statement 56:] The routine {\tt vecnul} allocates memory and initialises
+the array {\tt scvec}. This can be performed using the statements
+\begin{quote}
+\source
+ALLOCATE(scvec(dofel))\\
+scvec = 0.0
+\end{quote}
+\item[Statement 61 to 62 :] The routine {\tt matran} transposes the array {\tt geom}.
+It creates and initialises memory for the intermediate
+array {\tt geomt}. This can be performed using the intrinsic {\tt TRANSPOSE}:
+\begin{quote}
+\source
+geomt=TRANSPOSE(geom)
+\end{quote}
+provided {\tt geomt} has been created and is of a suitable size and shape.
+
+The routine {\tt matvec} post multiplies the matrix {\tt geomt}
+by the vector {\tt fun}. This can be performed using the intrinsic {\tt MATMUL} 
+which been mapped onto the function  {\tt MATRIX\_MULTIPLY} in FELIB90. {\tt matvec}
+will create and initial memory for the intermediate array {\tt xy} so {\tt xy}
+will need to be created.
+\begin{quote}
+\source
+xy=MATRIX\_MULTIPLY(geomt,fun)
+\end{quote}
+\item[Statements 61 to 64:] An alternative to these statements is to 
+calculate {\tt x} and {\tt y} directly through an array section 
+using either the FELIB90 routine {\tt scaprd}
+\begin{quote}
+\source
+CALL scaprd(geom(1:nodel,1),fun,x)\\
+CALL scaprd(geom(1:nodel,2),fun,y)
+\end{quote}
+or the intrinsic {\tt DOT\_PRODUCT}:
+\begin{quote}
+\source
+x=DOT\_PRODUCT(geom(1:nodel,1),fun)\\
+y=DOT\_PRODUCT(geom(1:nodel,2),fun)
+\end{quote}
+This is possible because of the way in which Fortran stores its arrays in memory.
+\item[Statement 65 to 67:] The routine {\tt matmul} multiplies the arrays {\tt lder}
+and {\tt geom} together. This can be performed using the
+intrinsic {\tt MATMUL}. This has been mapped onto the function {\tt MATRIX\_MULTIPLY}
+in FELIB90.
+\begin{quote}
+\source
+jac=MATRIX\_MULTIPLY(lder,geom)
+\end{quote}
+{\tt jac} must be allocated with suitable size and shape.
+
+The routine {\tt matmul} multiplies the arrays {\tt jacin}
+and {\tt lder} together. This can be performed using the
+intrinsic {\tt MATMUL} which been mapped onto the function {\tt MATRIX\_MULTIPLY}
+in FELIB90.
+\begin{quote}
+\source
+gder=MATRIX\_MULTIPLY(jacin,lder)
+\end{quote}
+{\tt gder} must be allocated with suitable size and shape.
+\item[Statements 68 to 75:] The section of code deals with the
+construction and assembly the element stiffness matrix {\tt dtpd}. There
+two approaches to replacing these statements: firstly by mirroring the FELIB90
+routines using intrinsics
+\begin{quote}
+\source
+pd=MATRIX\_MULTIPLY(p,gder)\\
+gdert=TRANSPOSE(gder)\\
+dtpd=MATRIX\_MULTIPLY(gdert,pd)\\
+scvec=fun*src(x,y,strgth)*quot
+\end{quote}
+remembering that the intrinsic {\tt matnul} is mapped to the FELIB90
+routine {\tt MATRIX\_MULTIPLY} or by combining these  three steps into a
+single compound statement
+\begin{quote}
+\source
+dtpd=MATRIX\_MULTIPLY(TRANSPOSE(gder),MATRIX\_MULTIPLY(p,gder))
+\end{quote}
+{\tt dtpd} must be allocated with a suitable size and shape.
+The final collections can be performed using
+\begin{quote}
+\source
+elk = elk + dtpd\\
+elq = elq + scvec
+\end{quote}
+instead of using the FELIB90 {\tt matadd} and {\tt vecadd} routines.
+\end{description}
+
+

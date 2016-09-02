@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Generic routines</TITLE>
+<META NAME="description" CONTENT="Generic routines">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node8.html">
+<LINK REL="previous" HREF="node6.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node8.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html101"
+  HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html99"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html93"
+  HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html102"
+  HREF="node8.html">Intrinsic functions</A>
+<B> Up:</B> <A NAME="tex2html100"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html94"
+  HREF="node6.html">Optional arguments</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00034000000000000000">
+Generic routines</A>
+</H2>
+As can be seen from the above another very useful feature of Fortran&nbsp;90/95 is the definition 
+of <I>generic</I> interfaces: functions with differing argument types being called by
+the same <I>generic</I> name. This an example of the idea of 
+<I>overloading</I> in Fortran&nbsp;90/95. <TT>FELIB90</TT> uses generic routines where ever thought useful.
+Routines such as <TT>MATNUL</TT> can be made generic and thus capable of operating on
+<TT>INTEGER</TT>, <TT>REAL</TT> and <TT>COMPLEX</TT> arrays. As seen above <TT>setopt</TT> is define as a generic
+routine capable of operating on <TT>INTEGER</TT>, <TT>REAL</TT>, <TT>COMPLEX</TT> and <TT>CHARACTER</TT> variables. 
+
+<P>
+In the Fortran&nbsp;66 and Fortran&nbsp;77 versions of the library <TT>COMPLEX</TT> variables were
+treated as order pairs of <TT>REAL</TT> values and required their own set of manipulation
+routines such as <TT>CMTNUL</TT> and <TT>CSYSOL</TT>. Fortran&nbsp;90/95 defines a <TT>COMPLEX</TT>
+data type which much simplifies some of the routines through the use of <I>generic</I>
+interfaces. As a consequence this does require that many routines are defined as generic routines.
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html101"
+  HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html99"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html93"
+  HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html102"
+  HREF="node8.html">Intrinsic functions</A>
+<B> Up:</B> <A NAME="tex2html100"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html94"
+  HREF="node6.html">Optional arguments</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

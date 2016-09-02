@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The transformation process</TITLE>
+<META NAME="description" CONTENT="The transformation process">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node15.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html169"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html167"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html161"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html170"
+  HREF="node15.html">Some notes on development</A>
+<B> Up:</B> <A NAME="tex2html168"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html162"
+  HREF="node13.html">An example of program</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00090000000000000000">
+The transformation process</A>
+</H1>
+<TT>FELIB</TT> had been developed originally in Fortran&nbsp;66 - a fixed source form with
+all upper case characters - no <TT>IF - THEN - ELSE</TT> constructs and the use of
+<TT>GOTO</TT> statements. Moreover <TT>FELIB</TT> was in strict Fortran&nbsp;66 having been verified
+by QA tools such <TT>PFORT</TT> [<A
+ HREF="node23.html#pfort">13</A>].
+
+<P>
+The basic transformation process had the following steps:
+
+<UL>
+<LI>Compile and run on test data. Save results from tests.
+</LI>
+<LI>Verify Fortran&nbsp;66 code against standard (using <TT>PFORT</TT> or the <TT>TOOLPACK</TT> tool
+	<TT>istpf</TT>)
+</LI>
+<LI>The conforming Fortran&nbsp;66, which includes many <TT>GOTO</TT> blocks was restructured using
+	the <TT>TOOLPACK</TT> tool <TT>istst</TT> and <TT>plusFORT</TT> <TT>SPAG</TT> program. With the correct
+	options <TT>SPAG</TT> could transform directly to Fortran&nbsp;90/95 but it was thought that staging 
+	through restructured Fortran&nbsp;77 would allow some result testing.
+</LI>
+<LI>Re-compilation and testing of new Fortran&nbsp;77 using test data.
+</LI>
+<LI>Transformation of comments etc with <TT>istuc</TT>.
+</LI>
+<LI>Re-compilation and testing.
+</LI>
+<LI>Transformation into free format Fortran&nbsp;90/95 using <TT>SPAG</TT>. Others tools in the 
+	<TT>NAGWare</TT> suite could have been used.
+</LI>
+<LI>Compilation and testing of new source code using test data.
+	
+</LI>
+</UL>
+At this point we have transform the Fortran&nbsp;66 code into free format Fortran&nbsp;90/95. Along the
+route each tool will have detected some problems with the code that required corrections. In
+general the corrections were made to the original Fortran&nbsp;66 and the process repeated.
+
+<P>
+At this point the structural elements of the re-design were implemented. As the overall
+structure and functionality of the example programs and library were not going to changed
+the modification at this point were made on a routine by routine basis using a set of
+simple edit scripts. For examples: changing the type of variable <TT>SRNAME</TT>, the routine
+name, from <TT>DOUBLE PRECISION</TT> to <TT>CHARACTER*6</TT> were simple <TT>awk</TT> scripts.<PRE>
+DOUBLE PRECISION SRNAME
+DATA SRNAME /' SRNAME '/
+</PRE>
+became<PRE>
+CHARACTER*6 srname = "SRNAME"
+</PRE>
+There were many other similar examples.
+
+<P>
+As with many of the other changes these had to be made on a routine by routine
+basis following some basic re-design rules.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html169"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html167"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html161"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html170"
+  HREF="node15.html">Some notes on development</A>
+<B> Up:</B> <A NAME="tex2html168"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html162"
+  HREF="node13.html">An example of program</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Array features</TITLE>
+<META NAME="description" CONTENT="Array features">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html71"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html69"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html63"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html72"
+  HREF="node5.html">Dynamic storage allocation</A>
+<B> Up:</B> <A NAME="tex2html70"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html64"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00031000000000000000">
+Array features</A>
+</H2>
+The array features are one clear example of an important Fortran&nbsp;90/95 feature. It is now
+possible to initialise and perform calculations on complete arrays whereas
+before, in Fortran&nbsp;77, this required multiple nested loop structures.
+
+<P>
+To initialise the array <TT>SYSK</TT> to zero in Fortran&nbsp;77 required:
+
+<P><PRE>
+   INTEGER ISYSK, JSYSK
+   PARAMETER (ISYSK=200, JSYSK=20)
+   REAL SYSK(ISYSK,JSYSK)
+</PRE><BLOCKQUOTE>
+......
+</BLOCKQUOTE><PRE>
+   DO 10 I=1,TOTDOF
+      DO 20 J=1,HBAND
+         SYSK(I,J) = 0.0D0
+20    CONTINUE
+10 CONTINUE
+</PRE>
+or<PRE>
+   CALL MATNUL(SYSK,ISYSK,JSYSK,TOTDOF,HBAND,ITEST)
+</PRE>
+using the <TT>FELIB</TT> routine. Other often used routines during the element
+matrix construction and assembly are <TT>MATADD</TT>, <TT>MATRAN</TT> and <TT>MATMUL</TT>. 
+The array features of Fortran&nbsp;90/95 provide a more compact and natural way of performing
+these actions. For example:
+<BLOCKQUOTE>
+<TT>
+SYSK=0
+
+</TT></BLOCKQUOTE>
+can replace a call to <TT>MATNUL</TT>.
+<BLOCKQUOTE>
+<TT>
+ELK = ELK + DTBD
+
+</TT></BLOCKQUOTE>
+would replace a call to <TT>MATADD</TT>.
+
+<P>
+Fortran&nbsp;90/95 provides a number of basic array/matrix intrinsic functions. In the
+context of <TT>FELIB</TT> three of the more important are <TT>MATMUL</TT>, <TT>TRANSPOSE</TT>
+ and <TT>DOT_PRODUCT</TT>. So
+<BLOCKQUOTE>
+<TT>
+&nbsp;CALL MATMUL(LDER,ILDER,JLDER,GEOM,IGEOM,JGEOM,
+<BR>*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JAC,IJAC,JJAC,DIMEN,NODEL,DIMEN,ITEST)
+
+</TT></BLOCKQUOTE>
+can be replaced by the considerable simpler
+<BLOCKQUOTE>
+<TT>
+JAC = MATMUL(LDER,GEOM)
+
+</TT></BLOCKQUOTE>
+and
+<BLOCKQUOTE>
+<TT>
+CALL SCAPRD(GEOM(1,1),IGEOM,FUN,IFUN,NODE,X,ITEST)
+
+</TT></BLOCKQUOTE>
+replace by
+<BLOCKQUOTE>
+<TT>
+X = DOT_PRODUCT(GEOM(1:NODEL,1),FUN)
+
+</TT></BLOCKQUOTE>
+Immediately one notices the reduction in actual arguments in the routines calls.
+Fortran&nbsp;90/95 carries much more information about arrays than Fortran&nbsp;77 did. Properties
+as an array's <I>rank</I> or an array's <I>shape</I> are readily available through
+a range of <TT>INTRINSIC</TT> functions. For example <TT>RANK</TT>, <TT>SHAPE</TT>, <TT>SIZE</TT>,
+<TT>LBOUND</TT> and <TT>UBOUND</TT>. These, together with the stricter conditions on the
+property matching between actual and dummy arguments in procedure calls, enable a
+considerable amount of information on arrays to be passed implicitly into procedures.
+Although these new features can simplify or modify many of the steps involved in
+an <TT>FELIB</TT> program there is a possible danger in compactness making the
+software more opaque. For example the construction of one quadrature point contribution
+to an element stiffness matrix could be written as:
+<BLOCKQUOTE>
+<TT>
+ELK = ELK + MATMUL(TRANSPOSE(MATMUL(jacin,lder)),   &amp;
+<BR>
+MATMUL(p,MATMUL(jacin,lder)))
+
+</TT></BLOCKQUOTE>
+Clearly this is more compact but it is hardly transparent. A balance will be required
+between succinctness and clarity particularly in software that is to be used
+as a teaching aid.
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html71"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html69"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html63"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html72"
+  HREF="node5.html">Dynamic storage allocation</A>
+<B> Up:</B> <A NAME="tex2html70"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html64"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

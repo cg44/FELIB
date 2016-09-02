@@ -1,0 +1,45 @@
+\begin{verbatim}
+MODULE mod_setopt
+
+USE FELIB_GLOBALS, only : wp
+
+INTERFACE setopt
+   MODULE PROCEDURE complex_setopt
+   MODULE PROCEDURE real_setopt
+   MODULE PROCEDURE integer_setopt
+   MODULE PROCEDURE character_setopt
+END INTERFACE
+
+CONTAINS
+
+...........................
+
+SUBROUTINE real_setopt(dummy,value,actual)
+IMPLICIT NONE
+REAL (wp) :: dummy, value
+REAL (wp) , OPTIONAL :: actual
+
+IF( PRESENT(actual)) THEN
+  dummy=actual
+ELSE
+  dummy=value
+ENDIF
+
+END SUBROUTINE real_setopt
+
+SUBROUTINE integer_setopt(dummy,value,actual)
+IMPLICIT NONE
+INTEGER :: dummy, value
+INTEGER , OPTIONAL :: actual
+
+
+IF( PRESENT(actual)) THEN
+  dummy=actual
+ELSE
+  dummy=value
+ENDIF
+
+................................
+
+END MODULE mod_setopt
+\end{verbatim}
