@@ -1,0 +1,25 @@
+      SUBROUTINE SPARIN(A,N,KDIAG)
+C
+C      THIS SUBROUTINE PERFORMS CHOLESKI REDUCTION OF THE
+C      VARIABLE-BANDWIDTH STIFFNESS MATRIX STORED AS A VECTOR
+C
+      REAL A(*)
+      INTEGER KDIAG(*)
+      A(1)=SQRT(A(1))
+      DO 1 I=2,N
+      KI=KDIAG(I)-I
+      L=KDIAG(I-1)-KI+1
+      DO 2 J=L,I
+      X=A(KI+J)
+      KJ=KDIAG(J)-J
+      IF(J.EQ.1)GOTO 2
+      LBAR=KDIAG(J-1)-KJ+1
+      LBAR=MAX0(L,LBAR)
+      IF(LBAR.EQ.J)GOTO 2
+      M=J-1
+      DO 3 K=LBAR,M
+    3 X=X-A(KI+K)*A(KJ+K)
+    2 A(KI+J)=X/A(KJ+J)
+    1 A(KI+I)=SQRT(X)
+      RETURN
+      END

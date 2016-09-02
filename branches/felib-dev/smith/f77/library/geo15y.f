@@ -1,0 +1,74 @@
+      SUBROUTINE GEO15Y(IP,IQ,NYE,WID,DEP,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE COORDINATES AND STEERING VECTOR
+C      FOR 15-NODE TRIANGLES COUNTING IN Y-DIRECTION
+C
+      REAL COORD(ICOORD,*),WID(*),DEP(*)
+      INTEGER G(*),NF(INF,*),NUM(15)
+      IF(MOD(IQ,2).EQ.0)GOTO 1
+      FAC1=4*(2*NYE+1)*(IP-1)+2*IQ-1
+      NUM(1)=FAC1
+      NUM(2)=FAC1+1
+      NUM(3)=FAC1+2
+      NUM(4)=FAC1+3
+      NUM(5)=FAC1+4
+      NUM(6)=FAC1+2*NYE+4
+      NUM(7)=FAC1+4*NYE+4
+      NUM(8)=FAC1+6*NYE+4
+      NUM(9)=FAC1+8*NYE+4
+      NUM(10)=FAC1+6*NYE+3
+      NUM(11)=FAC1+4*NYE+2
+      NUM(12)=FAC1+2*NYE+1
+      NUM(13)=FAC1+2*NYE+2
+      NUM(14)=FAC1+2*NYE+3
+      NUM(15)=FAC1+4*NYE+3
+      COORD(1,1)=WID(IP)
+      COORD(1,2)=DEP((IQ+1)/2)
+      COORD(5,1)=WID(IP)
+      COORD(5,2)=DEP((IQ+3)/2)
+      COORD(9,1)=WID(IP+1)
+      COORD(9,2)=DEP((IQ+1)/2)
+      GOTO 2
+    1 FAC2=4*(2*NYE+1)*(IP-1)+2*IQ+8*NYE+5
+      NUM(1)=FAC2
+      NUM(2)=FAC2-1
+      NUM(3)=FAC2-2
+      NUM(4)=FAC2-3
+      NUM(5)=FAC2-4
+      NUM(6)=FAC2-2*NYE-4
+      NUM(7)=FAC2-4*NYE-4
+      NUM(8)=FAC2-6*NYE-4
+      NUM(9)=FAC2-8*NYE-4
+      NUM(10)=FAC2-6*NYE-3
+      NUM(11)=FAC2-4*NYE-2
+      NUM(12)=FAC2-2*NYE-1
+      NUM(13)=FAC2-2*NYE-2
+      NUM(14)=FAC2-2*NYE-3
+      NUM(15)=FAC2-4*NYE-3
+      COORD(1,1)=WID(IP+1)
+      COORD(1,2)=DEP((IQ+2)/2)
+      COORD(5,1)=WID(IP+1)
+      COORD(5,2)=DEP(IQ/2)
+      COORD(9,1)=WID(IP)
+      COORD(9,2)=DEP((IQ+2)/2)
+    2 DO 3 I=1,2
+      COORD(3,I)=.5*(COORD(1,I)+COORD(5,I))
+      COORD(7,I)=.5*(COORD(5,I)+COORD(9,I))
+      COORD(11,I)=.5*(COORD(9,I)+COORD(1,I))
+      COORD(2,I)=.5*(COORD(1,I)+COORD(3,I))
+      COORD(4,I)=.5*(COORD(3,I)+COORD(5,I))
+      COORD(6,I)=.5*(COORD(5,I)+COORD(7,I))
+      COORD(8,I)=.5*(COORD(7,I)+COORD(9,I))
+      COORD(10,I)=.5*(COORD(9,I)+COORD(11,I))
+      COORD(12,I)=.5*(COORD(11,I)+COORD(1,I))
+      COORD(15,I)=.5*(COORD(7,I)+COORD(11,I))
+      COORD(14,I)=.5*(COORD(3,I)+COORD(7,I))
+      COORD(13,I)=.5*(COORD(2,I)+COORD(15,I))
+    3 CONTINUE
+      INC=0
+      DO 4 I=1,15
+      DO 4 J=1,2
+      INC=INC+1
+    4 G(INC)=NF(NUM(I),J)
+      RETURN
+      END

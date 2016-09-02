@@ -1,0 +1,22 @@
+      SUBROUTINE VMPL(E,V,STRESS,PL)
+C
+C      THIS SUBROUTINE FORMS THE PLASTIC MATRIX FOR A
+C      VON-MISES MATERIAL
+C
+      REAL STRESS(*),TERM(4),PL(4,4)
+      SX=STRESS(1)
+      SY=STRESS(2)
+      TXY=STRESS(3)
+      SZ=STRESS(4)
+      DSBAR=SQRT((SX-SY)**2+(SY-SZ)**2+(SZ-SX)**2+6.*TXY**2)/SQRT(2.)
+      EE=1.5*E/((1.+V)*DSBAR*DSBAR)
+      TERM(1)=(2.*SX-SY-SZ)/3.
+      TERM(2)=(2.*SY-SZ-SX)/3.
+      TERM(3)=TXY
+      TERM(4)=(2.*SZ-SX-SY)/3.
+      DO 1 I=1,4
+      DO 1 J=I,4
+      PL(I,J)=TERM(I)*TERM(J)*EE
+    1 PL(J,I)=PL(I,J)
+      RETURN
+      END

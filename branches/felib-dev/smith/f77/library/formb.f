@@ -1,0 +1,18 @@
+      SUBROUTINE FORMB(BEE,IBEE,DERIV,IDERIV,NOD)
+C
+C      THIS SUBROUTINE FORMS THE STRAIN/DISPLACEMENT MATRIX
+C      FOR PLANE STRAIN
+C
+      REAL BEE(IBEE,*),DERIV(IDERIV,*)
+      DO 1 M=1,NOD
+      K=2*M
+      L=K-1
+      X=DERIV(1,M)
+      BEE(1,L)=X
+      BEE(3,K)=X
+      Y=DERIV(2,M)
+      BEE(2,K)=Y
+      BEE(3,L)=Y
+    1 CONTINUE
+      RETURN
+      END

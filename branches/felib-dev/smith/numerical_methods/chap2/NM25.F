@@ -1,0 +1,36 @@
+      PROGRAM P25
+C
+C      PROGRAM 2.5 CHOLESKY FACTORISATION
+C      SKYLINE STORAGE OF A AS A VECTOR
+C
+C      ALTER NEXT LINE TO CHANGE PROBLEM SIZE
+C
+      PARAMETER (IA=50,IB=20)
+C
+      REAL A(IA),B(IB)
+      INTEGER KDIAG(IB)
+C
+      READ (5,*) N
+      READ (5,*) (KDIAG(I),I=1,N)
+      IR = KDIAG(N)
+      READ (5,*) (A(I),I=1,IR)
+      READ (5,*) (B(I),I=1,N)
+      WRITE(6,*) ('** CHOLESKY FACTORISATION WITH SKYLINE STORAGE ***')
+      WRITE(6,*) ('*********** SYMMETRICAL EQUATIONS ****************')
+      WRITE(6,*)
+      WRITE(6,*) ('COEFFICIENT VECTOR')
+      CALL PRINTV(A,IR,6)
+      WRITE(6,*)
+      WRITE(6,*) ('DIAGONAL LOCATIONS')
+      WRITE(6,100) (KDIAG(I),I=1,N)
+      WRITE(6,*)
+      WRITE(6,*) ('RIGHT HAND SIDE VECTOR')
+      CALL PRINTV(B,N,6)
+      WRITE(6,*)
+      CALL SKYFAC(A,N,KDIAG)
+      CALL SKYSUB(A,B,N,KDIAG)
+      WRITE(6,*) ('SOLUTION VECTOR')
+      CALL PRINTV(B,N,6)
+  100 FORMAT(10I6)
+      STOP	
+      END

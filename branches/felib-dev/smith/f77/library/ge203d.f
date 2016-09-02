@@ -1,0 +1,96 @@
+      SUBROUTINE GE203D(IP,IQ,IS,NXE,NZE,AA,BB,CC,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE STEERING VECTOR AND COORDINATES
+C      FOR 20-NODE BRICK ELEMENTS COUNTING X-Z PLANES IN Y-DIRECTION
+C
+      REAL COORD(ICOORD,*)
+      INTEGER G(*),NF(INF,*),NUM(20)
+      FAC1=((2*NXE+1)*(NZE+1)+(2*NZE+1)*(NXE+1))*(IQ-1)
+      FAC2=((2*NXE+1)*(NZE+1)+(2*NZE+1)*(NXE+1))*IQ
+      NUM(1)=FAC1+(3*NXE+2)*IS+2*IP-1
+      NUM(2)=FAC1+(3*NXE+2)*IS-NXE+IP-1
+      NUM(3)=NUM(1)-3*NXE-2
+      NUM(4)=NUM(3)+1
+      NUM(5)=NUM(4)+1
+      NUM(6)=NUM(2)+1
+      NUM(7)=NUM(1)+2
+      NUM(8)=NUM(1)+1
+      NUM(9)=FAC2-(NXE+1)*(NZE+1)+(NXE+1)*IS+IP
+      NUM(10)=NUM(9)-NXE-1
+      NUM(11)=NUM(10)+1
+      NUM(12)=NUM(9)+1
+      NUM(13)=FAC2+(3*NXE+2)*IS+2*IP-1
+      NUM(14)=FAC2+(3*NXE+2)*IS-NXE+IP-1
+      NUM(15)=NUM(13)-3*NXE-2
+      NUM(16)=NUM(15)+1
+      NUM(17)=NUM(16)+1
+      NUM(18)=NUM(14)+1
+      NUM(19)=NUM(13)+2
+      NUM(20)=NUM(13)+1
+      INC=0
+      DO 1 I=1,20
+      DO 1 J=1,3
+      INC=INC+1
+    1 G(INC)=NF(NUM(I),J)
+      COORD(1,1)=(IP-1)*AA
+      COORD(2,1)=(IP-1)*AA
+      COORD(3,1)=(IP-1)*AA
+      COORD(9,1)=(IP-1)*AA
+      COORD(10,1)=(IP-1)*AA
+      COORD(13,1)=(IP-1)*AA
+      COORD(14,1)=(IP-1)*AA
+      COORD(15,1)=(IP-1)*AA
+      COORD(5,1)=IP*AA
+      COORD(6,1)=IP*AA
+      COORD(7,1)=IP*AA
+      COORD(11,1)=IP*AA
+      COORD(12,1)=IP*AA
+      COORD(17,1)=IP*AA
+      COORD(18,1)=IP*AA
+      COORD(19,1)=IP*AA
+      COORD(4,1)=.5*(COORD(3,1)+COORD(5,1))
+      COORD(8,1)=.5*(COORD(1,1)+COORD(7,1))
+      COORD(16,1)=.5*(COORD(15,1)+COORD(17,1))
+      COORD(20,1)=.5*(COORD(13,1)+COORD(19,1))
+      COORD(1,2)=(IQ-1)*BB
+      COORD(2,2)=(IQ-1)*BB
+      COORD(3,2)=(IQ-1)*BB
+      COORD(4,2)=(IQ-1)*BB
+      COORD(5,2)=(IQ-1)*BB
+      COORD(6,2)=(IQ-1)*BB
+      COORD(7,2)=(IQ-1)*BB
+      COORD(8,2)=(IQ-1)*BB
+      COORD(13,2)=IQ*BB
+      COORD(14,2)=IQ*BB
+      COORD(15,2)=IQ*BB
+      COORD(16,2)=IQ*BB
+      COORD(17,2)=IQ*BB
+      COORD(18,2)=IQ*BB
+      COORD(19,2)=IQ*BB
+      COORD(20,2)=IQ*BB
+      COORD(9,2)=.5*(COORD(1,2)+COORD(13,2))
+      COORD(10,2)=.5*(COORD(3,2)+COORD(15,2))
+      COORD(11,2)=.5*(COORD(5,2)+COORD(17,2))
+      COORD(12,2)=.5*(COORD(7,2)+COORD(19,2))
+      COORD(1,3)=-IS*CC
+      COORD(7,3)=-IS*CC
+      COORD(8,3)=-IS*CC
+      COORD(9,3)=-IS*CC
+      COORD(12,3)=-IS*CC
+      COORD(13,3)=-IS*CC
+      COORD(19,3)=-IS*CC
+      COORD(20,3)=-IS*CC
+      COORD(3,3)=-(IS-1)*CC
+      COORD(4,3)=-(IS-1)*CC
+      COORD(5,3)=-(IS-1)*CC
+      COORD(10,3)=-(IS-1)*CC
+      COORD(11,3)=-(IS-1)*CC
+      COORD(15,3)=-(IS-1)*CC
+      COORD(16,3)=-(IS-1)*CC
+      COORD(17,3)=-(IS-1)*CC
+      COORD(2,3)=.5*(COORD(1,3)+COORD(3,3))
+      COORD(6,3)=.5*(COORD(5,3)+COORD(7,3))
+      COORD(14,3)=.5*(COORD(13,3)+COORD(15,3))
+      COORD(18,3)=.5*(COORD(17,3)+COORD(19,3))
+      RETURN
+      END

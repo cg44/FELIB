@@ -1,0 +1,26 @@
+      SUBROUTINE CHOLIN(KB,IKB,N,IW)
+C
+C      THIS SUBROUTINE PERFORMS CHOLESKI REDUCTION OF
+C      THE STIFFNESS MATRIX STORED AS AN ARRAY BK(N,IW+1)
+C
+      REAL KB(IKB,*)
+      DO 1 I=1,N
+      X=0.
+      DO 2 J=1,IW
+    2 X=X+KB(I,J)**2
+      KB(I,IW+1)=SQRT(KB(I,IW+1)-X)
+      DO 3 K=1,IW
+      X=0.
+      IF(I+K.GT.N)GOTO 3
+    6 IF(K.EQ.IW)GOTO 4
+    7 L=IW-K
+    5 X=X+KB(I+K,L)*KB(I,L+K)
+      L=L-1
+      IF(L.NE.0)GOTO 5
+    4 IA=I+K
+      IB=IW-K+1
+      KB(IA,IB)=(KB(IA,IB)-X)/KB(I,IW+1)
+    3 CONTINUE
+    1 CONTINUE
+      RETURN
+      END

@@ -1,0 +1,35 @@
+      SUBROUTINE GEOM3X(IP,IQ,NXE,AA,BB,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE COORDINATES AND STEERING VECTOR
+C      FOR 3-NODE TRIANGLES COUNTING IN X-DIRECTION
+C
+      REAL COORD(ICOORD,*)
+      INTEGER G(*),NF(INF,*),NUM(3)
+      IF(MOD(IQ,2).EQ.0)GOTO 1
+      NUM(1)=(NXE+1)*(IQ-1)/2+IP
+      NUM(2)=(NXE+1)*(IQ+1)/2+IP
+      NUM(3)=NUM(1)+1
+      COORD(1,1)=(IP-1)*AA
+      COORD(1,2)=-(IQ-1)/2*BB
+      COORD(2,1)=(IP-1)*AA
+      COORD(2,2)=-(IQ+1)/2*BB
+      COORD(3,1)=IP*AA
+      COORD(3,2)=COORD(1,2)
+      GOTO 2
+    1 NUM(1)=(NXE+1)*IQ/2+IP+1
+      NUM(2)=(NXE+1)*(IQ-2)/2+IP+1
+      NUM(3)=NUM(1)-1
+      COORD(1,1)=IP*AA
+      COORD(1,2)=-IQ/2*BB
+      COORD(2,1)=IP*AA
+      COORD(2,2)=-(IQ-2)/2*BB
+      COORD(3,1)=(IP-1)*AA
+      COORD(3,2)=COORD(1,2)
+    2 CONTINUE
+      INC=0
+      DO 3 I=1,3
+      DO 3 J=1,2
+      INC=INC+1
+    3 G(INC)=NF(NUM(I),J)
+      RETURN
+      END

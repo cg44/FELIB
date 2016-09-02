@@ -1,0 +1,21 @@
+      SUBROUTINE FMTET4(DER,IDER,FUN,SAMP,ISAMP,I)
+C
+C      THIS SUBROUTINE FORMS THE SHAPE FUNCTIONS AND
+C      THEIR DERIVATIVES FOR 4-NODE TETRAHEDRON ELEMENTS
+C
+      REAL DER(IDER,*),SAMP(ISAMP,*),FUN(*)
+      FUN(1)=SAMP(I,1)
+      FUN(2)=SAMP(I,2)
+      FUN(3)=SAMP(I,3)
+      FUN(4)=1.-FUN(1)-FUN(2)-FUN(3)
+      DO 1 M=1,3
+      DO 1 N=1,4
+    1 DER(M,N)=0.
+      DER(1,1)=1.
+      DER(2,2)=1.
+      DER(3,3)=1.
+      DER(1,4)=-1.
+      DER(2,4)=-1.
+      DER(3,4)=-1.
+      RETURN
+      END

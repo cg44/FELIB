@@ -1,0 +1,32 @@
+      PROGRAM P31
+C
+C      PROGRAM 3.1 ITERATIVE SUBSTITUTION FOR SINGLE ROOT
+C
+      READ (5,*) X0,TOL,ITS
+      WRITE(6,*) ('**************** SIMPLE ITERATION **************')
+      WRITE(6,*)
+      WRITE(6,*) ('INITIAL VALUE')
+      WRITE (6,100) X0
+      WRITE(6,*)
+      ITERS = 0
+      ICON = 0
+    1 X1 = F(X0)
+      CALL CHECK(X1,X0,TOL,ICON)
+      ITERS = ITERS + 1
+      IF (ICON.EQ.0 .AND. ITERS.LT.ITS) GO TO 1
+      WRITE(6,*)
+      WRITE(6,*) ('SOLUTION AND ITERATIONS TO CONVERGENCE')
+      WRITE (6,100) X1,ITERS
+  100 FORMAT (E12.4,I10)
+      STOP
+      END
+C
+      FUNCTION F(X)
+C
+C      THIS FUNCTION PROVIDES THE VALUE OF F(X)
+C      AND WILL VARY FROM ONE PROBLEM TO THE NEXT
+C
+C
+      F = EXP(LOG(X+1.0)/3.0)
+      RETURN
+      END

@@ -1,0 +1,41 @@
+      SUBROUTINE GEOM9X(IP,IQ,NXE,AA,BB,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE COORDINATES AND STEERING VECTOR
+C      FOR 9-NODE QUADS COUNTING IN X-DIRECTION
+C
+      REAL COORD(ICOORD,*)
+      INTEGER G(*),NF(INF,*),NUM(9)
+      NUM(1)=IQ*(4*NXE+2)+2*IP-1
+      NUM(2)=IQ*(4*NXE+2)+2*IP-NXE-4
+      NUM(3)=(IQ-1)*(4*NXE+2)+2*IP-1
+      NUM(4)=NUM(3)+1
+      NUM(5)=NUM(4)+1
+      NUM(6)=NUM(2)+2
+      NUM(7)=NUM(1)+2
+      NUM(8)=NUM(1)+1
+      NUM(9)=NUM(2)+1
+      INC=0
+      DO 1 I=1,9
+      DO 1 J=1,2
+      INC=INC+1
+    1 G(INC)=NF(NUM(I),J)
+      COORD(1,1)=(IP-1)*AA
+      COORD(3,1)=(IP-1)*AA
+      COORD(5,1)=IP*AA
+      COORD(7,1)=IP*AA
+      COORD(1,2)=-IQ*BB
+      COORD(3,2)=-(IQ-1)*BB
+      COORD(5,2)=-(IQ-1)*BB
+      COORD(7,2)=-IQ*BB
+      COORD(2,1)=.5*(COORD(1,1)+COORD(3,1))
+      COORD(2,2)=.5*(COORD(1,2)+COORD(3,2))
+      COORD(4,1)=.5*(COORD(3,1)+COORD(5,1))
+      COORD(4,2)=.5*(COORD(3,2)+COORD(5,2))
+      COORD(6,1)=.5*(COORD(5,1)+COORD(7,1))
+      COORD(6,2)=.5*(COORD(5,2)+COORD(7,2))
+      COORD(8,1)=.5*(COORD(1,1)+COORD(7,1))
+      COORD(8,2)=.5*(COORD(1,2)+COORD(7,2))
+      COORD(9,1)=.5*(COORD(2,1)+COORD(6,1))
+      COORD(9,2)=.5*(COORD(4,2)+COORD(8,2))
+      RETURN
+      END

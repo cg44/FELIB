@@ -1,0 +1,65 @@
+      SUBROUTINE FMTR15(DER,IDER,FUN,SAMP,ISAMP,I)
+C
+C      THIS SUBROUTINE FORMS THE SHAPE FUNCTIONS AND
+C      THEIR DERIVATIVES FOR 15-NODED TRIANGULAR ELEMENTS
+C
+      REAL DER(IDER,*),SAMP(ISAMP,*),FUN(*)
+      C1=SAMP(I,1)
+      C2=SAMP(I,2)
+      C3=1.-C1-C2
+      T1=C1-.25
+      T2=C1-.5
+      T3=C1-.75
+      T4=C2-.25
+      T5=C2-.5
+      T6=C2-.75
+      T7=C3-.25
+      T8=C3-.5
+      T9=C3-.75
+      FUN(1)=32./3.*C1*T1*T2*T3
+      FUN(2)=128./3.*C1*C2*T1*T2
+      FUN(3)=64.*C1*C2*T1*T4
+      FUN(4)=128./3.*C1*C2*T4*T5
+      FUN(5)=32./3.*C2*T4*T5*T6
+      FUN(6)=128./3.*C2*C3*T4*T5
+      FUN(7)=64.*C2*C3*T4*T7
+      FUN(8)=128./3.*C2*C3*T7*T8
+      FUN(9)=32./3.*C3*T7*T8*T9
+      FUN(10)=128./3.*C3*C1*T7*T8
+      FUN(11)=64.*C3*C1*T1*T7
+      FUN(12)=128./3.*C3*C1*T1*T2
+      FUN(13)=128.*C1*C2*T1*C3
+      FUN(14)=128.*C1*C2*C3*T4
+      FUN(15)=128.*C1*C2*C3*T7
+      DER(1,1)=32./3.*(T2*T3*(T1+C1)+C1*T1*(T3+T2))
+      DER(1,2)=128./3.*C2*(T2*(T1+C1)+C1*T1)
+      DER(1,3)=64.*C2*T4*(T1+C1)
+      DER(1,4)=128./3.*C2*T4*T5
+      DER(1,5)=0.
+      DER(1,6)=-128./3.*C2*T4*T5
+      DER(1,7)=-64.*C2*T4*(T7+C3)
+      DER(1,8)=-128./3.*C2*(T8*(T7+C3)+C3*T7)
+      DER(1,9)=-32./3.*(T8*T9*(T7+C3)+C3*T7*(T8+T9))
+      DER(1,10)=128./3.*(C3*T7*T8-C1*(T8*(T7+C3)+C3*T7))
+      DER(1,11)=64.*(C3*T7*(T1+C1)-C1*T1*(T7+C3))
+      DER(1,12)=128./3.*(C3*(T2*(T1+C1)+C1*T1)-C1*T1*T2)
+      DER(1,13)=128.*C2*(C3*(T1+C1)-C1*T1)
+      DER(1,14)=128.*C2*T4*(C3-C1)
+      DER(1,15)=128.*C2*(C3*T7-C1*(T7+C3))
+      DER(2,1)=0.0
+      DER(2,2)=128./3.*C1*T1*T2
+      DER(2,3)=64.*C1*T1*(T4+C2)
+      DER(2,4)=128./3.*C1*(T5*(T4+C2)+C2*T4)
+      DER(2,5)=32./3.*(T5*T6*(T4+C2)+C2*T4*(T6+T5))
+      DER(2,6)=128./3.*((C3*(T5*(T4+C2)+C2*T4))-C2*T4*T5)
+      DER(2,7)=64.*(C3*T7*(T4+C2)-C2*T4*(T7+C3))
+      DER(2,8)=128./3.*(C3*T7*T8-C2*(T8*(T7+C3)+C3*T7))
+      DER(2,9)=-32./3.*(T8*T9*(T7+C3)+C3*T7*(T8+T9))
+      DER(2,10)=-128./3.*C1*(T8*(T7+C3)+C3*T7)
+      DER(2,11)=-64.*C1*T1*(T7+C3)
+      DER(2,12)=-128./3.*C1*T1*T2
+      DER(2,13)=128.*C1*T1*(C3-C2)
+      DER(2,14)=128.*C1*(C3*(T4+C2)-C2*T4)
+      DER(2,15)=128.*C1*(C3*T7-C2*(C3+T7))
+      RETURN
+      END

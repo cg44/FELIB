@@ -1,0 +1,23 @@
+      SUBROUTINE ECMAT(ECM,IECM,TN,ITN,NT,INT,FUN,NOD,NODOF)
+C
+C      THIS SUBROUTINE FORMS THE CONSISTENT MASS MATRIX
+C
+      REAL ECM(IECM,*),TN(ITN,*),NT(INT,*),FUN(*)
+      IDOF=NOD*NODOF
+      DO 1 I=1,IDOF
+      DO 1 J=1,NODOF
+      NT(I,J)=0.
+    1 TN(J,I)=NT(I,J)
+      DO 2 I=1,NOD
+      DO 2 J=1,NODOF
+      NT((I-1)*NODOF+J,J)=FUN(I)
+    2 TN(J,(I-1)*NODOF+J)=FUN(I)
+      DO 3 I=1,IDOF
+      DO 3 J=1,IDOF
+      X=0.0
+      DO 4 K=1,NODOF
+    4 X=X+NT(I,K)*TN(K,J)
+      ECM(I,J)=X
+    3 CONTINUE
+      RETURN
+      END

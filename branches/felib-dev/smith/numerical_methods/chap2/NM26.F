@@ -1,0 +1,32 @@
+      PROGRAM P26
+C
+C      PROGRAM 2.6 LU FACTORISATION USING PIVOTING
+C
+C      ALTER NEXT LINE TO CHANGE PROBLEM SIZE
+C
+      PARAMETER (IN=20)
+C
+      REAL A(IN,IN),B(IN),X(IN)
+      INTEGER ROW(IN)
+C
+      READ (5,*) N
+      READ (5,*) ((A(I,J),J=1,N),I=1,N)
+      READ (5,*) (B(I),I=1,N)
+      WRITE(6,*) ('****** LU FACTORISATION WITH PIVOTING ******')
+      WRITE(6,*)
+      WRITE(6,*) ('COEFFICIENT MATRIX')
+      CALL PRINTA(A,IN,N,N,6)
+      WRITE(6,*)
+      WRITE(6,*) ('RIGHT HAND SIDE VECTOR')
+      CALL PRINTV(B,N,6)
+      WRITE(6,*)
+      CALL LUPFAC(A,IN,N,ROW)
+      CALL LUPSOL(A,IN,B,X,N,ROW)
+      WRITE(6,*) ('REORDERED ROW NUMBERS')
+      WRITE(6,1000) (ROW(I),I=1,N)
+      WRITE(6,*)
+      WRITE(6,*) ('SOLUTION VECTOR')
+      CALL PRINTV(X,N,6)
+ 1000 FORMAT (10I5)
+      STOP
+      END

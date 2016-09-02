@@ -1,0 +1,19 @@
+      SUBROUTINE READNF(NF,INF,NN,NODOF,NR)
+C
+C      THIS SUBROUTINE READS THE NODAL FREEDOM DATA
+C
+      INTEGER NF(INF,*)
+      DO 1 I=1,NN
+      DO 1 J=1,NODOF
+    1 NF(I,J)=1
+      IF(NR.GT.0)READ(5,*)(K,(NF(K,J),J=1,NODOF),I=1,NR)
+      N=0
+      DO 2 I=1,NN
+      DO 2 J=1,NODOF
+      IF(NF(I,J).NE.0)THEN
+      N=N+1
+      NF(I,J)=N
+      ENDIF
+    2 CONTINUE
+      RETURN
+      END
