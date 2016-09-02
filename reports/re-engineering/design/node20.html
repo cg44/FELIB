@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Memory checking</TITLE>
+<META NAME="description" CONTENT="Memory checking">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node21.html">
+<LINK REL="previous" HREF="node19.html">
+<LINK REL="up" HREF="node15.html">
+<LINK REL="next" HREF="node21.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html235"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html233"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html227"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html236"
+  HREF="node21.html">Case transformer: istuc</A>
+<B> Up:</B> <A NAME="tex2html234"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html228"
+  HREF="node19.html">NAGWare Tools</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000105000000000000000">
+Memory checking</A>
+</H2>
+One of the major sources of difficulty in using dynamic arrays in Fortran&nbsp;90/95
+is memory leakage. Without a very careful count of <TT>ALLOCATES</TT> and <TT>DEALLOCATES</TT> 
+it is very easy for leaks to arise. This is often true of library software but it is
+particularly true of <TT>FELIB90</TT> as it attempts to <I>hide</I> much of its dynamic memory
+management.
+
+<P>
+During this develop the <TT>memprof</TT> program has been used to help track memory leaks. The
+program is freely available over the Internet from 
+<BLOCKQUOTE>
+<TT>http://www.gnome.org/projects/memprof/</TT>
+
+</BLOCKQUOTE>
+and is easily installed and used. <TT>memprof</TT> is a tool for profiling memory usage and finding 
+memory leaks. Its two major features are:
+
+<UL>
+<LI>It can generate a profile how much memory was allocated by each 
+function in your program.
+</LI>
+<LI>It can scan memory and find blocks that you have allocated but are 
+no longer referenced anywhere.
+</LI>
+</UL>
+<TT>memprof</TT> works by pre-loading a library to override the C library's memory allocation 
+functions and does not require you to recompile your program.
+
+<P>
+One advantage <TT>memprof</TT> has over some other similar tools that are available is that it 
+has a nice GUI front-end and is relatively easy to use. It appears to work fine on <TT>FELIB90</TT> 
+although its diagnostic output, instruction addresses, is not particularly useful. It 
+does however give a useful way of indicating the presence of memory leaks.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html235"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html233"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html227"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html236"
+  HREF="node21.html">Case transformer: istuc</A>
+<B> Up:</B> <A NAME="tex2html234"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html228"
+  HREF="node19.html">NAGWare Tools</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

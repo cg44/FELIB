@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Library construction</TITLE>
+<META NAME="description" CONTENT="Library construction">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html129"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html127"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html121"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html130"
+  HREF="node11.html">Program definitions</A>
+<B> Up:</B> <A NAME="tex2html128"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html122"
+  HREF="node9.html">Management of dynamic arrays</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00050000000000000000">
+Library construction</A>
+</H1>
+<TT>FELIB90</TT> has taken on a modular approach to its design - the library is
+a <TT>MODULE</TT> to be <TT>USE</TT>d by the user program. All the <TT>FELIB90</TT>
+routines are contained in their own modules and these are <TT>USE</TT>d
+by the <TT>FELIB90</TT> module to build the complete library. A consequence of
+this is that all the interfaces of the library routines are explicit and
+can be used by the compiler at compile and run time to provide diagnostics.
+
+<P>
+This approach has some impact on developing the library in terms of
+compilation but these are minimal as <TT>FELIB90</TT> is a <I>small</I> library. There
+are benefits in as much that the developer is not required to generate
+interface blocks for the user to reference.
+
+<P>
+As mentioned above each routine of <TT>FELIB90</TT> is a module in its own right. This
+makes providing generic interfaces straightforward and ensures explicit
+interfaces. So for example the routine <TT>MATNUL</TT> has the following code
+<BLOCKQUOTE>
+</BLOCKQUOTE><PRE>
+    MODULE mod_matnul
+
+!-----------------------------------------------------------------------
+! PURPOSE
+!      MATNUL creates and sets matrix A to the null matrix
+
+! HISTORY
+
+!      Copyright (C) 2000 : CCLRC, Rutherford Appleton Laboratory
+!                           Chilton, Didcot, Oxfordshire OX11 0QX
+
+!      Release 1.0   2 Jul 2000 (CG)
+
+! ARGUMENTS in
+!      M       number of rows of A set to zero (OPTIONAL)
+!      N       number of columns of A set to zero (OPTIONAL)
+!      ITEST   error checking option (OPTIONAL)
+
+! ARGUMENTS out
+!      A       array set to zeros
+
+! ROUTINES called
+
+!***********************************************************************
+
+      USE felib_globals,only : wp
+      USE mod_space,only : create
+      USE mod_setopt,only : setopt
+      
+      PRIVATE
+      PUBLIC matnul
+
+      INTERFACE matnul
+        MODULE PROCEDURE complex_matnul
+        MODULE PROCEDURE real_matnul
+        MODULE PROCEDURE integer_matnul
+      END INTERFACE
+
+      CHARACTER (5) :: srname = 'MATNUL'    
+
+    CONTAINS
+
+..............................
+     
+      SUBROUTINE real_matnul(a,m,n,itest)
+        IMPLICIT NONE
+
+! Dummy arguments
+
+        INTEGER, OPTIONAL :: m, n, itest
+        REAL (wp), POINTER :: a(:,:)
+        INTENT (IN) :: m,n
+        INTENT (INOUT) :: itest
+
+! Local variables
+
+        INTEGER :: i, ierror, j, mm, nn
+        CHARACTER (5) :: srname = 'MATNUL'
+
+! Check optional arguments and association of A
+
+        CALL setopt(mm,size(a,1),m)
+        CALL setopt(nn,size(a,2),n)
+
+! Create A if necessary then initialise
+
+        CALL create(a,mm,nn)
+
+        a(1:mm,1:nn)=0
+
+      END SUBROUTINE real_matnul
+
+..............................
+
+    END MODULE mod_matnul
+</PRE><BLOCKQUOTE>
+
+</BLOCKQUOTE>
+As can been seen from the source <TT>MATNUL</TT> is a generic routine that will if
+necessary create the storage to be associated with a variable using the routine
+<TT>CREATE</TT> and manages optional arguments using the <TT>SETOPT</TT> routine.
+This is type of <TT>FELIB90</TT> routines.
+
+<P>
+The final step is to build the full library, <TT>FELIB90</TT>. Again <TT>FELIB90</TT> is a module
+in its own right and contains a sequence of <TT>USE</TT> statements to include
+all the library routines - one per routine. Below is show the <TT>FELIB90</TT> code.
+<BLOCKQUOTE>
+</BLOCKQUOTE><PRE>
+    MODULE felib90
+
+! MODULE felib90 is the main defining modules of FELIB90. All
+! user callable routines are included here.
+
+! System
+
+      USE felib_globals, ONLY : wp
+      USE mod_space, ONLY : create, destory, check
+
+! Routines
+
+      USE mod_bndwth, ONLY : bndwth
+      USE mod_qqua4, ONLY : qqua4
+      USE mod_elgeom, ONLY : elgeom
+      USE mod_quam4, ONLY : quam4
+      USE mod_quam8, ONLY : quam8
+      USE mod_scaprd, ONLY : scaprd
+      USE mod_matmul, ONLY : matmul
+      USE mod_matnul, ONLY : matnul
+      USE mod_matran, ONLY : matran
+      USE mod_matvec, ONLY : matvec
+      USE mod_prtval, ONLY : prtval
+      USE mod_asrhs, ONLY : asrhs
+      USE mod_assym, ONLY : assym
+      
+      .............................
+      
+      USE mod_chosol, ONLY : chosol
+      USE mod_direct, ONLY : direct
+      USE mod_matinv, ONLY : matinv
+      USE mod_getgeo, ONLY : getgeo
+      USE mod_gettop, ONLY : gettop
+      USE mod_prtgeo, ONLY : prtgeo
+      USE mod_prttop, ONLY : prttop
+      USE mod_errmes, ONLY : errmes
+      USE mod_asful, ONLY : asful
+      USE mod_vecnul, ONLY : vecnul
+      USE mod_vecadd, ONLY : vecadd
+      USE mod_matadd, ONLY : matadd
+      USE mod_setopt, ONLY : setopt
+
+! Redefinition of intrinsic MATMUL
+
+      USE mod_matmul_intrinsic, ONLY : matrix_multiply =&gt; matmul
+
+    END MODULE felib90
+</PRE><BLOCKQUOTE>
+
+</BLOCKQUOTE><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html129"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html127"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html121"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html130"
+  HREF="node11.html">Program definitions</A>
+<B> Up:</B> <A NAME="tex2html128"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html122"
+  HREF="node9.html">Management of dynamic arrays</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

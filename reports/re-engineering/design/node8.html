@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Intrinsic functions</TITLE>
+<META NAME="description" CONTENT="Intrinsic functions">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html109"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html107"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html103"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html110"
+  HREF="node9.html">Management of dynamic arrays</A>
+<B> Up:</B> <A NAME="tex2html108"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html104"
+  HREF="node7.html">Generic routines</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00035000000000000000">
+Intrinsic functions</A>
+</H2>
+Where ever possible the standard Fortran&nbsp;90/95 <TT>INTRINSIC</TT> functions have
+been used in the Level&nbsp;0 Library routines. For example <TT>HUGE</TT> is used to
+obtain the largest <TT>REAL</TT> and largest <TT>INTEGER</TT> available to the library.
+<TT>EPSILON</TT> is use to determine the smallest value for which <IMG
+ WIDTH="75" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="$1+\epsilon&gt;1$">.
+There are one or two problems with using the standard Fortran&nbsp;90/95 intrinsics. One of the design goal of
+<TT>FELIB90</TT> to provide an easy migration path requires that potentially obsolete routines
+be provide. <TT>MATMUL</TT> is probably the most important of these. The name <TT>MATMUL</TT>
+conflicts with the Fortran&nbsp;90/95 intrinsic of the same name and will cause compiler 
+warnings or errors if <TT>MATMUL</TT> is either declared or used in this way.
+
+<P>
+To circumnavigate this problem a new interface to the Fortran&nbsp;90/95 intrinsic
+has been defined. This is another feature of Fortran&nbsp;90/95: procedures defined
+in modules can have their names aliased. 
+<TT>FELIB90</TT> defines an alias to the intrinsic <TT>MATNUL</TT> as <TT>MAXTRIX_MULTIPLY</TT>:
+ (similar to <TT>DOT_PRODUCT</TT> and <TT>TRANSPOSE</TT> in style).
+This is defined in the simple module<PRE>
+    MODULE mod_matmul_intrinsic
+      
+       INTRINSIC MATMUL
+
+    END MODULE mod_matmul_intrinsic
+</PRE>
+and a <TT>USE</TT> statement at the head of the <TT>FELIB90</TT> module.
+<BLOCKQUOTE>
+<TT>
+USE mod_matmul_intrinsic, ONLY : matrix_multiply =&gt; matmul
+
+</TT></BLOCKQUOTE>
+These statements essentially map the name <TT>matrix_multiply</TT> onto
+the intrinsic function <TT>MATMUL</TT>. Through this mechanism the intrinsic
+<TT>MATMUL</TT> is made available to <TT>FELIB90</TT> programs. Thus
+<BLOCKQUOTE>
+<TT>CALL matmul(lder,geom,jac)
+
+</TT></BLOCKQUOTE>
+and
+<BLOCKQUOTE>
+<TT>jac=MATRIX_MULTIPLY(lder,geom)
+
+</TT></BLOCKQUOTE>
+are equivalent.
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html109"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html107"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html103"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html110"
+  HREF="node9.html">Management of dynamic arrays</A>
+<B> Up:</B> <A NAME="tex2html108"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html104"
+  HREF="node7.html">Generic routines</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

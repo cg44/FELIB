@@ -1,0 +1,890 @@
+
+\documentclass[a4paper,titlepage,11pt]{article}
+\usepackage{verbatim,seg-report}%REPORT
+%\usepackage{verbatim,msghtml}%HTML
+
+\begin{document}
+\author{Dr C Greenough}
+\title{Re-Engineering the Finite Element Library: \\The Transformation of
+ a Legacy Fortran Library}
+\date{October 2003}
+\refnum{RAL-TR-2004-011}
+\email{c.greenough@rl.ac.uk}
+
+%\maketitle %HTML
+\abstract{%REPORT
+%\begin{abstract} %HTML
+The Finite Element Library ({\tt FELIB}) \cite{felib1,felib2,felib3} was 
+first designed and implemented in the early 1980s and since then 
+there have been four releases of the software - Release 4 is the 
+current release.
+\apar
+Many individuals and groups have made use of {\tt FELIB} in developing
+finite element based applications and in the teaching of finite
+element techniques. Some 3000 known copies of the library are known
+to exist (through monitoring {\it httpd} and {\it ftp} accessing) and there are
+probably many other copies obtained through third parties.
+\apar
+This report details the re-design and re-engineering of the original Fortran~77 
+{\tt FELIB} to make use of the new features of Fortran~90/95. This process provides
+a very useful way in assessing some of the software tools which can assist in
+this transformation and re-design. The report contains short summaries
+on tool such as {\tt TOOLPACK} and {\tt plusFORT} used in this work.
+\apar
+The basic design~goals are discussed in light of Fortran~90/95 features and 
+methods of implementation detailed. There is a short debate on whether to use
+{\tt POINTER}s to arrays or {\tt ALLOCATABLE} arrays and the overall {\tt MODULE}
+structure of this implementation is described.
+\apar
+Full details of the Fortran~77 and Fortran~90/95 versions of {\tt FELIB}
+are to found on the Mathematical Software Group Web site under 
+{\tt FELIB}.
+}%REPORT
+%\end{abstract}%HTML
+\keywords{%REPORT
+%{\noindent\par\bf Keywords: \rm %HTML
+%
+finite element, library design, Fortran 95, legacy software
+}
+\maketitle %REPORT
+\section{Introduction}
+The Finite Element Library ({\tt FELIB}) \cite{felib1,felib2,felib3} was 
+first designed and implemented in the early 1980s and since then 
+there have been four releases of the software - Release 4 is the 
+current release.
+
+Many individuals and groups have made use of {\tt FELIB} in developing
+finite element based applications and in the teaching of finite
+element techniques. Some 3000 known copies of the library are known
+to exist (through monitoring \textit{httpd} and \textit{ftp} accessing) and there are
+probably many other copies obtained through third parties.
+
+The original library, based on an existing prototype library of Prof~IM~Smith of
+Manchester University \cite{imsmith1}, was implemented in Fortran~66, with 
+subsequent versions making use of Fortran~77, as part of one of the Rutherford 
+Appleton Laboratory's Engineering Support programs funded by the then SERC 
+(now EPSRC). The Numerical Algorithms Group Ltd (Oxford) provided the primary 
+outlet to the scientific community. The prototype library was highly re-engineered
+and its two-level structure fully documented.
+
+Although other language versions of the base Fortran~66 library were partially 
+implemented - C, DAP-Fortran and Ada - it is not until recently that is was 
+thought useful to consider developing a Fortran~90/95 version. In 1998 Prof~Smith
+and Dr~Griffiths \cite{imsmith2} published a Fortran~90/95 version their library which has
+grown significantly through the years and there is also a version for SMPD machines \cite{imsmith3}.
+
+Within the CLRC programme FELIB has developed and PVM/MPI versions have been developed \cite{felib4}
+as too have a family of pre- and post processing routines tailored to FELIB.
+Even though originally designed in the 80s {\tt FELIB} is still well used judged
+by the level of Email inquiries and comments.
+
+\section{Design goals - old and new}
+\label{design}
+The primary goal of {\tt FELIB} was to provide a tool box of routines components
+providing the majority of the steps required in a finite element base
+analysis together with a selection of \textit{example}  programs to illustrate
+there use. The two-level structure of the library satisfied the requirement.
+
+The first Finite Element Library was targeted at Fortran~66. Even
+though Fortran~77 had been defined there were insufficient compilers to make
+the language attractive to developers. In 1985 it was thought that \textit{
+Fortran~77 was not yet universal} \cite{felib3}. Since then {\tt FELIB} has taken
+on Fortran~77 and as mentioned above implementations have been started in
+a number of other languages. The same could be said of Fortran~90/95 now - has
+it become \textit{universal}? Again, {\it no} is probably the answer! However with Fortran~2000
+nearing the completion of its definition and with the availability of many more
+Fortran~90/95 compilers ({\tt g95} will may well appear soon and the Intel compiler is
+available on Linux systems) it would appear that it has nearly achieved {\it universal} status.
+
+Hence a Fortran~90/95 version of {\tt FELIB} would not appear ill-timed. What should
+we be looking for in this new version? Clearly an exploitation of the new features
+of Fortran~90/95: arrays, modules, dynamic memory allocation etc. The goals of the first 
+library have not changed in providing a prototyping tool. However, as Fortran~90/95 has
+Fortran~77 as a complete subset (apart from a list of deprecated features) it
+would seem reasonable that there should be an easy migration path from
+the old form of the library to the new.
+
+To this end {\tt FELIB90} contains a variety of routines that are not strictly
+necessary in Fortran~90/95. For example, the routine for initialising an
+array to zero, {\tt MATNUL} and the matrix multiplication routine
+{\tt MATMUL}. As explained below these can be replaced by the use of
+some of the basic features of Fortran~90/95 or by the use of standard
+intrinsic functions.
+
+Fortran~90/95 provides mechanisms for defining application specific data
+types and structures. The simple array definitions of arrays such as the
+mesh geometry, {\tt COORD}, could be replace by more object oriented
+structures. However it was decide to retain the simple array structures
+for the main data elements of the library.
+
+Also {\tt FELIB} used a large number of intermediate arrays such {\tt DTPD} and
+{\tt ELK}. These aided the readability of the {\tt FELIB} programs and allowed
+them to mirror the mathematical analysis. Fortran~90/95 provides a number
+of mechanisms for allocating array space dynamically. In this re-design we
+will use these features to reduce the number of array definitions, space
+allocations and initialisations the programmer is require to perform. 
+
+For example the routine {\tt QQUA4} returns the abscissas and weights of a
+four-point quadrature rule. Its {\tt FELIB} call is
+\begin{quote}
+\tt\source
+CALL QQUA4(WGHT,IWGHT,ABSS,IABSS,JABSS,NQP,ITEST)
+\end{quote}
+The arrays {\tt WGHT} and {\tt ABSS} are intermediate arrays whose sizes are
+determined by the content of the subroutine. They are only required for
+the assembly phase and the memory they occupy could be released once this
+phase is completed. By making these arrays dynamic and allowing the routine
+to allocate appropriate space the programmer task can be simplified. The call to the
+{\tt FELIB90} version of the routine could be reduced to
+\begin{quote}
+\tt\source
+CALL QQUA4(wght,abss,nqp)
+\end{quote}
+where the arrays {\tt wght} and {\tt abss} would be returned with the correct
+size, populated with data together with {\tt nqp}. The user would still be
+required to provide a declaration of the arguments types but not necessarily
+their sizes. The routine would manage the allocation of memory space and 
+initialisation.
+
+As with many programs the initial lines of code are given over to declarations
+of variables and initialisations. In {\tt FELIB} these could take up 10 to 30
+lines. To aid this declaration process each {\tt FELIB90} example program will 
+be provided with a definitions file which will specify the types of the most 
+common variable and intermediate arrays. 
+An example of one of these is given in Section~\ref{prog-def}.
+
+\section{Use of Fortran~90/95 features}
+Fortran~90/95 has made many additions to improve the Fortran language and some that
+open up new approaches to library design and implementation. In this section
+we will highlight some of these changes and consider how they might improve
+the design of a Fortran~90/95 version of the Finite Element Library.
+\subsection{Array features}
+The array features are one clear example of an important Fortran~90/95 feature. It is now
+possible to initialise and perform calculations on complete arrays whereas
+before, in Fortran~77, this required multiple nested loop structures.
+
+To initialise the array {\tt SYSK} to zero in Fortran~77 required:
+
+\begin{quote}
+\source	
+\begin{verbatim}
+   INTEGER ISYSK, JSYSK
+   PARAMETER (ISYSK=200, JSYSK=20)
+   REAL SYSK(ISYSK,JSYSK)
+\end{verbatim}
+\ldots\ldots
+\begin{verbatim}
+   DO 10 I=1,TOTDOF
+      DO 20 J=1,HBAND
+         SYSK(I,J) = 0.0D0
+20    CONTINUE
+10 CONTINUE
+\end{verbatim}
+\end{quote}
+or
+\begin{quote}
+\source
+\begin{verbatim}
+   CALL MATNUL(SYSK,ISYSK,JSYSK,TOTDOF,HBAND,ITEST)
+\end{verbatim}
+\end{quote}
+using the {\tt FELIB} routine. Other often used routines during the element
+matrix construction and assembly are {\tt MATADD}, {\tt MATRAN} and {\tt MATMUL}. 
+The array features of Fortran~90/95 provide a more compact and natural way of performing
+these actions. For example:
+\begin{quote}
+\tt\source
+SYSK=0
+\end{quote}
+can replace a call to {\tt MATNUL}.
+\begin{quote}
+\tt\source
+ELK = ELK + DTBD
+\end{quote}
+would replace a call to {\tt MATADD}.
+
+Fortran~90/95 provides a number of basic array/matrix intrinsic functions. In the
+context of {\tt FELIB} three of the more important are {\tt MATMUL}, {\tt TRANSPOSE}
+ and {\tt DOT\_PRODUCT}. So
+\begin{quote}
+\tt\source
+{~}CALL MATMUL(LDER,ILDER,JLDER,GEOM,IGEOM,JGEOM,\\
+{*~~~~~~~~~~~~}JAC,IJAC,JJAC,DIMEN,NODEL,DIMEN,ITEST)
+\end{quote}
+can be replaced by the considerable simpler
+\begin{quote}
+\tt\source
+JAC = MATMUL(LDER,GEOM)
+\end{quote}
+and
+\begin{quote}
+\tt\source
+CALL SCAPRD(GEOM(1,1),IGEOM,FUN,IFUN,NODE,X,ITEST)
+\end{quote}
+replace by
+\begin{quote}
+\tt\source
+X = DOT\_PRODUCT(GEOM(1:NODEL,1),FUN)
+\end{quote}
+Immediately one notices the reduction in actual arguments in the routines calls.
+Fortran~90/95 carries much more information about arrays than Fortran~77 did. Properties
+as an array's {\it rank} or an array's {\it shape} are readily available through
+a range of {\tt INTRINSIC} functions. For example {\tt RANK}, {\tt SHAPE}, {\tt SIZE},
+{\tt LBOUND} and {\tt UBOUND}. These, together with the stricter conditions on the
+property matching between actual and dummy arguments in procedure calls, enable a
+considerable amount of information on arrays to be passed implicitly into procedures.
+Although these new features can simplify or modify many of the steps involved in
+an {\tt FELIB} program there is a possible danger in compactness making the
+software more opaque. For example the construction of one quadrature point contribution
+to an element stiffness matrix could be written as:
+\begin{quote}
+\tt\source
+ELK = ELK + MATMUL(TRANSPOSE(MATMUL(jacin,lder)),   \&\\
+\hspace*{30mm}MATMUL(p,MATMUL(jacin,lder)))
+\end{quote}
+Clearly this is more compact but it is hardly transparent. A balance will be required
+between succinctness and clarity particularly in software that is to be used
+as a teaching aid.
+\subsection{Dynamic storage allocation}
+An important feature of Fortran~90/59 is the ability to
+dynamically allocate storage to arrays at execution time. Fortran~90/95
+provides two mechanisms to make this possible: the {\tt ALLOCATABLE} array
+and the {\tt POINTER} array. Both these types can be specified without
+size information:
+
+\begin{quote}
+\tt\source
+REAL (wp), ALLOCATABLE :: sysk(:,:)\\
+REAL (wp), POINTER :: sysm(:,:)
+\end{quote}
+
+These statements define the two arrays {\tt sysk} and {\tt sysm} whose memory
+allocation can be specified thus:
+
+\begin{quote}
+\tt\source
+ALLOCATE(sysk(100,10))\\
+ALLOCATE(sysm(100,10))
+\end{quote}
+In the first of these {\tt sysk} has been defined as an {\tt ALLOCATABLE} array and
+once memory is allocate {\tt sysk} is a unique reference to this memory. The second
+allocate creates a similar reference to memory which can be used in the same way.
+However this may not be a unique reference. The nature of {\tt POINTER}s allow
+multiple references to the same locations in memory. Although this would not be
+intended in the context of {\tt FELIB} it is a possibility.
+
+This is one of the features of {\tt POINTER} arrays that the programmer must be
+aware. This non-uniqueness inherent in {\tt POINTER}s can lead to unfortunate
+side effects.
+
+Probably the most important of these is the possibility of {\it memory leaks} if the 
+arrays are not allocated and deallocated assiduously. It is very easy to allocate space  
+to a {\tt POINTER} and then to later re-allocate a different section of memory to the 
+same {\tt POINTER} without de-allocating the former. In general compilers and run-time 
+system will not flag this as an error. 
+However the result is that there will be sections of memory reserved
+with no way of referencing it. This would have the potential of {\it eating} away
+the memory available to the application if the {\tt ALLOCATE} is contained in some form
+of loop. 
+
+A second characteristic of {\tt POINTER}s that can be a nuisance is that of initialisation. 
+The {\tt POINTER} declaration above defines a {\tt POINTER} to an array but does not give 
+an initial value to the {\tt POINTER}. As a consequence the result from the intrinsic 
+function {\tt ASSOCIATED} is really undefined although, as is often the case, many compilers
+set these variables automatically to {\tt NULL}. However, as this is the only mechanism 
+through which it is possible to determine whether a {\tt POINTER} has been associated 
+with a target, it is essential that {\tt POINTER} variables be explicitly initialised. 
+This can be readily achieved using either the {\tt NULL()} intrinsic or the {\tt NULLIFY} 
+statement. For example:
+\begin{quote}
+\tt\source
+REAL (wp), POINTER :: sysm(:,:) => NULL()
+\end{quote}
+will define and initialised to {\tt NULL} the {\tt POINTER sysm} whereas
+\begin{quote}
+\tt\source
+NULLIFY(sysm)
+\end{quote}
+performs the same task as an executable statement.
+
+An important point to consider in the library context is how these array types can
+be passed into subroutines and functions and how their dynamic properties can
+be exploited. In the Fortran~90/95 standard it was not possible to pass {\tt ALLOCATABLE}
+arrays as dummy arguments. Passing {\tt POINTER} arrays was allowed. However, during
+2001 an extension to allow the passing of {\tt ALLOCATABLE} arrays into procedures
+was proposed \cite{cohen}. This was excepted by the Fortran Standards body but
+as of yet only a few Fortran~90/95 compilers support for this feature. In a series
+of simple checks on the passing of {\tt ALLOCATABLE} arrays into procedures using
+a number of compilers (Intel {\tt ifc}, Lahey {\tt lf95}, {\tt NAG f95}, {\tt DEC f95}):
+one gave an error message (ifc), one gave a warning and continued compilation ({\tt NAG f95}), 
+two compiled without warnings ({\tt lf95}, {\tt DEC f95}). Only two the those that compiled and
+linked successfully executed correctly (Lehay {\tt lf95}, {\tt NAG F95}).
+
+Not supporting this feature stops the programmer passing an unallocated
+{\tt ALLOCATABLE} array into procedure and making the allocation within 
+the procedure. Defining arrays as {\tt ALLOCATABLE} is one method of
+providing dynamic arrays within Fortran~90/95. However, if the arrays within {\tt FELIB90} 
+are defined as {\tt ALLOCATABLE} to provide this functionality it will inhibit 
+dynamically allocated intermediate arrays as described above
+in Section~\ref{design} as desirable. To overcome this
+problem all the arrays within {\tt FELIB90} will be of a {\tt POINTER} type. Although
+this may lead to problems of memory leaks, by the use of a stack of dynamic arrays
+and a type of semi-automatic garbage collection, these potential problems can
+be minimised from the library's point of view. However it will still be
+possible for the user to fall foul of these difficulties.
+
+\subsection{Optional arguments}
+Another important new feature of Fortran~90/95 is the provision of optional dummy arguments
+in procedure calls. These can shorten the argument lists of library routines
+significantly. A simple example of the use of optional arguments is the
+{\tt PRTGEO} routine. This routine outputs the coordinate array {\tt COORD}. The
+full argument list would be:
+\begin{quote}
+\tt\source
+CALL PRTGEO(coord,totnod,dimen,nout,itest)
+\end{quote}
+This can be reduce to
+\begin{quote}
+\tt\source
+CALL PRTGEO(coord)
+\end{quote}
+if the size and shape of {\tt coord} matches exactly the element coordinate data and 
+there is a default output channel {\tt nout}. {\tt totnod} and {\tt dimen} can be
+determined using the intrinsic function {\tt SIZE}.
+
+A design goal of {\tt FELIB90} has been to reduce required arguments lists to a minimum
+whilst maintaining flexibility and control through optional arguments.
+
+Because of the nature and implementation of optional arguments in Fortran~90/95 the
+head of most routines has a group of code dealing with optional arguments. For an
+optional argument {\tt arg1} it takes the form
+\begin{quote}
+\source
+\begin{verbatim}
+! Dummy argument
+INTEGER, OPTIONAL :: arg1
+.......
+! Local variables
+INTEGER :: larg1
+.......
+IF (PRESENT(arg1))THEN
+larg1 = arg1
+ELSE
+larg1 = default_arg1
+ENDIF
+\end{verbatim}
+\end{quote}
+where {\tt larg1} is the local variable associated with {\tt arg1}. It should
+be note that {\tt arg1} cannot be referenced if it is not present. It may only
+be reference through the {\tt PRESENT} intrinsic.
+
+In general {\tt FELIB90} only has scalars as optional arguments. 
+To aid clarity {\tt FELIB90} uses a simple set generic routines to assign default values to
+optional arguments. These are provided through the module {\tt mod\_setopt}. The part
+of the code is shown below.
+\begin{quote}
+\source
+\input{setopt}
+\end{quote}
+Now the setting of optional arguments is reduced to:
+\begin{quote}
+\source
+\begin{verbatim}
+call setop(larg1,default_arg1,arg1)
+\end{verbatim}
+\end{quote}
+Use of this routine clears up the opening statements of the library routines.
+%
+\subsection{Generic routines}
+As can be seen from the above another very useful feature of Fortran~90/95 is the definition 
+of {\it generic} interfaces: functions with differing argument types being called by
+the same {\it generic} name. This an example of the idea of 
+{\it overloading} in Fortran~90/95. {\tt FELIB90} uses generic routines where ever thought useful.
+Routines such as {\tt MATNUL} can be made generic and thus capable of operating on
+{\tt INTEGER}, {\tt REAL} and {\tt COMPLEX} arrays. As seen above {\tt setopt} is define as a generic
+routine capable of operating on {\tt INTEGER}, {\tt REAL}, {\tt COMPLEX} and {\tt CHARACTER} variables. 
+
+In the Fortran~66 and Fortran~77 versions of the library {\tt COMPLEX} variables were
+treated as order pairs of {\tt REAL} values and required their own set of manipulation
+routines such as {\tt CMTNUL} and {\tt CSYSOL}. Fortran~90/95 defines a {\tt COMPLEX}
+data type which much simplifies some of the routines through the use of {\it generic}
+interfaces. As a consequence this does require that many routines are defined as generic routines.
+%
+\subsection{Intrinsic functions}
+Where ever possible the standard Fortran~90/95 {\tt INTRINSIC} functions have
+been used in the Level~0 Library routines. For example {\tt HUGE} is used to
+obtain the largest {\tt REAL} and largest {\tt INTEGER} available to the library.
+{\tt EPSILON} is use to determine the smallest value for which $1+\epsilon>1$.
+There are one or two problems with using the standard Fortran~90/95 intrinsics. One of the design goal of
+{\tt FELIB90} to provide an easy migration path requires that potentially obsolete routines
+be provide. {\tt MATMUL} is probably the most important of these. The name {\tt MATMUL}
+conflicts with the Fortran~90/95 intrinsic of the same name and will cause compiler 
+warnings or errors if {\tt MATMUL} is either declared or used in this way.
+
+To circumnavigate this problem a new interface to the Fortran~90/95 intrinsic
+has been defined. This is another feature of Fortran~90/95: procedures defined
+in modules can have their names aliased. 
+{\tt FELIB90} defines an alias to the intrinsic {\tt MATNUL} as {\tt MAXTRIX\_MULTIPLY}:
+ (similar to {\tt DOT\_PRODUCT} and {\tt TRANSPOSE} in style).
+This is defined in the simple module
+\begin{quote}
+\source
+\begin{verbatim}
+
+    MODULE mod_matmul_intrinsic
+      
+       INTRINSIC MATMUL
+
+    END MODULE mod_matmul_intrinsic
+\end{verbatim}
+\end{quote}
+and a {\tt USE} statement at the head of the {\tt FELIB90} module.
+\begin{quote}
+\tt\source
+USE mod\_matmul\_intrinsic, ONLY : matrix\_multiply => matmul
+\end{quote}
+These statements essentially map the name {\tt matrix\_multiply} onto
+the intrinsic function {\tt MATMUL}. Through this mechanism the intrinsic
+{\tt MATMUL} is made available to {\tt FELIB90} programs. Thus
+\begin{quote}
+\source
+\tt
+CALL matmul(lder,geom,jac)
+\end{quote}
+and
+\begin{quote}
+\source
+\tt
+jac=MATRIX\_MULTIPLY(lder,geom)
+\end{quote}
+are equivalent.
+%
+\section{Management of dynamic arrays}
+As mentioned above it was decided to implement the library
+using {\tt POINTER} arrays to provide the maximum flexibility
+in managing intermediate and temporary arrays even though this does have some potential
+pit falls. However these can be minimised by providing the user with a collection
+of array management routines although it is not really expected that the
+user would make use of these routines. It is thought that as more compilers adopt the 
+recommendations of the ISO~TR~15581 this approach can be easily modified to make
+use of {\tt ALLOCATABLE} arrays.
+
+In this version of {\tt FELIB90} a module ({\tt mod\_space}) of memory management 
+routines based on {\tt POINTER} arrays has been implemented. The module
+contains three types of routine: one set the {\tt create} vectors and arrays,
+a second set to {\tt destroy} and another the {\tt check} the memory
+allocations.
+
+The module {\tt mod\_space} maintains and manages a set of arrays which point to 
+specific arrays and vectors. The basic allocation process starts with a call to 
+{\tt create} within a subroutine.
+\begin{quote}
+\source
+\tt
+CALL create(elk,dofel,dofel)
+\end{quote}
+The {\tt create} routine performs the following steps:
+\begin{quote}
+\it
+\begin{tabbing}
+-----\=-----\=-----\=-----\=-----\=-----\=-----\=-----\kill
+{\bf loop}~list of current allocations for an association\\ 
+\>to {\tt elk} using the {\tt associated} intrinsic. \\
+\>{\bf if} a current association exists {\bf then}\\
+\>\>{\bf if}~size and shape of allocated space is ok {\bf then}\\
+\>\>\> return to calling routine\\
+\>\>{\bf else}\\
+\>\>\> deallocate using {\tt destroy}\\
+\>\>\> create new space using {\tt create} (recursively)\\
+\>\>{\bf endif}\\ 
+\>{\bf else}\\
+\>\>find next free pointer in list\\
+\>\>allocate new space\\
+\>\>associate with target name\\
+\>\>mark pointer as in use\\
+\>{\bf endif}\\
+{\bf end loop}
+\end{tabbing}
+\end{quote}
+{\tt create} is a generic routine and provides for vectors and two-dimensional 
+arrays of the basic types required by {\tt FELIB90}: {\tt real, integer} and  {\tt complex}.
+The module {\tt mod\_space} also provides: {\tt destroy}, a generic routine for
+deallocating memory space and disassociating pointers and targets and {\tt check},
+a routine to check on the status of a vector or array.
+%
+\section{Library construction}
+{\tt FELIB90} has taken on a modular approach to its design - the library is
+a {\tt MODULE} to be {\tt USE}d by the user program. All the {\tt FELIB90}
+routines are contained in their own modules and these are {\tt USE}d
+by the {\tt FELIB90} module to build the complete library. A consequence of
+this is that all the interfaces of the library routines are explicit and
+can be used by the compiler at compile and run time to provide diagnostics.
+
+This approach has some impact on developing the library in terms of
+compilation but these are minimal as {\tt FELIB90} is a \textit{small} library. There
+are benefits in as much that the developer is not required to generate
+interface blocks for the user to reference.
+
+As mentioned above each routine of {\tt FELIB90} is a module in its own right. This
+makes providing generic interfaces straightforward and ensures explicit
+interfaces. So for example the routine {\tt MATNUL} has the following code
+\begin{quote}
+\source
+\input{matnul}
+\end{quote}
+As can been seen from the source {\tt MATNUL} is a generic routine that will if
+necessary create the storage to be associated with a variable using the routine
+{\tt CREATE} and manages optional arguments using the {\tt SETOPT} routine.
+This is type of {\tt FELIB90} routines.
+
+The final step is to build the full library, {\tt FELIB90}. Again {\tt FELIB90} is a module
+in its own right and contains a sequence of {\tt USE} statements to include
+all the library routines - one per routine. Below is show the {\tt FELIB90} code.
+\begin{quote}
+\source
+\input{felib90}
+\end{quote}
+\section{Program definitions}
+\label{prog-def}
+To help make the programs more readable the definitions of many of the
+standard intermediate arrays such as {\tt ELK} and {\tt GEOM} have been
+collected together into a definitions module - for example {\tt def3p1}.
+These are provided with the program file and are to be compiled with
+the user program. Clearly the user can add to these definitions if thought
+useful or replace them with their own specific definitions. An example of
+this type of module is given below.
+\begin{quote}
+\source
+\input{def3p1}
+\end{quote}
+
+\section{An example program}
+In this section a complete {\tt FELIB90} Level~1 program is shown. The structure is
+very much like that of the Fortran~77 programs. When compared with the Fortran~77
+version it can be seen the actual argument lists of the routines are much shorter. 
+A comparison with the Fortran~77 program {\tt  SEG3P1} \cite{felib1} will also show
+the similarity of structure and therefore this program should be recognisable to 
+existing users of {\tt FELIB}.
+
+Throughout this program the shortest possible argument list have been used and use has
+been made of all the system defaults provided by the library. In particular
+input/output channel numbers.
+
+As mention above {\tt FELIB90} contains some redundant routines and code to aid
+the transition from {\tt FELIB} to {\tt FELIB90} and also to aid clarity in a teaching
+context. For the programmer who wishes to move to a full Fortran~90/95
+implementation a number of \textit{Notes} have been added to each
+Level~1 program. The next section, Section~\ref{notes}, give the notes on this program.
+
+\begin{quote}
+\source
+\input{program}
+\end{quote}
+
+\section{An example of program \textit{notes}}
+\label{notes}
+\input{notes}
+
+\section{The transformation process}
+{\tt FELIB} had been developed originally in Fortran~66 - a fixed source form with
+all upper case characters - no {\tt IF - THEN - ELSE} constructs and the use of
+{\tt GOTO} statements. Moreover {\tt FELIB} was in strict Fortran~66 having been verified
+by QA tools such {\tt PFORT} \cite{pfort}.
+
+The basic transformation process had the following steps:
+\begin{itemize}
+  \item Compile and run on test data. Save results from tests.
+	\item Verify Fortran~66 code against standard (using {\tt PFORT} or the {\tt TOOLPACK} tool
+	{\tt istpf})
+	\item The conforming Fortran~66, which includes many {\tt GOTO} blocks was restructured using
+	the {\tt TOOLPACK} tool {\tt istst} and {\tt plusFORT} {\tt SPAG} program. With the correct
+	options {\tt SPAG} could transform directly to Fortran~90/95 but it was thought that staging 
+	through restructured Fortran~77 would allow some result testing.
+	\item Re-compilation and testing of new Fortran~77 using test data.
+	\item Transformation of comments etc with {\tt istuc}.
+	\item Re-compilation and testing.
+	\item Transformation into free format Fortran~90/95 using {\tt SPAG}. Others tools in the 
+	{\tt NAGWare} suite could have been used.
+	\item Compilation and testing of new source code using test data.
+	\end{itemize}
+At this point we have transform the Fortran~66 code into free format Fortran~90/95. Along the
+route each tool will have detected some problems with the code that required corrections. In
+general the corrections were made to the original Fortran~66 and the process repeated.
+
+At this point the structural elements of the re-design were implemented. As the overall
+structure and functionality of the example programs and library were not going to changed
+the modification at this point were made on a routine by routine basis using a set of
+simple edit scripts. For examples: changing the type of variable {\tt SRNAME}, the routine
+name, from {\tt DOUBLE PRECISION} to {\tt CHARACTER*6} were simple {\tt awk} scripts.
+\begin{quote}
+\begin{verbatim}
+DOUBLE PRECISION SRNAME
+DATA SRNAME /' SRNAME '/
+\end{verbatim}
+\end{quote}
+became
+\begin{quote}
+\begin{verbatim}
+CHARACTER*6 srname = "SRNAME"
+\end{verbatim}
+\end{quote}
+There were many other similar examples.
+
+As with many of the other changes these had to be made on a routine by routine
+basis following some basic re-design rules.
+
+\section{Some notes on development tools}
+In this section we review some of the software tools used in the re-engineering of {\tt FELIB}. 
+These tools were used to process the source code and check the executables.
+Regular use of tools such as these will speed development by helping to prevent or to find errors 
+in user programs and in making source code easier to read and understand. 
+Real benefits can be gained from the use of the tools during maintenance of existing software as the checks help to ensure that modifications are properly applied and that the style of the code remains consistent.
+
+\subsection{Source code transformers}
+One of the major stumbling blocks in any re-design or re-engineering process is the
+thought that you have thousands of line of code to change. This has been well
+recognised in the Fortran community as the use of Fortran~90/95 has developed. For
+Fortran~77 many source code analysis and restructuring tools had been
+developed: notably through the {\tt TOOLPACK} Project. As Fortran~77 was a fully compliant 
+subset of Fortran~90/95 it was generally straightforward to develop source code transformers 
+to transform the fixed format Fortran~77 programs to either fixed or free format Fortran~90/95.
+
+Three transformers have been used in this project: the {\tt TOOLPACK} suite,
+the {\tt spag} program from the {\tt plusFORT} suite of Polyhedron Software Ltd and 
+the {\tt f95} Declaration Standardiser of the {\tt NAGware} 
+Tools from the Numerical Algorithms Group Ltd. All these tools will take a fixed format
+Fortran~77 program and transform the source. {\tt TOOLPACK} will generate well
+structured and formated Fortran~77 from {\it old} Fortran~66 and the other two will transform 
+conforming Fortran~77 into reasonable Fortran~90/95 in either a fixed of free format.
+
+However problems do arise if the source Fortran is not conforming. So often elements
+of the Unix C pre-processor {\tt cpp} are used as version control constructs in Fortran
+programs. {\tt spag} from {\tt plusFORT} was more tolerant of language dialects than {\tt decs95}. 
+However both tools were very useful in producing free format Fortran~90/95 code from the
+original Fortran~77.
+
+\subsection{The {\tt TOOLPACK} Suite}
+For some programs Fortran~66 is the implementation language: the use of {\tt GOTO}s, 
+arithmetic {\tt IF}s and computed {\tt GOTO} statements.
+
+{\tt TOOLPACK} is a suite of software tools designed in the 1980s to support the Fortran programmer. 
+In this context, a `software tool' is a utility program to assist in the various phases 
+of constructing, analysing, testing, adapting, or maintaining a body of Fortran software. 
+Typically, the input to such a tool is your Fortran source code. The tool processes this 
+and produces output that may have one or both of the following forms:
+\begin{itemize}
+\item A report that gives an analysis of the input program, e.g. a summary of the types of statements used; this type of tool is called a static analyser.
+\item A modified version of the input program; in this case, the tool is called a transformer. An example is a formatter which improves the appearance of the code.
+\end{itemize}
+In some cases the input may be test data, documentation, or a report generated by a previously applied tool. Tools that assist directly in preparing documents are usually called documentation generation aids. These and other tools serving utility functions all have an important role to play and so, even if they do not process a program directly, they are still regarded as programming aids.
+
+Further examples of the software tools provided include:
+\begin{itemize}
+\item A text editor with Fortran~77 oriented features.
+\item A transforming tool that standardises the declarative part of a Fortran program.
+\item An instrumenter that modifies the program by inserting monitoring and other control statements. The instrumented program is then compiled and executed, and data is gathered that is used to generate reports. Execution of an instrumented program is an example of dynamic analysis. 
+\end{itemize}
+The {\tt TOOLPACK} Suite is public domain and is easily obtained although they are
+now of limited use as the community migrates the Fortran 90/95. Some of the tools
+contained in {\tt TOOLPACK} have been packaged into the {\tt NAGWare} Fortran~77 Tools.
+See 
+\begin{quote}
+{\tt http://www.nag.co.uk/public/tpack.asp}
+\end{quote}
+for details.
+
+\subsection{{\tt plusFORT}}
+
+{\tt plusFORT} is a suite of tools for Fortran programmers. The main components are summarised below.
+
+\begin{itemize}
+			\item {\tt SPAG}: The primary analysis and restructuring tool.
+			\item {\tt GXCHK}:A global static analysis tool.
+			\item {\tt CVRANAL}:A coverage analysis reporting tool.
+			\item {\tt QMERGE}:A version selection tool.
+			\item {\tt QSPLIT}:A small file-splitting utility.
+			\item {\tt AUTOMAKE}:A tool for minimal recompilation.
+\end{itemize}
+
+{\tt SPAG}, the {\tt plusFORT} restructuring tool, was the one tool that was extensively used. It can unscramble spaghetti Fortran~66 code, and convert it to structured Fortran~77. It also converts back and forth between standard Fortran~77, and code with VAX and Fortran~90/95 extensions such as {\tt DO WHILE}, {\tt ENDDO}, {\tt CYCLE}, {\tt EXIT} and {\tt SELECT CASE}.
+
+{\tt SPAG} does not change the meaning of a program, or even the order in which statements are executed; it does change the way the program logic is written down, making it much easier to understand and maintain. Blocks of code are reordered so that logically related sections are physically close, and jumps in control flow are minimised. {\tt SPAG} may also replicate small code fragments where this improves the re-structured code. {\tt SPAG} computes complexity metrics before and after restructuring. 
+{\tt SPAG} contains a powerful code beautifier, with dozens of options controlling spacing, case, labels, indentation, use of {\tt CONTINUE} etc. You can use {\tt SPAG} to switch back and forth between the Fortran~77 and Fortran~90/95 source forms.
+
+There are over 100 configuration options which allow you to customise {\tt SPAG} output to local conventions and requirements. See 
+\begin{quote}
+{\tt http://www.polyhedron.com}
+\end{quote}
+ for details.
+
+\subsection{{\tt NAGWare} Tools}
+
+The {\tt NAGWare} Fortran Tools provide users with the ability to analyse and transform Fortran~77 and Fortran~90/95 codes.  These tools can be used in a range of ways: 
+\begin{itemize}
+	\item Quality assurance standardisation - enforcing coding standards 
+	\item Porting to new platforms 
+	\item Converting from fixed format Fortran~77 to free format Fortran~95 
+	\item Normal day-to-day development 
+\end{itemize}
+The {\tt NAGWare} Fortran Tools suite consists of the following components: 
+\begin{itemize}
+	\item {\it {\tt NAGWare} Fortran 95 Tools}:
+The {\tt NAGWare} f95 Tools provide analysis and transformational tools that accept as input 
+Fortran~77 and fixed or free format Fortran~95. Output from the transformational tools is 
+always free format, so these tools are effectively fixed to free format translators. 
+This set of tools provides analysis capabilities that include a call graph generator and transformational tools that include a configurable pretty printer, declaration standardiser and precision standardiser. 
+  \item{\it{\tt NAGWare} Fortran 77 Tools}:
+The {\tt NAGWare} f77 Tools are a collection of tools for processing, analysing and transforming 
+Fortran~77 source code. The tools accept as input standard conforming Fortran~77 with some common extensions and output fixed format Fortran~77. So these tools are used where it is not desired to move forward to free format Fortran~95. 
+The analysis capabilities which include a portability verifier (standard conformance checker) and 
+call graph generator, can be useful as a first step in porting code from Fortran~77 to Fortran~95 
+or as an aid to further development work on the Fortran~77 code.
+\end{itemize} 
+The transformational tools include a configurable pretty printer, declaration standardiser and precision transformer.  See 
+\begin{quote}
+{\tt http://www.nag.co.uk}
+\end{quote}
+ for details.
+
+\subsection{Memory checking}
+One of the major sources of difficulty in using dynamic arrays in Fortran~90/95
+is memory leakage. Without a very careful count of {\tt ALLOCATES} and {\tt DEALLOCATES} 
+it is very easy for leaks to arise. This is often true of library software but it is
+particularly true of {\tt FELIB90} as it attempts to {\it hide} much of its dynamic memory
+management.
+
+During this develop the {\tt memprof} program has been used to help track memory leaks. The
+program is freely available over the Internet from 
+\begin{quote}
+{\tt http://www.gnome.org/projects/memprof/}
+\end{quote}
+and is easily installed and used. {\tt memprof} is a tool for profiling memory usage and finding 
+memory leaks. Its two major features are:
+\begin{itemize}
+\item It can generate a profile how much memory was allocated by each 
+function in your program.
+\item It can scan memory and find blocks that you have allocated but are 
+no longer referenced anywhere.
+\end{itemize}
+{\tt memprof} works by pre-loading a library to override the C library's memory allocation 
+functions and does not require you to recompile your program.
+
+One advantage {\tt memprof} has over some other similar tools that are available is that it 
+has a nice GUI front-end and is relatively easy to use. It appears to work fine on {\tt FELIB90} 
+although its diagnostic output, instruction addresses, is not particularly useful. It 
+does however give a useful way of indicating the presence of memory leaks.
+
+\subsection{Case transformer: {\tt istuc}}
+As noted above {\tt FELIB} was originally in a the fixed, upper case format of Fortran~66. As
+a results all the comments in the software were upper case. Given that Fortran~77 and Fortran~90/95
+allowed mixed cases it was thought useful to transform the comments into mixed case. The
+comments also often referenced variable names. It was thought helpful if these could be left, together
+with a few other key words, in upper case.
+
+To make this process as automatic as possible the utilities and libraries of the {\tt TOOLPACK}
+suite were used the develop an addition tool to preform this task. {\tt TOOLPACK} provided
+all that was need to parse the software, edit and reformed the comment lines and re-construct
+the programs source form. {\tt istuc} was used within the {\tt TOOLPACK} command environment 
+{\tt istce}. The following {\tt TOOLPACK} script was used to process each file in {\tt FELIB}
+\begin{quote}
+\begin{verbatim}
+lx #&1.f,&1-lx.lst,&1-lx.tkn,&1-lx.cmt
+uc &1-lx.tkn,&1-lx.cmt,&1-uc.tkn,&1-uc.cmt,u-words
+pl &1-uc.tkn,&1-uc.cmt,#&1.pol,-    
+\end{verbatim}
+\end{quote}
+the script being called thus
+\begin{quote}
+\begin{verbatim}
+ce:com/edit asful
+\end{verbatim}
+\end{quote}                                                
+for the routine {\tt asful.f}. {\tt lx} is the {\tt TOOLPACK} lexical analyser which decomposes
+the source code and generates a listing stream ({\tt .lst}), token stream ({\tt .tkn}) and
+a comment stream ({\tt .cmt}). {\tt uc} processes the token and comment streams and passes
+then on to the {\tt TOOLPACK} polish tool, {\tt pl}, which reconstitutes the source code.
+{\tt lx} and {\tt pl} are standard {\tt TOOLPACK} tools.
+
+Although one might wish to preform similar processes in Fortran~90/95 no tool set like that
+of {\tt TOOLPACK} is available. Such tasks would then need performing languages such as
+{\tt perl} \cite{perl} or {\tt python} \cite{python}.
+
+\section{Conclusions}
+In this report we have described the re-design of the Finite Element Library in Fortran~90/95
+and explained the major design choices. The overall structure of the library has
+been discussed and the use of generic routines and dynamic memory allocation
+explored.
+
+We believe that the resulting library will provide a useful addition to the
+vast body of Fortran~90/95 computational engineering software available to
+the community.
+
+The Fortran~90/95 version of the Finite Element Library will be made available
+to the research community through the Group's Web site at:
+\begin{quote}
+\tt\small
+http://www.mathsoft.cse.clrc.ac.uk/felib90
+\end{quote}
+At present only a small subset of {\tt FELIB} is available in Fortran~90/95 but
+this will grow in time. All additional {\tt FELIB90} material such as software and 
+documentation, will be made available at this address.
+
+One final comment. Fortran~90/95 has the potential to design and implement
+programs in an object oriented approach. The work in this report is a
+stepping stone to an object oriented version of the Finite Element Library.
+
+\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{99}
+\bibitem{felib1} C. Greenough, K. Robinson, {\it The Finite Element Library - Level 1
+Documentation - Version 3}, Rutherford Appleton Laboratory, 1990
+\bibitem{felib2} C. Greenough, K. Robinson, {\it The Finite Element Library - Level 0 
+Documentation - Version 3}, Rutherford Appleton Laboratory, 1990
+\bibitem{felib3} C. Greenough, "The Finite Element Library - from design to realisation",
+Rutherford Appleton Laboratory, Technical Report, RAL-85-011, 1985
+\bibitem{felib4} C. Greenough, C.J. Hunt, PARFEL - An Extension of the NAG/SERC Finite Element
+Library for Multi-Processor Message Passing System, Rutherford Appleton Laboratory Report, 
+RAL-90-070, 1990
+\bibitem{imsmith1} I.M. Smith, {\it Programming the Finite Element Method with Application in
+Geo-mechanic}, John Wiley, Chichester, 1982
+\bibitem{imsmith2} I.M. Smith, D.V. Griffiths, {\it Programming the Finite Element Method}, 3rd Ed, John Whiley, Chichester, 1998
+\bibitem{imsmith3} I.M Smith, A General Purpose System for Finite Element Analysis in Parallel, Engineering Computations, v17, No1, pp75 - 91, 2000
+\bibitem{cohen} M. Cohen (ed.), "Information technology - Programming languages - Fortran -
+Enhanced data type facilities", ISO/IEC TR 15581(E), ISO, Geneva
+\bibitem{toolpack} \textit{TOOLPACK} see {\tt http://www.nag.co.uk/public/tpack.asp}
+\bibitem{plusfort} \textit{plusFORT} Reference Manual, Polyhedron Software Ltd\\ (see  {\tt http://www.polyhedron.com/pf/manual/index.html})
+\bibitem{nagware}\textit{NAGWare} see {\tt http://www.nag.co.uk/nagware/NQ.asp}
+\bibitem{fortran90} M. Metcalf, J. Reid, {\it Fortran 90 Explained}, Oxford University Press
+\bibitem{pfort} B.G. Ryder, The PFORT Verifier, Software, Practice and Experience, {\bf 4}, pp359-378, 1974.
+\bibitem{perl} R.L. Schwartz, T. Christiansen, {\it Learning Perl}, O'Reilly \& Associates Inc, 1997
+\bibitem{python} G. Van Rossum, F.L. Drake Jr (Editor), {\it An Introduction to Python}, Network Theory Ltd., April 2003
+\end{thebibliography}
+\newpage
+\appendix
+\addcontentsline{toc}{section}{Appendix A - Reduced Fortran~90/95 version of Seg3p1}
+\section*{Appendix A - Reduced Fortran~90/95 version of Seg3p1}
+In this section we provide another version of Seg3p1 using more more of the features 
+available in Fortran~90/95. We have made some of the substitutions using
+the Notes in Section~\ref{notes} and placed multiple statements on
+source lines. We have introduced a number of additional {\it intrinsic} functions: 
+{\tt matrix\_inverse} and {\tt matrix\_determinant}. This has made the assembly
+loop more compact.
+
+It will be noticed that {\tt ALLOCATE} and {\tt DEALLOCATE} statements have been
+introduced to manage the dynamic memory arrays. In this program the {\tt ALLOCATE} 
+and {\tt DEALLOCATE} statements have been placed near the array's point of use and not
+as a vast initialisation block. Also some have been placed within the element loops. This
+is not strictly necessary but gives an indication of where they might be needed in a
+more complex program using more than one element type.
+
+There are a few other problems given the current operation of some of the routines.
+For example {\tt qqua4}: to define storage for {\tt wght} and {\tt abss} the number 
+of quadrature  points, {\tt nqp}, must be assumed. This makes returning the value redundant.
+Although in this program {\tt qqua4} is placed outside the element loops in a multi-element
+type application this would be moved inside the element loop. 
+
+\begin{quote}
+\source
+\input{prog-reduced}
+\end{quote}
+
+\end{document}

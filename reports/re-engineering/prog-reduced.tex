@@ -1,0 +1,262 @@
+\begin{verbatim}     
+1    PROGRAM seg3p1
+     
+     !*****************************************************************
+     
+     !     Copyright (C) 2003 : CLRC, Rutherford Appleton Laboratory
+     !     Chilton, Didcot, Oxfordshire OX11 0QX
+     
+     ! N.B. The working precision of the current library is held
+     !      in the variable wp. This must be used in all REAL
+     !      declarations of variables used by FELIB90.
+     
+     !      The program also uses the standard FELIB90 values for 
+     !      nin and nout.
+     
+     !*****************************************************************
+     
+2      USE felib90 ! Use FELIB90 all routines
+     
+3      USE def3p1 ! Use standard SEG3P1 definitions
+     
+4      IMPLICIT NONE
+     
+     ! Parameters
+     
+5      REAL (wp), PARAMETER :: scale = 1.0E+10
+     
+     ! Local variables
+     
+6      INTEGER :: bndnod, dif, dimen, dofel, dofnod, elnum, eltyp, hband, i, &
+7        iquad, itest, j, nele, node, nodel, nodnum, nqp, totdof, totels, &
+8        totnod
+9      REAL (wp) :: det, eta, quot, strgth, x, xi, y
+     
+     ! Allocatable arrays - mesh size dependent
+     
+10      INTEGER, POINTER :: bnode(:), nf(:,:), eltop(:,:)
+11      REAL (wp), POINTER :: bval(:), rhs(:), coord(:,:), sysk(:,:)
+     
+     ! Intrinsic functions
+     
+12      INTRINSIC abs
+     
+     !     Initialisation of POINTERS to main arrays
+     
+     !     NULLIFY(bnode, nf, eltop, bval, rhs, coord, sysk)
+     
+13      itest = 0
+     
+     !     **********************
+     !     *                    *
+     !     * Input Data Section *
+     !     *                    *
+     !     **********************
+     
+     !     Input of nodal geometry - memory for coord automatic
+     
+14      READ (nin,'(2I5)') totnod, dimen
+15      ALLOCATE (coord(totnod,dimen))
+16      DO i = 1, totnod
+17        READ (nin,'(I5,2F10.0)') node, (coord(node,j),j=1,dimen)
+18      END DO
+19      CALL prtgeo(coord)
+     
+     !     Input of element topology - memory for totels automatic
+     
+20      READ (nin,'(3I5)') eltyp, totels, nodel
+21      ALLOCATE (eltop(totels,nodel+2))
+22      DO i = 1, totels
+23        READ (nin,'(10I5)') elnum, (eltop(elnum,j+2),j=1,nodel)
+24        eltop(elnum,1) = eltyp
+25        eltop(elnum,2) = nodel
+26      END DO
+27      CALL prttop(eltop)
+     
+     !     Input of permeabilities, construction of permeability matrix P
+     !     and source strength
+     
+28      ALLOCATE (p(dimen,dimen))
+29      p = 0.0
+30      WRITE (nout,'(/A)') 'Permeabilities'
+31      READ (nin,'(2F10.0)') (p(i,i),i=1,dimen)
+32      WRITE (nout,'(2F10.5)') (p(i,i),i=1,dimen)
+     
+33      WRITE (nout,'(/A)') 'Source Strength'
+34      READ (nin,'(F10.0)') strgth
+35      WRITE (nout,'(F10.5)') strgth
+     
+     !     Input of number of degrees of freedom per node, input of
+     !     boundary conditions and construction of nodal freedom array NF
+     
+36      WRITE (nout,'(/A)') 'Degrees of freedom per node (DOFNOD)'
+37      READ (nin,'(I5)') dofnod
+38      WRITE (nout,'(I5)') dofnod
+     
+     !    Input boundary conidtions
+     
+39      WRITE (nout,'(/A)') 'Boundary Conditions'
+40      READ (nin,'(I5)') bndnod
+41      WRITE (nout,'(I5)') bndnod
+     
+42      ALLOCATE (bnode(bndnod),bval(bndnod))
+43      bnode = 0.0
+44      bval = 0.0
+45      DO i = 1, bndnod
+46        READ (nin,'(I5,F10.0)') bnode(i), bval(i)
+47        WRITE (nout,'(I5,F10.5)') bnode(i), bval(i)
+48      END DO
+     
+     ! Setup nodel freedom array
+     
+     
+49      ALLOCATE (nf(totnod,dofnod))
+50      nf = 0
+51      totdof = 0
+52      DO i = 1, totnod
+53        DO j = 1, dofnod
+54          totdof = totdof + 1
+55          nf(i,j) = totdof
+56        END DO
+57      END DO
+     
+     !     Calculation of semi-bandwidth
+     
+58      CALL bndwth(eltop,nf,hband)
+     
+     !  ************************************
+     !  *                                  *
+     !  * System Stiffness Matrix Assembly *
+     !  *                                  *
+     !  ************************************
+     
+     
+     ! System matrices setup and initalise : rhs, sysk
+     
+59      ALLOCATE (sysk(totdof,hband),rhs(totdof))
+60      sysk = 0.0
+61      rhs = 0.0
+     
+     ! Setup quadrature
+     
+62      nqp = 4
+63      ALLOCATE (wght(nqp),abss(dimen,nqp))
+64      CALL qqua4(wght,abss,nqp)
+     
+     ! Begin main element loop
+     
+65      DO nele = 1, totels !Loop over all elements
+     
+66        nodel = eltop(nele,2)
+67        dofel = dofnod*nodel
+     
+     ! Initial memory space for working arrays
+     
+68        ALLOCATE (jac(dimen,dimen))
+69        ALLOCATE (gder(dimen,nodel))
+70        ALLOCATE (dtpd(nodel*dofnod,nodel*dofnod))
+     
+     ! Element matrices setup and initalise: elk, elq, scvec
+     
+71        ALLOCATE (elk(dofel,dofel),elq(dofel),scvec(dofel))
+72        elk = 0.0
+73        elq = 0.0
+74        scvec = 0.0
+     
+75        ALLOCATE (geom(dofel,dimen))
+76        CALL elgeom(nele,eltop,coord,geom)
+     
+     !     Integration loop for element stiffness using NQP quadrature
+     !     points
+     
+77        DO iquad = 1, nqp ! Numerical integration
+     
+     !     Form linear shape function and space derivatives in the local
+     !     corrdinates. Transform local derivatives to global coordinate
+     !     system
+     
+78          xi = abss(1,iquad)
+79          eta = abss(2,iquad)
+     
+80          ALLOCATE (fun(nodel),lder(dimen,nodel))
+81          CALL quam4(fun,lder,xi,eta)
+     
+82          x = dot_product(geom(1:nodel,1),fun)
+83          y = dot_product(geom(1:nodel,2),fun)
+     
+84          jac = matrix_multiply(lder,geom)
+85          gder = matrix_multiply(matrix_inverse(jac),lder)
+86          dtpd = matrix_multiply(transpose(gder),matrix_multiply(p,gder))
+     
+87          quot = abs(matrix_determinant(jac))*wght(iquad)
+88          elk = elk + dtpd*quot
+89          elq = elq + fun*src(x,y,strgth)*quot
+     
+90          DEALLOCATE (fun,lder)
+     
+91        END DO !Loop over quadrature points - iquad
+     
+     !     Assembly of system stiffness matrix
+     
+92        CALL direct(nele,eltop,nf,steer) ! Memory for steer automatic
+93        CALL assym(sysk,elk,steer)
+94        CALL asrhs(rhs,elq,steer)
+     
+95        DEALLOCATE (elk,elq,scvec) ! Deallocate element vector & arrays
+96        DEALLOCATE (jac,gder,dtpd)
+97        DEALLOCATE (geom,geomt)
+     
+98      END DO !Loop over elements - nele
+     
+     !     *********************
+     !     *                   *
+     !     * Equation Solution *
+     !     *                   *
+     !     *********************
+     
+     !     Modification of stiffness matrix and right-hand side to
+     !     implement boundary conditions
+     
+99      DO i = 1, bndnod
+100        j = bnode(i)
+101        sysk(j,hband) = sysk(j,hband)*scale
+102        rhs(j) = sysk(j,hband)*bval(i)
+103      END DO
+     
+     !     Solution of system matrix for the nodal values of the
+     !     potential
+     
+104      CALL chosol(sysk,rhs) ! rhs=chosol(sysk,rhs)
+     
+105      WRITE (nout,'(/A)') 'Nodal Potentials'
+106      CALL prtval(rhs,nf)
+     
+107      STOP
+     
+108    CONTAINS
+     
+     
+     !*****************************************************************
+     ! Source function
+     
+109      FUNCTION src(x,y,strgth)
+     
+110        USE felib90
+     
+111        IMPLICIT NONE
+     
+     ! Dummy arguments
+     
+112        REAL (wp) :: src
+113        REAL (wp) :: strgth, x, y
+     
+114        INTENT (IN) strgth, x, y
+     
+115        src = 0.0D0
+116        IF ((x>1.0D0) .AND. (x<2.0D0) .AND. (y>1.0D0) .AND. (y<2.0D0)) &
+117          src = strgth
+     
+118      END FUNCTION src
+     
+119    END PROGRAM seg3p1
+\end{verbatim}

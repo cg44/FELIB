@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Program definitions</TITLE>
+<META NAME="description" CONTENT="Program definitions">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node12.html">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html139"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html137"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html131"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+  HREF="node12.html">An example program</A>
+<B> Up:</B> <A NAME="tex2html138"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html132"
+  HREF="node10.html">Library construction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00060000000000000000"></A>
+<A NAME="prog-def"></A>
+<BR>
+Program definitions
+</H1>
+To help make the programs more readable the definitions of many of the
+standard intermediate arrays such as <TT>ELK</TT> and <TT>GEOM</TT> have been
+collected together into a definitions module - for example <TT>def3p1</TT>.
+These are provided with the program file and are to be compiled with
+the user program. Clearly the user can add to these definitions if thought
+useful or replace them with their own specific definitions. An example of
+this type of module is given below.
+<BLOCKQUOTE>
+</BLOCKQUOTE><PRE>
+    MODULE def3p1
+
+! All arrays within FELIB programs are defined as POINTERs. This
+! enables dynamic allocation within FUNCTIONS and SUBROUTINES. Many
+! routines automatically ALLOCATE space for a current set of intermediate
+! variables use in the solution process.
+
+! These variables are created through a library of space management routines
+! which includes garbage collection. These routines do not inhibit the user
+! defining his own arrays locally or by using the space creataion routines.
+
+! This modules contains a standard set of variable definitions
+! often found in basic FELIB programs.
+
+      USE felib_globals, ONLY : wp
+
+
+! Allocatable arrays - dependent on element types and problem 
+!                      dimensionality
+
+      INTEGER, POINTER ::     &amp;
+        steer(:)   =&gt; null()    ! Element steering vector
+      REAL (wp), POINTER ::   &amp;
+        elq(:)     =&gt; null(), &amp; ! Element vector                              
+        fun(:)     =&gt; null(), &amp; ! Shape function vector
+        xy(:)      =&gt; null(), &amp; ! Global coordinate vector
+        geom(:,:)  =&gt; null(), &amp; ! Local geometry array
+        elk(:,:)   =&gt; null(), &amp; ! Element stiffness arrat
+        lder(:,:)  =&gt; null(), &amp; ! Local derivatives of shape funtions
+        jac(:,:)   =&gt; null(), &amp; ! Transformation jacobian
+        jacin(:,:) =&gt; null(), &amp; ! Inverse of JAC
+        geomt(:,:) =&gt; null(), &amp; ! Element geometry transposed
+        wght(:)    =&gt; null(), &amp; ! Quadrature weights
+        abss(:,:)  =&gt; null(), &amp; ! Quadrature abssise
+        p(:,:)     =&gt; null(), &amp; ! Permeitvity array P
+        pd(:,:)    =&gt; null(), &amp; ! P transposed
+        scvec(:)   =&gt; null(), &amp; ! Element source vector
+        gder(:,:)  =&gt; null(), &amp; ! Global derivatives of shape functions
+        dtpd(:,:)  =&gt; null(), &amp; ! Element matrix
+        gdert(:,:) =&gt; null()    ! Tranpose of GDERT
+
+
+    END MODULE def3p1
+</PRE><BLOCKQUOTE>
+
+</BLOCKQUOTE>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html139"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html137"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html131"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+  HREF="node12.html">An example program</A>
+<B> Up:</B> <A NAME="tex2html138"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html132"
+  HREF="node10.html">Library construction</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

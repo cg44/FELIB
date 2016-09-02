@@ -1,0 +1,24 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Design goals - old and new}{1}
+\contentsline {section}{\numberline {3}Use of Fortran\nobreakspace {}90/95 features}{2}
+\contentsline {subsection}{\numberline {3.1}Array features}{2}
+\contentsline {subsection}{\numberline {3.2}Dynamic storage allocation}{3}
+\contentsline {subsection}{\numberline {3.3}Optional arguments}{5}
+\contentsline {subsection}{\numberline {3.4}Generic routines}{6}
+\contentsline {subsection}{\numberline {3.5}Intrinsic functions}{6}
+\contentsline {section}{\numberline {4}Management of dynamic arrays}{7}
+\contentsline {section}{\numberline {5}Library construction}{8}
+\contentsline {section}{\numberline {6}Program definitions}{10}
+\contentsline {section}{\numberline {7}An example program}{11}
+\contentsline {section}{\numberline {8}An example of program \textit {notes}}{15}
+\contentsline {section}{\numberline {9}The transformation process}{18}
+\contentsline {section}{\numberline {10}Some notes on development tools}{19}
+\contentsline {subsection}{\numberline {10.1}Source code transformers}{19}
+\contentsline {subsection}{\numberline {10.2}The {\tt TOOLPACK} Suite}{19}
+\contentsline {subsection}{\numberline {10.3}{\tt plusFORT}}{20}
+\contentsline {subsection}{\numberline {10.4}{\tt NAGWare} Tools}{20}
+\contentsline {subsection}{\numberline {10.5}Memory checking}{21}
+\contentsline {subsection}{\numberline {10.6}Case transformer: {\tt istuc}}{22}
+\contentsline {section}{\numberline {11}Conclusions}{22}
+\contentsline {section}{References}{22}
+\contentsline {section}{Appendix A - Reduced Fortran\nobreakspace {}90/95 version of Seg3p1}{24}

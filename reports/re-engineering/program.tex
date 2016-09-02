@@ -1,0 +1,237 @@
+ \begin{verbatim}
+     !*****************************************************************
+     
+1     PROGRAM seg3p1
+     
+     !*****************************************************************
+     
+     !     Copyright (C) 2003 : CLRC, Rutherford Appleton Laboratory
+     !     Chilton, Didcot, Oxfordshire OX11 0QX
+     
+     ! N.B. The working precision of the current library is held
+     !      in the variable WP. This must be used in all REAL
+     !      declarations of variables used by FELIB90.
+     
+     !      The program also uses the standard FELIB90 values for 
+     !      nin and nout.
+     
+     !*****************************************************************
+     
+2       USE felib90 ! Use FELIB90 all routines
+3       USE def3p1 ! Use standard SEG3P1 definitions
+4       IMPLICIT NONE
+     
+     ! Parameters
+     
+5       REAL (WP), PARAMETER :: scale = 1.0E+10
+     
+     ! Local variables
+     
+6       INTEGER :: bndnod, dimen, dofel, dofnod, hband, i, iquad, itest, j, &
+7         nele, nodel, nqp, totdof, totels, totnod
+8       REAL (WP) :: det, eta, quot, strgth, x, xi, y
+     
+     ! Allocatable arrays - mesh size dependent - user defined in the data
+     
+9       INTEGER, POINTER :: bnode(:), nf(:,:), eltop(:,:)
+10      REAL (WP), POINTER :: bval(:), rhs(:), coord(:,:), sysk(:,:)
+     
+     ! Intrinsic functions
+     
+11      INTRINSIC abs
+     
+     !     Initialisation of POINTERS to main arrays
+     
+12      NULLIFY (bnode,nf,eltop)
+13      NULLIFY (bval,rhs,coord,sysk)
+     
+     !     Set error checking flag
+     
+14      itest = 0
+     
+     !     **********************
+     !     *                    *
+     !     * Input Data Section *
+     !     *                    *
+     !     **********************
+     
+     !     Input of nodal geometry
+     
+15      CALL getgeo(coord,totnod,dimen)
+16      CALL prtgeo(coord)
+     
+     !     Input of element topology
+     
+17      CALL gettop(eltop,totels)
+18      CALL prttop(eltop)
+     
+     !     Input of permeabilities, construction of permeability matrix P
+     !     and source strength
+     
+19      CALL matnul(p,dimen,dimen)
+20      WRITE (nout,'(/A)') 'Permeabilities'
+21      READ (nin,'(2F10.0)') (p(i,i),i=1,dimen)
+22      WRITE (nout,'(2F10.5)') (p(i,i),i=1,dimen)
+     
+23      WRITE (nout,'(/A)') 'Source Strength'
+24      READ (nin,'(F10.0)') strgth
+25      WRITE (nout,'(F10.5)') strgth
+     
+     !     Input of number of degrees of freedom per node, input of
+     !     boundary conditions and construction of nodal freedom array NF
+     
+26      WRITE (nout,'(/A)') 'Degrees of freedom per node (DOFNOD)'
+27      READ (nin,'(I5)') dofnod
+28      WRITE (nout,'(I5)') dofnod
+     
+     !    Input boundary conidtions
+     
+29      WRITE (nout,'(/A)') 'Boundary Conditions'
+30      READ (nin,'(I5)') bndnod
+31      WRITE (nout,'(I5)') bndnod
+     
+32      CALL vecnul(bnode,bndnod)
+33      CALL vecnul(bval,bndnod)
+34      DO i = 1, bndnod
+35        READ (nin,'(I5,F10.0)') bnode(i), bval(i)
+36        WRITE (nout,'(I5,F10.5)') bnode(i), bval(i)
+37      END DO
+     
+     ! Setup nodel freedom array
+     
+38      CALL matnul(nf,totnod,dofnod)
+39      totdof = 0
+40      DO i = 1, totnod
+41        DO j = 1, dofnod
+42          totdof = totdof + 1
+43          nf(i,j) = totdof
+44        END DO
+45      END DO
+     
+     !     Calculation of semi-bandwidth
+     
+46      CALL bndwth(eltop,nf,hband)
+     
+     !  ************************************
+     !  *                                  *
+     !  * System Stiffness Matrix Assembly *
+     !  *                                  *
+     !  ************************************
+     
+     
+     ! System matrices setup and initalise : rhs, sysk
+     
+47      CALL matnul(sysk,totdof,hband)
+48      CALL vecnul(rhs,totdof) 
+     
+     ! Setup quadrature
+     
+49      CALL qqua4(wght,abss,nqp)
+     
+     ! Begin main element loop
+     
+50      DO nele = 1, totels !Loop over all elements
+     
+51        nodel = eltop(nele,2)
+52        dofel = dofnod*nodel
+53        CALL elgeom(nele,eltop,coord,geom)
+     
+     !     Integration loop for element stiffness using NQP quadrature
+     !     points
+     
+54        CALL matnul(elk,dofel,dofel) 
+55        CALL vecnul(elq,dofel)
+56        CALL vecnul(scvec,dofel)
+     
+57        DO iquad = 1, nqp !Numerical integration
+     
+     !     Form linear shape function and space derivatives in the local
+     !     corrdinates. Transform local derivatives to global coordinate
+     !     system
+     
+58          xi = abss(1,iquad)
+59          eta = abss(2,iquad)
+60          CALL quam4(fun,lder,xi,eta)
+     
+61          CALL matran(geom,geomt)
+62          CALL matvec(geomt,fun,xy) 
+63          x = xy(1)
+64          y = xy(2)
+     
+65          CALL matmul(lder,geom,jac) 
+66          CALL matinv(jac,jacin,det)
+67          CALL matmul(jacin,lder,gder)
+     
+     !     Formation of element stiffness ELK
+     
+68          CALL matmul(p,gder,pd)
+69          CALL matran(gder,gdert)
+70          CALL matmul(gdert,pd,dtpd)
+     
+71          quot = abs(det)*wght(iquad)
+72          dtpd = dtpd*quot
+73          scvec = fun*src(x,y,strgth)*quot
+     
+74          CALL matadd(elk,dtpd)
+75          CALL vecadd(elq,scvec)
+     
+76        END DO !Loop over quadrature points - iquad
+     
+     !     Assembly of system stiffness matrix
+     
+77        CALL direct(nele,eltop,nf,steer)
+78        CALL assym(sysk,elk,steer)
+79        CALL asrhs(rhs,elq,steer)
+     
+80      END DO !Loop over elements - nele
+     
+     !     *********************
+     !     *                   *
+     !     * Equation Solution *
+     !     *                   *
+     !     *********************
+     
+     !     Modification of stiffness matrix and right-hand side to
+     !     implement boundary conditions
+     
+81      DO i = 1, bndnod
+82        j = bnode(i)
+83        sysk(j,hband) = sysk(j,hband)*scale
+84        rhs(j) = sysk(j,hband)*bval(i)
+85      END DO
+     
+     !     Solution of system matrix for the nodal values of the
+     !     potential
+     
+86      CALL chosol(sysk,rhs)
+     
+87      WRITE (nout,'(/A)') 'Nodal Potentials'
+88      CALL prtval(rhs,nf)
+     
+89      STOP
+     
+90    CONTAINS
+     
+     !*****************************************************************
+     ! Source function
+     
+91      FUNCTION src(x,y,strgth)
+     
+92        USE felib90
+     
+93        IMPLICIT NONE
+     
+     ! Dummy arguments
+     
+94        REAL (wp) :: src
+95        REAL (wp) :: strgth, x, y
+96        INTENT (IN) strgth, x, y
+     
+97        src = 0.0D0
+98        IF ((x>1.0D0) .AND. (x<2.0D0) .AND. (y>1.0D0) .AND. (y<2.0D0)) &
+99          src = strgth
+     
+100      END FUNCTION src
+     
+101    END PROGRAM seg3p1
+\end{verbatim}

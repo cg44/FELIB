@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Optional arguments</TITLE>
+<META NAME="description" CONTENT="Optional arguments">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html91"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html89"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html83"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html92"
+  HREF="node7.html">Generic routines</A>
+<B> Up:</B> <A NAME="tex2html90"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html84"
+  HREF="node5.html">Dynamic storage allocation</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00033000000000000000">
+Optional arguments</A>
+</H2>
+Another important new feature of Fortran&nbsp;90/95 is the provision of optional dummy arguments
+in procedure calls. These can shorten the argument lists of library routines
+significantly. A simple example of the use of optional arguments is the
+<TT>PRTGEO</TT> routine. This routine outputs the coordinate array <TT>COORD</TT>. The
+full argument list would be:
+<BLOCKQUOTE>
+<TT>
+CALL PRTGEO(coord,totnod,dimen,nout,itest)
+
+</TT></BLOCKQUOTE>
+This can be reduce to
+<BLOCKQUOTE>
+<TT>
+CALL PRTGEO(coord)
+
+</TT></BLOCKQUOTE>
+if the size and shape of <TT>coord</TT> matches exactly the element coordinate data and 
+there is a default output channel <TT>nout</TT>. <TT>totnod</TT> and <TT>dimen</TT> can be
+determined using the intrinsic function <TT>SIZE</TT>.
+
+<P>
+A design goal of <TT>FELIB90</TT> has been to reduce required arguments lists to a minimum
+whilst maintaining flexibility and control through optional arguments.
+
+<P>
+Because of the nature and implementation of optional arguments in Fortran&nbsp;90/95 the
+head of most routines has a group of code dealing with optional arguments. For an
+optional argument <TT>arg1</TT> it takes the form<PRE>
+! Dummy argument
+INTEGER, OPTIONAL :: arg1
+.......
+! Local variables
+INTEGER :: larg1
+.......
+IF (PRESENT(arg1))THEN
+larg1 = arg1
+ELSE
+larg1 = default_arg1
+ENDIF
+</PRE>
+where <TT>larg1</TT> is the local variable associated with <TT>arg1</TT>. It should
+be note that <TT>arg1</TT> cannot be referenced if it is not present. It may only
+be reference through the <TT>PRESENT</TT> intrinsic.
+
+<P>
+In general <TT>FELIB90</TT> only has scalars as optional arguments. 
+To aid clarity <TT>FELIB90</TT> uses a simple set generic routines to assign default values to
+optional arguments. These are provided through the module <TT>mod_setopt</TT>. The part
+of the code is shown below.
+<BLOCKQUOTE>
+</BLOCKQUOTE><PRE>
+MODULE mod_setopt
+
+USE FELIB_GLOBALS, only : wp
+
+INTERFACE setopt
+   MODULE PROCEDURE complex_setopt
+   MODULE PROCEDURE real_setopt
+   MODULE PROCEDURE integer_setopt
+   MODULE PROCEDURE character_setopt
+END INTERFACE
+
+CONTAINS
+
+...........................
+
+SUBROUTINE real_setopt(dummy,value,actual)
+IMPLICIT NONE
+REAL (wp) :: dummy, value
+REAL (wp) , OPTIONAL :: actual
+
+IF( PRESENT(actual)) THEN
+  dummy=actual
+ELSE
+  dummy=value
+ENDIF
+
+END SUBROUTINE real_setopt
+
+SUBROUTINE integer_setopt(dummy,value,actual)
+IMPLICIT NONE
+INTEGER :: dummy, value
+INTEGER , OPTIONAL :: actual
+
+
+IF( PRESENT(actual)) THEN
+  dummy=actual
+ELSE
+  dummy=value
+ENDIF
+
+................................
+
+END MODULE mod_setopt
+</PRE><BLOCKQUOTE>
+
+</BLOCKQUOTE>
+Now the setting of optional arguments is reduced to:<PRE>
+call setop(larg1,default_arg1,arg1)
+</PRE>
+Use of this routine clears up the opening statements of the library routines.
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html91"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html89"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html83"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html92"
+  HREF="node7.html">Generic routines</A>
+<B> Up:</B> <A NAME="tex2html90"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html84"
+  HREF="node5.html">Dynamic storage allocation</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

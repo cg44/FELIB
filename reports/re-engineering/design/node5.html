@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Dynamic storage allocation</TITLE>
+<META NAME="description" CONTENT="Dynamic storage allocation">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html81"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html79"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html73"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html82"
+  HREF="node6.html">Optional arguments</A>
+<B> Up:</B> <A NAME="tex2html80"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html74"
+  HREF="node4.html">Array features</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00032000000000000000">
+Dynamic storage allocation</A>
+</H2>
+An important feature of Fortran&nbsp;90/59 is the ability to
+dynamically allocate storage to arrays at execution time. Fortran&nbsp;90/95
+provides two mechanisms to make this possible: the <TT>ALLOCATABLE</TT> array
+and the <TT>POINTER</TT> array. Both these types can be specified without
+size information:
+
+<P>
+<BLOCKQUOTE>
+<TT>
+REAL (wp), ALLOCATABLE :: sysk(:,:)
+<BR>
+REAL (wp), POINTER :: sysm(:,:)
+
+</TT></BLOCKQUOTE>
+
+<P>
+These statements define the two arrays <TT>sysk</TT> and <TT>sysm</TT> whose memory
+allocation can be specified thus:
+
+<P>
+<BLOCKQUOTE>
+<TT>
+ALLOCATE(sysk(100,10))
+<BR>
+ALLOCATE(sysm(100,10))
+
+</TT></BLOCKQUOTE>
+In the first of these <TT>sysk</TT> has been defined as an <TT>ALLOCATABLE</TT> array and
+once memory is allocate <TT>sysk</TT> is a unique reference to this memory. The second
+allocate creates a similar reference to memory which can be used in the same way.
+However this may not be a unique reference. The nature of <TT>POINTER</TT>s allow
+multiple references to the same locations in memory. Although this would not be
+intended in the context of <TT>FELIB</TT> it is a possibility.
+
+<P>
+This is one of the features of <TT>POINTER</TT> arrays that the programmer must be
+aware. This non-uniqueness inherent in <TT>POINTER</TT>s can lead to unfortunate
+side effects.
+
+<P>
+Probably the most important of these is the possibility of <I>memory leaks</I> if the 
+arrays are not allocated and deallocated assiduously. It is very easy to allocate space  
+to a <TT>POINTER</TT> and then to later re-allocate a different section of memory to the 
+same <TT>POINTER</TT> without de-allocating the former. In general compilers and run-time 
+system will not flag this as an error. 
+However the result is that there will be sections of memory reserved
+with no way of referencing it. This would have the potential of <I>eating</I> away
+the memory available to the application if the <TT>ALLOCATE</TT> is contained in some form
+of loop. 
+
+<P>
+A second characteristic of <TT>POINTER</TT>s that can be a nuisance is that of initialisation. 
+The <TT>POINTER</TT> declaration above defines a <TT>POINTER</TT> to an array but does not give 
+an initial value to the <TT>POINTER</TT>. As a consequence the result from the intrinsic 
+function <TT>ASSOCIATED</TT> is really undefined although, as is often the case, many compilers
+set these variables automatically to <TT>NULL</TT>. However, as this is the only mechanism 
+through which it is possible to determine whether a <TT>POINTER</TT> has been associated 
+with a target, it is essential that <TT>POINTER</TT> variables be explicitly initialised. 
+This can be readily achieved using either the <TT>NULL()</TT> intrinsic or the <TT>NULLIFY</TT> 
+statement. For example:
+<BLOCKQUOTE>
+<TT>
+REAL (wp), POINTER :: sysm(:,:) =&gt; NULL()
+
+</TT></BLOCKQUOTE>
+will define and initialised to <TT>NULL</TT> the <TT>POINTER sysm</TT> whereas
+<BLOCKQUOTE>
+<TT>
+NULLIFY(sysm)
+
+</TT></BLOCKQUOTE>
+performs the same task as an executable statement.
+
+<P>
+An important point to consider in the library context is how these array types can
+be passed into subroutines and functions and how their dynamic properties can
+be exploited. In the Fortran&nbsp;90/95 standard it was not possible to pass <TT>ALLOCATABLE</TT>
+arrays as dummy arguments. Passing <TT>POINTER</TT> arrays was allowed. However, during
+2001 an extension to allow the passing of <TT>ALLOCATABLE</TT> arrays into procedures
+was proposed [<A
+ HREF="node23.html#cohen">8</A>]. This was excepted by the Fortran Standards body but
+as of yet only a few Fortran&nbsp;90/95 compilers support for this feature. In a series
+of simple checks on the passing of <TT>ALLOCATABLE</TT> arrays into procedures using
+a number of compilers (Intel <TT>ifc</TT>, Lahey <TT>lf95</TT>, <TT>NAG f95</TT>, <TT>DEC f95</TT>):
+one gave an error message (ifc), one gave a warning and continued compilation (<TT>NAG f95</TT>), 
+two compiled without warnings (<TT>lf95</TT>, <TT>DEC f95</TT>). Only two the those that compiled and
+linked successfully executed correctly (Lehay <TT>lf95</TT>, <TT>NAG F95</TT>).
+
+<P>
+Not supporting this feature stops the programmer passing an unallocated
+<TT>ALLOCATABLE</TT> array into procedure and making the allocation within 
+the procedure. Defining arrays as <TT>ALLOCATABLE</TT> is one method of
+providing dynamic arrays within Fortran&nbsp;90/95. However, if the arrays within <TT>FELIB90</TT> 
+are defined as <TT>ALLOCATABLE</TT> to provide this functionality it will inhibit 
+dynamically allocated intermediate arrays as described above
+in Section&nbsp;<A HREF="node2.html#design">2</A> as desirable. To overcome this
+problem all the arrays within <TT>FELIB90</TT> will be of a <TT>POINTER</TT> type. Although
+this may lead to problems of memory leaks, by the use of a stack of dynamic arrays
+and a type of semi-automatic garbage collection, these potential problems can
+be minimised from the library's point of view. However it will still be
+possible for the user to fall foul of these difficulties.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html81"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html79"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html73"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html82"
+  HREF="node6.html">Optional arguments</A>
+<B> Up:</B> <A NAME="tex2html80"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Previous:</B> <A NAME="tex2html74"
+  HREF="node4.html">Array features</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

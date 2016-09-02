@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>An example of program notes</TITLE>
+<META NAME="description" CONTENT="An example of program notes">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node14.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html159"
+  HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html157"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html151"
+  HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html160"
+  HREF="node14.html">The transformation process</A>
+<B> Up:</B> <A NAME="tex2html158"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html152"
+  HREF="node12.html">An example program</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00080000000000000000"></A>
+<A NAME="notes"></A>
+<BR>
+An example of program <I>notes</I>
+</H1>
+For each Level&nbsp;1 Programs  a set of <I>Notes</I> has been developed. 
+These indicate how a programmer could modify the Level&nbsp;1 Programs to use 
+more fully the features of Fortran&nbsp;90/95. These include the use of
+explicit <TT>ALLOCATE</TT> statements for memory allocations and the use
+of other Fortran&nbsp;90/95 intrinsics.
+<DL>
+<DT><STRONG>Statement 15:</STRONG></DT>
+<DD>The routine <TT>getgeo</TT> allocates memory for <TT>coord</TT> depending
+on the data. The total number of nodes, <TT>totnod</TT> and the dimensionality
+of the problem, <TT>dimen</TT> are returned. 
+The array <TT>coord</TT> can be defined and initailised using the statements 
+<BLOCKQUOTE>
+ALLOCATE(coord(totnod,dimen))
+<BR>
+coord=0.0
+
+</BLOCKQUOTE>
+provided <TT>totnod</TT> and <TT>dimen</TT> are known.
+</DD>
+<DT><STRONG>Statement 17:</STRONG></DT>
+<DD>The routine <TT>gettop</TT> allocates memory for <TT>eltop</TT>
+depending on the data. The total number of elements, <TT>totels</TT> is returned.
+The array <TT>eltop</TT> can be defined and initialised using the statements
+<BLOCKQUOTE>
+ALLOCATE(eltop(totels,max_nodel+2))
+<BR>
+eltop=0
+
+</BLOCKQUOTE>
+provided <TT>totels</TT> and <TT>max_nodel</TT> are known. <TT>max_nodel</TT> is set to
+the largest number of nodes in an element (<TT>nodel</TT>) for the given mesh. For
+simple meshes this will be equal to <TT>nodel</TT>.
+</DD>
+<DT><STRONG>Statement 19:</STRONG></DT>
+<DD>The routine <TT>matnul</TT> allocates memory and initialises
+the array <TT>p</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(p(dimen,dimen))
+<BR>
+p=0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 32:</STRONG></DT>
+<DD>The routine <TT>vecnul</TT> allocates memory and initialises
+the array <TT>bnode</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(bnode(bndnod))
+<BR>
+bonde=0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 33:</STRONG></DT>
+<DD>The routine <TT>vecnul</TT> allocates memory and initialises
+the array <TT>bval</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(bval(bnnod))
+<BR>
+bval=0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 38:</STRONG></DT>
+<DD>The routine <TT>matnul</TT> allocates memory and initialises
+the array <TT>nf</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(nf(totnod,dofnod))
+<BR>
+nf=0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 47:</STRONG></DT>
+<DD>The routine <TT>matnul</TT> allocates memory and initialises
+the array <TT>sysk</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(sysk(totdof,hband))
+<BR>
+sysk=0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 48:</STRONG></DT>
+<DD>The routine <TT>vecnul</TT> allocates memory and initialises
+the array <TT>rhs</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(rhs(totdof)
+<BR>
+rhs=0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 54:</STRONG></DT>
+<DD>The routine <TT>matnul</TT> allocates memory and initialises
+the array <TT>elk</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(elk(dofel,dofel))
+<BR>
+elk=0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 55:</STRONG></DT>
+<DD>The routine <TT>vecnul</TT> allocates memory and initialises
+the array <TT>elq</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(elq(dofel))
+<BR>
+elq = 0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 56:</STRONG></DT>
+<DD>The routine <TT>vecnul</TT> allocates memory and initialises
+the array <TT>scvec</TT>. This can be performed using the statements
+<BLOCKQUOTE>
+ALLOCATE(scvec(dofel))
+<BR>
+scvec = 0.0
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statement 61 to 62 :</STRONG></DT>
+<DD>The routine <TT>matran</TT> transposes the array <TT>geom</TT>.
+It creates and initialises memory for the intermediate
+array <TT>geomt</TT>. This can be performed using the intrinsic <TT>TRANSPOSE</TT>:
+<BLOCKQUOTE>
+geomt=TRANSPOSE(geom)
+
+</BLOCKQUOTE>
+provided <TT>geomt</TT> has been created and is of a suitable size and shape.
+
+<P>
+The routine <TT>matvec</TT> post multiplies the matrix <TT>geomt</TT>
+by the vector <TT>fun</TT>. This can be performed using the intrinsic <TT>MATMUL</TT> 
+which been mapped onto the function  <TT>MATRIX_MULTIPLY</TT> in FELIB90. <TT>matvec</TT>
+will create and initial memory for the intermediate array <TT>xy</TT> so <TT>xy</TT>
+will need to be created.
+<BLOCKQUOTE>
+xy=MATRIX_MULTIPLY(geomt,fun)
+
+</BLOCKQUOTE>
+</DD>
+<DT><STRONG>Statements 61 to 64:</STRONG></DT>
+<DD>An alternative to these statements is to 
+calculate <TT>x</TT> and <TT>y</TT> directly through an array section 
+using either the FELIB90 routine <TT>scaprd</TT>
+<BLOCKQUOTE>
+CALL scaprd(geom(1:nodel,1),fun,x)
+<BR>
+CALL scaprd(geom(1:nodel,2),fun,y)
+
+</BLOCKQUOTE>
+or the intrinsic <TT>DOT_PRODUCT</TT>:
+<BLOCKQUOTE>
+x=DOT_PRODUCT(geom(1:nodel,1),fun)
+<BR>
+y=DOT_PRODUCT(geom(1:nodel,2),fun)
+<BR>
+</BLOCKQUOTE>
+This is possible because of the way in which Fortran stores its arrays in memory.
+</DD>
+<DT><STRONG>Statement 65 to 67:</STRONG></DT>
+<DD>The routine <TT>matmul</TT> multiplies the arrays <TT>lder</TT>
+and <TT>geom</TT> together. This can be performed using the
+intrinsic <TT>MATMUL</TT>. This has been mapped onto the function <TT>MATRIX_MULTIPLY</TT>
+in FELIB90.
+<BLOCKQUOTE>
+jac=MATRIX_MULTIPLY(lder,geom)
+
+</BLOCKQUOTE>
+<TT>jac</TT> must be allocated with suitable size and shape.
+
+<P>
+The routine <TT>matmul</TT> multiplies the arrays <TT>jacin</TT>
+and <TT>lder</TT> together. This can be performed using the
+intrinsic <TT>MATMUL</TT> which been mapped onto the function <TT>MATRIX_MULTIPLY</TT>
+in FELIB90.
+<BLOCKQUOTE>
+gder=MATRIX_MULTIPLY(jacin,lder)
+
+</BLOCKQUOTE>
+<TT>gder</TT> must be allocated with suitable size and shape.
+</DD>
+<DT><STRONG>Statements 68 to 75:</STRONG></DT>
+<DD>The section of code deals with the
+construction and assembly the element stiffness matrix <TT>dtpd</TT>. There
+two approaches to replacing these statements: firstly by mirroring the FELIB90
+routines using intrinsics
+<BLOCKQUOTE>
+pd=MATRIX_MULTIPLY(p,gder)
+<BR>
+gdert=TRANSPOSE(gder)
+<BR>
+dtpd=MATRIX_MULTIPLY(gdert,pd)
+<BR>
+scvec=fun*src(x,y,strgth)*quot
+
+</BLOCKQUOTE>
+remembering that the intrinsic <TT>matnul</TT> is mapped to the FELIB90
+routine <TT>MATRIX_MULTIPLY</TT> or by combining these  three steps into a
+single compound statement
+<BLOCKQUOTE>
+dtpd=MATRIX_MULTIPLY(TRANSPOSE(gder),MATRIX_MULTIPLY(p,gder))
+
+</BLOCKQUOTE>
+<TT>dtpd</TT> must be allocated with a suitable size and shape.
+The final collections can be performed using
+<BLOCKQUOTE>
+elk = elk + dtpd
+<BR>
+elq = elq + scvec
+
+</BLOCKQUOTE>
+instead of using the FELIB90 <TT>matadd</TT> and <TT>vecadd</TT> routines.
+</DD>
+</DL>
+
+<P>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html159"
+  HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html157"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html151"
+  HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html160"
+  HREF="node14.html">The transformation process</A>
+<B> Up:</B> <A NAME="tex2html158"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html152"
+  HREF="node12.html">An example program</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

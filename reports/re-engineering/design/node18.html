@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>plusFORT</TITLE>
+<META NAME="description" CONTENT="plusFORT">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node19.html">
+<LINK REL="previous" HREF="node17.html">
+<LINK REL="up" HREF="node15.html">
+<LINK REL="next" HREF="node19.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html215"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html213"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html207"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html216"
+  HREF="node19.html">NAGWare Tools</A>
+<B> Up:</B> <A NAME="tex2html214"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html208"
+  HREF="node17.html">The TOOLPACK Suite</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000103000000000000000">
+<TT>plusFORT</TT></A>
+</H2>
+
+<P>
+<TT>plusFORT</TT> is a suite of tools for Fortran programmers. The main components are summarised below.
+
+<P>
+
+<UL>
+<LI><TT>SPAG</TT>: The primary analysis and restructuring tool.
+</LI>
+<LI><TT>GXCHK</TT>:A global static analysis tool.
+</LI>
+<LI><TT>CVRANAL</TT>:A coverage analysis reporting tool.
+</LI>
+<LI><TT>QMERGE</TT>:A version selection tool.
+</LI>
+<LI><TT>QSPLIT</TT>:A small file-splitting utility.
+</LI>
+<LI><TT>AUTOMAKE</TT>:A tool for minimal recompilation.
+</LI>
+</UL>
+
+<P>
+<TT>SPAG</TT>, the <TT>plusFORT</TT> restructuring tool, was the one tool that was extensively used. It can unscramble spaghetti Fortran&nbsp;66 code, and convert it to structured Fortran&nbsp;77. It also converts back and forth between standard Fortran&nbsp;77, and code with VAX and Fortran&nbsp;90/95 extensions such as <TT>DO WHILE</TT>, <TT>ENDDO</TT>, <TT>CYCLE</TT>, <TT>EXIT</TT> and <TT>SELECT CASE</TT>.
+
+<P>
+<TT>SPAG</TT> does not change the meaning of a program, or even the order in which statements are executed; it does change the way the program logic is written down, making it much easier to understand and maintain. Blocks of code are reordered so that logically related sections are physically close, and jumps in control flow are minimised. <TT>SPAG</TT> may also replicate small code fragments where this improves the re-structured code. <TT>SPAG</TT> computes complexity metrics before and after restructuring. 
+<TT>SPAG</TT> contains a powerful code beautifier, with dozens of options controlling spacing, case, labels, indentation, use of <TT>CONTINUE</TT> etc. You can use <TT>SPAG</TT> to switch back and forth between the Fortran&nbsp;77 and Fortran&nbsp;90/95 source forms.
+
+<P>
+There are over 100 configuration options which allow you to customise <TT>SPAG</TT> output to local conventions and requirements. See 
+<BLOCKQUOTE>
+<TT>http://www.polyhedron.com</TT>
+
+</BLOCKQUOTE>
+ for details.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html215"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html213"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html207"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html216"
+  HREF="node19.html">NAGWare Tools</A>
+<B> Up:</B> <A NAME="tex2html214"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html208"
+  HREF="node17.html">The TOOLPACK Suite</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

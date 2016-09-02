@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Design goals - old and new</TITLE>
+<META NAME="description" CONTENT="Design goals - old and new">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html46"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html44"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html38"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html47"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Up:</B> <A NAME="tex2html45"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html39"
+  HREF="node1.html">Introduction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00020000000000000000"></A>
+<A NAME="design"></A>
+<BR>
+Design goals - old and new
+</H1>
+The primary goal of <TT>FELIB</TT> was to provide a tool box of routines components
+providing the majority of the steps required in a finite element base
+analysis together with a selection of <I>example</I>  programs to illustrate
+there use. The two-level structure of the library satisfied the requirement.
+
+<P>
+The first Finite Element Library was targeted at Fortran&nbsp;66. Even
+though Fortran&nbsp;77 had been defined there were insufficient compilers to make
+the language attractive to developers. In 1985 it was thought that <I>
+Fortran&nbsp;77 was not yet universal</I> [<A
+ HREF="node23.html#felib3">3</A>]. Since then <TT>FELIB</TT> has taken
+on Fortran&nbsp;77 and as mentioned above implementations have been started in
+a number of other languages. The same could be said of Fortran&nbsp;90/95 now - has
+it become <I>universal</I>? Again, <I>no</I> is probably the answer! However with Fortran&nbsp;2000
+nearing the completion of its definition and with the availability of many more
+Fortran&nbsp;90/95 compilers (<TT>g95</TT> will may well appear soon and the Intel compiler is
+available on Linux systems) it would appear that it has nearly achieved <I>universal</I> status.
+
+<P>
+Hence a Fortran&nbsp;90/95 version of <TT>FELIB</TT> would not appear ill-timed. What should
+we be looking for in this new version? Clearly an exploitation of the new features
+of Fortran&nbsp;90/95: arrays, modules, dynamic memory allocation etc. The goals of the first 
+library have not changed in providing a prototyping tool. However, as Fortran&nbsp;90/95 has
+Fortran&nbsp;77 as a complete subset (apart from a list of deprecated features) it
+would seem reasonable that there should be an easy migration path from
+the old form of the library to the new.
+
+<P>
+To this end <TT>FELIB90</TT> contains a variety of routines that are not strictly
+necessary in Fortran&nbsp;90/95. For example, the routine for initialising an
+array to zero, <TT>MATNUL</TT> and the matrix multiplication routine
+<TT>MATMUL</TT>. As explained below these can be replaced by the use of
+some of the basic features of Fortran&nbsp;90/95 or by the use of standard
+intrinsic functions.
+
+<P>
+Fortran&nbsp;90/95 provides mechanisms for defining application specific data
+types and structures. The simple array definitions of arrays such as the
+mesh geometry, <TT>COORD</TT>, could be replace by more object oriented
+structures. However it was decide to retain the simple array structures
+for the main data elements of the library.
+
+<P>
+Also <TT>FELIB</TT> used a large number of intermediate arrays such <TT>DTPD</TT> and
+<TT>ELK</TT>. These aided the readability of the <TT>FELIB</TT> programs and allowed
+them to mirror the mathematical analysis. Fortran&nbsp;90/95 provides a number
+of mechanisms for allocating array space dynamically. In this re-design we
+will use these features to reduce the number of array definitions, space
+allocations and initialisations the programmer is require to perform. 
+
+<P>
+For example the routine <TT>QQUA4</TT> returns the abscissas and weights of a
+four-point quadrature rule. Its <TT>FELIB</TT> call is
+<BLOCKQUOTE>
+<TT>
+CALL QQUA4(WGHT,IWGHT,ABSS,IABSS,JABSS,NQP,ITEST)
+
+</TT></BLOCKQUOTE>
+The arrays <TT>WGHT</TT> and <TT>ABSS</TT> are intermediate arrays whose sizes are
+determined by the content of the subroutine. They are only required for
+the assembly phase and the memory they occupy could be released once this
+phase is completed. By making these arrays dynamic and allowing the routine
+to allocate appropriate space the programmer task can be simplified. The call to the
+<TT>FELIB90</TT> version of the routine could be reduced to
+<BLOCKQUOTE>
+<TT>
+CALL QQUA4(wght,abss,nqp)
+
+</TT></BLOCKQUOTE>
+where the arrays <TT>wght</TT> and <TT>abss</TT> would be returned with the correct
+size, populated with data together with <TT>nqp</TT>. The user would still be
+required to provide a declaration of the arguments types but not necessarily
+their sizes. The routine would manage the allocation of memory space and 
+initialisation.
+
+<P>
+As with many programs the initial lines of code are given over to declarations
+of variables and initialisations. In <TT>FELIB</TT> these could take up 10 to 30
+lines. To aid this declaration process each <TT>FELIB90</TT> example program will 
+be provided with a definitions file which will specify the types of the most 
+common variable and intermediate arrays. 
+An example of one of these is given in Section&nbsp;<A HREF="node11.html#prog-def">6</A>.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html46"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html44"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html38"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html47"
+  HREF="node3.html">Use of Fortran&nbsp;90/95 features</A>
+<B> Up:</B> <A NAME="tex2html45"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html39"
+  HREF="node1.html">Introduction</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

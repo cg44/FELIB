@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Case transformer: istuc</TITLE>
+<META NAME="description" CONTENT="Case transformer: istuc">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="previous" HREF="node20.html">
+<LINK REL="up" HREF="node15.html">
+<LINK REL="next" HREF="node22.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html243"
+  HREF="node22.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html241"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html237"
+  HREF="node20.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html244"
+  HREF="node22.html">Conclusions</A>
+<B> Up:</B> <A NAME="tex2html242"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html238"
+  HREF="node20.html">Memory checking</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000106000000000000000">
+Case transformer: <TT>istuc</TT></A>
+</H2>
+As noted above <TT>FELIB</TT> was originally in a the fixed, upper case format of Fortran&nbsp;66. As
+a results all the comments in the software were upper case. Given that Fortran&nbsp;77 and Fortran&nbsp;90/95
+allowed mixed cases it was thought useful to transform the comments into mixed case. The
+comments also often referenced variable names. It was thought helpful if these could be left, together
+with a few other key words, in upper case.
+
+<P>
+To make this process as automatic as possible the utilities and libraries of the <TT>TOOLPACK</TT>
+suite were used the develop an addition tool to preform this task. <TT>TOOLPACK</TT> provided
+all that was need to parse the software, edit and reformed the comment lines and re-construct
+the programs source form. <TT>istuc</TT> was used within the <TT>TOOLPACK</TT> command environment 
+<TT>istce</TT>. The following <TT>TOOLPACK</TT> script was used to process each file in <TT>FELIB</TT><PRE>
+lx #&amp;1.f,&amp;1-lx.lst,&amp;1-lx.tkn,&amp;1-lx.cmt
+uc &amp;1-lx.tkn,&amp;1-lx.cmt,&amp;1-uc.tkn,&amp;1-uc.cmt,u-words
+pl &amp;1-uc.tkn,&amp;1-uc.cmt,#&amp;1.pol,-
+</PRE>
+the script being called thus<PRE>
+ce:com/edit asful
+</PRE>                                                
+for the routine <TT>asful.f</TT>. <TT>lx</TT> is the <TT>TOOLPACK</TT> lexical analyser which decomposes
+the source code and generates a listing stream (<TT>.lst</TT>), token stream (<TT>.tkn</TT>) and
+a comment stream (<TT>.cmt</TT>). <TT>uc</TT> processes the token and comment streams and passes
+then on to the <TT>TOOLPACK</TT> polish tool, <TT>pl</TT>, which reconstitutes the source code.
+<TT>lx</TT> and <TT>pl</TT> are standard <TT>TOOLPACK</TT> tools.
+
+<P>
+Although one might wish to preform similar processes in Fortran&nbsp;90/95 no tool set like that
+of <TT>TOOLPACK</TT> is available. Such tasks would then need performing languages such as
+<TT>perl</TT> [<A
+ HREF="node23.html#perl">14</A>] or <TT>python</TT> [<A
+ HREF="node23.html#python">15</A>].
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html243"
+  HREF="node22.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html241"
+  HREF="node15.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html237"
+  HREF="node20.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html244"
+  HREF="node22.html">Conclusions</A>
+<B> Up:</B> <A NAME="tex2html242"
+  HREF="node15.html">Some notes on development</A>
+<B> Previous:</B> <A NAME="tex2html238"
+  HREF="node20.html">Memory checking</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Management of dynamic arrays</TITLE>
+<META NAME="description" CONTENT="Management of dynamic arrays">
+<META NAME="keywords" CONTENT="design">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="design.css">
+
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="design.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html119"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html117"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html111"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html120"
+  HREF="node10.html">Library construction</A>
+<B> Up:</B> <A NAME="tex2html118"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html112"
+  HREF="node8.html">Intrinsic functions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00040000000000000000">
+Management of dynamic arrays</A>
+</H1>
+As mentioned above it was decided to implement the library
+using <TT>POINTER</TT> arrays to provide the maximum flexibility
+in managing intermediate and temporary arrays even though this does have some potential
+pit falls. However these can be minimised by providing the user with a collection
+of array management routines although it is not really expected that the
+user would make use of these routines. It is thought that as more compilers adopt the 
+recommendations of the ISO&nbsp;TR&nbsp;15581 this approach can be easily modified to make
+use of <TT>ALLOCATABLE</TT> arrays.
+
+<P>
+In this version of <TT>FELIB90</TT> a module (<TT>mod_space</TT>) of memory management 
+routines based on <TT>POINTER</TT> arrays has been implemented. The module
+contains three types of routine: one set the <TT>create</TT> vectors and arrays,
+a second set to <TT>destroy</TT> and another the <TT>check</TT> the memory
+allocations.
+
+<P>
+The module <TT>mod_space</TT> maintains and manages a set of arrays which point to 
+specific arrays and vectors. The basic allocation process starts with a call to 
+<TT>create</TT> within a subroutine.
+<BLOCKQUOTE>
+<TT>CALL create(elk,dofel,dofel)
+
+</TT></BLOCKQUOTE>
+The <TT>create</TT> routine performs the following steps:<PRE><TT>
+<B>loop</B>&nbsp;list of current allocations for an association
+<BR>
+to <TT>elk</TT> using the <TT>associated</TT> intrinsic. 
+<BR><B>if</B> a current association exists <B>then</B>
+<BR><B>if</B>&nbsp;size and shape of allocated space is ok <B>then</B>
+<BR>
+return to calling routine
+<BR><B>else</B>
+<BR>
+deallocate using <TT>destroy</TT>
+<BR>
+create new space using <TT>create</TT> (recursively)
+<BR><B>endif</B>
+<BR><B>else</B>
+<BR>
+find next free pointer in list
+<BR>
+allocate new space
+<BR>
+associate with target name
+<BR>
+mark pointer as in use
+<BR><B>endif</B>
+<BR><B>end loop</B>
+</TT></PRE>
+<TT>create</TT> is a generic routine and provides for vectors and two-dimensional 
+arrays of the basic types required by <TT>FELIB90</TT>: <TT>real, integer</TT> and  <TT>complex</TT>.
+The module <TT>mod_space</TT> also provides: <TT>destroy</TT>, a generic routine for
+deallocating memory space and disassociating pointers and targets and <TT>check</TT>,
+a routine to check on the status of a vector or array.
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html119"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html117"
+  HREF="design.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html111"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html120"
+  HREF="node10.html">Library construction</A>
+<B> Up:</B> <A NAME="tex2html118"
+  HREF="design.html">Re-Engineering the Finite Element</A>
+<B> Previous:</B> <A NAME="tex2html112"
+  HREF="node8.html">Intrinsic functions</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2004-02-24
+</ADDRESS>
+</BODY>
+</HTML>
