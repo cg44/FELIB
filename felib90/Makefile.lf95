@@ -1,0 +1,13 @@
+#lf95 - Lahey compiler
+
+MODULES=-I../$(MODULES_DIR)
+FFLAGS=--f95 --chkglobal -M../$(MODULES_DIR)
+LFLAGS=
+MOD_MV=
+# check if hsl and reset PATH
+ifeq ($(shell uname -n),hsl)
+PATH=/usr/local/lf9562/bin:/bin:/usr/bin:.
+else
+PATH=/opt/lf9561/bin:/usr/bin:/bin:.
+endif
+

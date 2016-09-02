@@ -1,0 +1,13 @@
+#g95 - Gnu Fortran 95
+
+# FELIB90 Root
+FELIB90=/home/mathsoft/felib90
+
+# FELIB90 Directories
+include $(FELIB90)/Makefile.directories
+
+# g95 options
+FFLAGS= -pg -I ../$(MODULES_DIR)
+MODULES=-I../$(MODULES_DIR)
+LFLAGS= 
+MOD_MV=-mv *.mod ../$(MODULES_DIR)
