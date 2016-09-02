@@ -1,0 +1,136 @@
+ADUNIT - Control the advisory message unit number
+ASFUL  - Assembles a full system matrix
+ASFULG - General assembly of a full system matrix
+ASLMS  - Assembles a system lumped mass matrix
+ASRHS  - Assembles the right-hand side of a system
+ASSYM  - Assembles a symmetric system matrix
+ASSYMG - General assembly of a symmetric system matrix
+ASUSM  - Assembles an unsymmetric system matrix
+ASUSMG - General assembly of an unsymmetric system matrix
+
+B2C2   - Forms strain-displacement matrix for 2-D plane elasticity
+B2P2   - Forms strain-displacement matrix for axisymmetric elasticity
+B3C3   - Forms strain-displacement matrix for 3-D elasticity
+BNDWTH - Calculates semi-bandwith of system matrix
+BQBRK  - Forms quadrature rule for line integration on hexahedrals
+BQTRI  - Forms quadrature rule for line integration on triangles
+BQQUA  - Forms quadrature rule for line integration on quadrilaterals
+BRK8   - Shape functions for eight-noded brick element
+BRK20  - Shape functions for twenty-noded brick element
+BRK32  - Shape functions for thirty-two-noded brick element
+
+CHOBAK - Choleski backward substitution
+CHOFWD - Choleski forward substitution
+CHORDN - Choleski decomposition into triangular matrices
+CHOSOL - Solves a system of linear equations using Choleski reduction
+CMTNUL - Initialises a complex matrix to zero
+CPRTMT - Prints a complex matrix in a standard form
+CPRTVC - Prints a complex vector in a standard form
+CPRTVL - Prints a complex nodal values in a standard form
+CSYRDN - Complex symmetric decomposition into triangular matrices
+CSYSOL - Solves a complex symmetric linear system
+CSYSUB - Complex forward and backward substitution
+CVCNUL - Initialises a complex vector to zero
+
+DAXI   - Forms stress-strain matrix for axisymmetric elasticity
+DCSTRI - Calculates the direction cosines for triangular elements
+DCSQUA - Calculates the direction cosines for quadrilateral elements
+DCSBRK - Calculates the direction cosines for hexahedral elements
+DIRECT - Construction of steering vector for system matrix assembly
+DISO   - Forms stress-strain matrix for 3-D elasticity
+DPLT   - Forms stress-strain matrix for 2-D plate bending
+DPSN   - Forms stress-strain matrix for plane strain
+DPSS   - Forms stress-strain matrix for plane stress
+DYAD   - Forms the dyad of two vectors
+
+ELGEOM - Construction of element geometry array for an element
+ERRMES - Controls processing of error conditions
+ERUNIT - Control the error message unit number
+
+FORMNF - Forms nodal freedom array
+FREDIF - Calcalutes of maximum freedom number difference for an element
+
+GAURDN - Gaussian decomposition into upper and lower triangles
+GAUSOL - Solves a system of linear equations using Gaussian reduction
+GAUSUB - Gaussian forward and backward substitution
+
+HOUSE  - Householder reduction to tridiagonal form
+
+IASRHS - Assembles the imaginary part of a complex right-hand side
+IASSYM - Assembles the imaginary part of a symmetric complex system matrix
+IASUSM - Assembles the imaginary part of a unsymmetric complex system matrix
+
+JACO   - Reduction to tridiagonal form by Jacobi rotations
+
+LINTRI - Calculates a unit length on the boundaries of triangles
+LINQUA - Calculates a unit length on the boundaries of quadrilaterals
+
+MATADD - Adds two full matrices together
+MATCOP - Copies one full matrix into another
+MATIDN - Initialises a matrix to the identity matrix
+MATINV - Inverts a full matrix (for limited sizes)
+MATMUL - Multiplies two matrices together
+MATNUL - Initialises a full matrix to zeros
+MATRAN - Forms the transpose of a full matrix
+MATSUB - Subtracts one full matrix from another
+MATVEC - Multiplies a full matrix by a vector
+MVSYB  - Multiplies a symmetric band matrix by a vector
+MVUSB  - Multiplies an unsymmetric band matrix by a vector
+
+NORM   - Computes the L*sub[2] norm of a vector
+
+PRTGEO - Prints the mesh geometry in a standard format
+PRTMAT - Prints a matrix in standard format
+PRTTOP - Prints the element topology in a standard format
+PRTVAL - Prints the nodal values in a standard format
+PRTVEC - Prints a vector in standard format
+
+QBRK6  - Six-point quadrature rule for cube
+QBRK8  - Eight-point quadrature rule for cube
+QLIN2  - Two-point, one-dimensional quadrature
+QLIN3  - Three-point, one-dimensional quadrature
+QLVAL  - Eigenvalue extraction using QL transformations
+QLVEC  - Eigenvalue and eigenvector extraction using QL transformations
+QQUA4  - Four-point quadrature rule for rectangular region
+QQUA9  - Nine-point quadrature rule for rectangular region
+QTET4  - Four-point quadrature rule for tetrahedral region
+QTRI4  - Four-point quadrature rule for triangular region
+QTRI7  - Seven-point quadrature rule for triangular region
+QUAM4  - Shape functions for four-noded quadrilateral membrane element
+QUAM8  - Shape functions for eight-noded quadrilateral membrane element
+QUAM12 - Shape functions for twelve-noded quadrilateral membrane element
+QWDG6  - Six-point quadrature rule for wedge-shaped region
+QWDG8  - Eight-point quadrature rule for wedge-shaped region
+
+RASRHS - Assembles the real part of a complex right-hand side
+RASSYM - Assembles the real part of a symmetric complex system matrix
+RASUSM - Assembles the real part of a unsymmetric complex system matrix
+ROD2   - Shape functions for two-noded line element
+ROD3   - Shape functions for three-noded line element
+ROD4   - Shape functions for four-noded line element
+
+SCAPRD - Forms the scalar product of two vectors
+SELECT - Constructs an element solution vector
+SHAPFN - Forms shape function matrix *comp[N]
+SIDENO - Forms list of element and side numbers from boundary node list
+SURBRK - Calculates a unit of area on boundary faces
+
+TET4   - Shape functions for four-noded tetrahedral element
+TET10  - Shape functions for ten-noded tetrahedral element
+TET20  - Shape functions for twenty-noded tetrahedral element
+TRIM3  - Shape functions for three-noded triangular membrane element
+TRIM6  - Shape functions for six-noded triangular membrane element
+TRIM10 - Shape functions for ten-noded triangular membrane element
+
+UPDATE - Updates solution vector with system solution
+
+VECADD - Adds two vectors together
+VECCOP - Copies one vector into another
+VECMAT - Pre-multiplies a full matrix by a vector
+VECNUL - Initialises a vector to zeros
+VECSUB - Subtracts one vector from another
+VMSYB  - Pre-multiplies a symmetric band matrix by a vector
+VMUSB  - Pre-multiplies an unsymmetric band matrix by a vector
+
+WDG6   - Shape functions for six-noded wedge element
+WDG15  - Shape functions for fifteen-noded wedge element

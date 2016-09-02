@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 99.1 release (March 30, 1999)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>NAG/SERC Finite Element Library
+(Release 4.0)
+Level&nbsp;0 User Documentation</TITLE>
+<META NAME="description" CONTENT="NAG/SERC Finite Element Library
+(Release 4.0)
+Level&nbsp;0 User Documentation">
+<META NAME="keywords" CONTENT="title-page-0">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v99.1 release">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="title-page-0.css">
+
+<LINK REL="next" HREF="node1.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html1"
+ HREF="node1.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/u/mathsoft/latex2html/icons.gif/next_motif.gif"></A> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/u/mathsoft/latex2html/icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/u/mathsoft/latex2html/icons.gif/previous_motif_gr.gif">   
+<BR>
+<B> Next:</B> <A NAME="tex2html2"
+ HREF="node1.html">Finite Element Library -</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<H1 ALIGN="CENTER"><FONT SIZE="+4"> <B> NAG/SERC Finite Element Library
+<BR>
+ (Release 4.0)
+<BR>
+<BR>
+<BR>
+Level&nbsp;0 User Documentation</B></FONT></H1>
+<P ALIGN="CENTER"><STRONG><FONT SIZE="+2"> C.&nbsp;Greenough
+<BR>
+               <I>Rutherford Appleton Laboratory</I></FONT></STRONG></P>
+
+<DIV ALIGN="CENTER">
+<B>PREFACE - RELEASE 4</B></DIV>
+ 
+<BR>
+<BR>
+
+<P>
+The Finite Element Library is now forming an important part of many
+research projects using numerical methods. The usage of the Library
+has grown greatly with the help of the Numerical Algorithms Group Ltd
+and Release&nbsp;4 is well due.
+
+<P>
+It is pleasing to report that over the past years only one or two serious
+bugs have been found and there have been many useful comments passed on
+about the functionality of the Library routines and the subjects covered 
+by the Level 1 programs.
+
+<P>
+Release&nbsp;4 introduces six new programs to the Level 1 Library and many more
+Level&nbsp;0 routines. An important addition is the treatment of two simple
+non-linear problems. It is hoped that all these additions will be found
+useful to users of the Library and they will provide to starting point
+to new areas of application.
+
+<P>
+The authors of the Library are very interested in suggestions from
+users about new areas to be covered and comments about the existing 
+material.
+The authors can be contacted directly at the Rutherford Appleton 
+Laboratory
+or through the Numerical Algorithms Group.
+
+<P>
+<BR>
+<BR>
+C Greenough
+<BR>
+<I> Rutherford Appleton Laboratory</I>
+
+<DIV ALIGN="CENTER">
+                                         <FONT SIZE="+1"><B> Contents                                         
+</B></FONT></DIV>                                         <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"></A>
+
+<UL>
+<LI><A NAME="tex2html3"
+ HREF="node1.html">Finite Element Library - Subject Listing</A>
+<UL>
+<LI><A NAME="tex2html4"
+ HREF="node2.html">Standard Vector and Matrix Handling</A>
+<LI><A NAME="tex2html5"
+ HREF="node3.html">Equation Solvers</A>
+<LI><A NAME="tex2html6"
+ HREF="node4.html">Eigenvalue and Eigenvector Extraction</A>
+<LI><A NAME="tex2html7"
+ HREF="node5.html">Data Handling</A>
+<LI><A NAME="tex2html8"
+ HREF="node6.html">Numerical Integration</A>
+<LI><A NAME="tex2html9"
+ HREF="node7.html">Shape Functions</A>
+<LI><A NAME="tex2html10"
+ HREF="node8.html">Strain-Displacement Matrices</A>
+<LI><A NAME="tex2html11"
+ HREF="node9.html">Stress-Strain Matrices</A>
+<LI><A NAME="tex2html12"
+ HREF="node10.html">Assembly Routines</A>
+<LI><A NAME="tex2html13"
+ HREF="node11.html">Utility Routines</A>
+</UL>
+<LI><A NAME="tex2html14"
+ HREF="node12.html">Finite Element Library - Alphabetic Listing</A>
+<UL>
+<LI><A NAME="tex2html15"
+ HREF="node13.html">A</A>
+<LI><A NAME="tex2html16"
+ HREF="node14.html">B</A>
+<LI><A NAME="tex2html17"
+ HREF="node15.html">C</A>
+<LI><A NAME="tex2html18"
+ HREF="node16.html">D</A>
+<LI><A NAME="tex2html19"
+ HREF="node17.html">E</A>
+<LI><A NAME="tex2html20"
+ HREF="node18.html">F</A>
+<LI><A NAME="tex2html21"
+ HREF="node19.html">G</A>
+<LI><A NAME="tex2html22"
+ HREF="node20.html">H</A>
+<LI><A NAME="tex2html23"
+ HREF="node21.html">I</A>
+<LI><A NAME="tex2html24"
+ HREF="node22.html">J</A>
+<LI><A NAME="tex2html25"
+ HREF="node23.html">L</A>
+<LI><A NAME="tex2html26"
+ HREF="node24.html">M</A>
+<LI><A NAME="tex2html27"
+ HREF="node25.html">N</A>
+<LI><A NAME="tex2html28"
+ HREF="node26.html">P</A>
+<LI><A NAME="tex2html29"
+ HREF="node27.html">Q</A>
+<LI><A NAME="tex2html30"
+ HREF="node28.html">R</A>
+<LI><A NAME="tex2html31"
+ HREF="node29.html">S</A>
+<LI><A NAME="tex2html32"
+ HREF="node30.html">T</A>
+<LI><A NAME="tex2html33"
+ HREF="node31.html">U</A>
+<LI><A NAME="tex2html34"
+ HREF="node32.html">V</A>
+<LI><A NAME="tex2html35"
+ HREF="node33.html">W</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1"
+ HREF="node1.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/u/mathsoft/latex2html/icons.gif/next_motif.gif"></A> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/u/mathsoft/latex2html/icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/u/mathsoft/latex2html/icons.gif/previous_motif_gr.gif">   
+<BR>
+<B> Next:</B> <A NAME="tex2html2"
+ HREF="node1.html">Finite Element Library -</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<i>Chris Greenough (c.greenough@rl.ac.uk): October 2000</i>
+</ADDRESS>
+</BODY>
+</HTML>

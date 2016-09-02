@@ -1,0 +1,177 @@
+Library routines can be conveniently divided
+up into a number of sections. Although the routines are
+presented in alphabetical order by routine name,
+below the routines are divided into sections
+depending upon their operation.
+
+%\medskip\noindent     %PAPER
+%The sections are:     %PAPER
+%\begin{enumerate}     %PAPER
+%\item Standard Vector and Matrix Operations     %PAPER
+%\item Equation Solvers     %PAPER
+%\item Eigenvalue and Eigenvector Extraction     %PAPER
+%\item Data Handling     %PAPER
+%\item Numerical Integration     %PAPER
+%\item Shape Functions     %PAPER
+%\item Strain-Displacement Matrices     %PAPER
+%\item Stress-Strain Matrices     %PAPER
+%\item Assembly Routines     %PAPER
+%\item Utility Routines     %PAPER
+%\end{enumerate}     %PAPER
+%\newpage     %PAPER
+%\section*{Standard Vector and Matrix Handling}   %PAPER
+\subsection*{Standard Vector and Matrix Handling} %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[CMTNUL \hfill] -- Initialises a complex matrix to zero
+\item[CVCNUL \hfill] -- Initialises a complex vector to zero
+\item[DYAD \hfill]   -- Forms the dyad of two vectors
+\item[MATADD \hfill]  -- Adds two full matrices together
+\item[MATCOP \hfill] -- Copies one full matrix into another
+\item[MATIDN \hfill] -- Initialises a matrix to the identity matrix
+\item[MATINV \hfill] -- Inverts a full matrix (for limited sizes)
+\item[MATMUL \hfill] -- Multiplies two matrices together
+\item[MATNUL \hfill] -- Initialises a full matrix to zeros
+\item[MATRAN \hfill] -- Forms the transpose of a full matrix
+\item[MATSUB \hfill] -- Subtracts one full matrix from another
+\item[MATVEC \hfill] -- Multiplies a full matrix by a vector
+\item[MVSYB \hfill]  -- Multiplies a symmetric band matrix by a vector
+\item[MVUSB \hfill]  -- Multiplies a unsymmetric band matrix by a vector
+\item[SCAPRD \hfill] -- Forms the scalar product of two vectors
+\item[VECADD \hfill] -- Adds two vectors together
+\item[VECCOP \hfill] -- Copies one vector into another
+\item[VECMAT \hfill] -- Pre-multiplies a full matrix by a vector
+\item[VECNUL \hfill] -- Initialises a vector to zeros
+\item[VECSUB \hfill] -- Subtracts one vector from another
+\item[VMSYB \hfill]  -- Pre-multiplies a symmetric band matrix by a vector
+\item[VMUSB \hfill]  -- Pre-multiplies an unsymmetric band matrix by a vector
+\end{list}
+%\section*{Equation Solvers} %PAPER
+\subsection*{Equation Solvers} %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[CSYRDN \hfill] -- Complex symmetric decomposition into triangular matrices
+\item[CSYSOL \hfill] -- Solves a complex symmetric linear system
+\item[CSYSUB \hfill] -- Complex forward and backward substitution
+\item[CHOBAK \hfill] -- Choleski backward substitution
+\item[CHOFWD \hfill] -- Choleski forward substitution
+\item[CHORDN \hfill] -- Choleski decomposition into triangular matrices
+\item[CHOSOL \hfill] -- Solves a system of linear equations using Choleski reduction
+\item[GAURDN \hfill] -- Gaussian decomposition into upper and lower triangles
+\item[GAUSOL \hfill] -- Solves a system of linear equations using Gaussian reduction
+\item[GAUSUB \hfill] -- Gaussian forward and backward substitution
+\end{list}
+%\section*{Eigenvalue and Eigenvector Extraction} %PAPER
+\subsection*{Eigenvalue and Eigenvector Extraction} %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[HOUSE \hfill]  -- Householder reduction to tridiagonal form
+\item[JACO \hfill]   -- Reduction to tridiagonal form by Jacobi rotations
+\item[QLVAL \hfill]  -- Eigenvalue extraction using QL transformations
+\item[QLVEC \hfill]  -- Eigenvalue and eigenvector extraction using QL transformations
+\end{list}
+%\section*{Data Handling} %PAPER
+\subsection*{Data Handling} %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[CPRTMT \hfill] -- Prints a complex matrix in a standard form
+\item[CPRTVC \hfill] -- Prints a complex vector in a standard form
+\item[CPRTVL \hfill] -- Prints a complex nodal values in a standard form
+\item[PRTGEO \hfill] -- Prints the mesh geometry in a standard format
+\item[PRTMAT \hfill] -- Prints a matrix in standard format
+\item[PRTTOP \hfill] -- Prints the element topology in a standard format
+\item[PRTVAL \hfill] -- Prints the nodal values in a standard format
+\item[PRTVEC \hfill] -- Prints a vector in standard format
+\end{list}
+%\section*{Numerical Integration}   %PAPER
+\subsection*{Numerical Integration}    %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[BQBRK \hfill]  -- Forms quadrature rule for line integration on hexahedrals
+\item[BQTRI \hfill]  -- Forms quadrature rule for line integration on triangles
+\item[BQQUA \hfill]  -- Forms quadrature rule for line integration on quadrilaterals
+\item[LINTRI \hfill] -- Calculates a unit length on the boundaries of triangles
+\item[LINQUA \hfill] -- Calculates a unit length on the boundaries of quadrilaterals
+\item[QBRK6 \hfill]  -- Six-point quadrature rule for cube
+\item[QBRK8 \hfill]  -- Eight-point quadrature rule for cube
+\item[QLIN2 \hfill]  -- Two-point, one-dimensional quadrature
+\item[QLIN3 \hfill]  -- Three-point, one-dimensional quadrature
+\item[QQUA4 \hfill]  -- Four-point quadrature rule for rectangular region
+\item[QQUA9 \hfill]  -- Nine-point quadrature rule for rectangular region
+\item[QTET4 \hfill]  -- Four-point quadrature rule for tetrahedral region
+\item[QTRI4 \hfill]  -- Four-point quadrature rule for triangular region
+\item[QTRI7 \hfill]  -- Seven-point quadrature rule for triangular region
+\item[QWDG6 \hfill]  -- Six-point quadrature rule for wedge-shaped region
+\item[QWDG8 \hfill]  -- Eight-point quadrature rule for wedge-shaped region
+\item[SURBRK \hfill] -- Calculates a unit of area on boundary faces
+\end{list}
+%\section*{Shape Functions} %PAPER
+\subsection*{Shape Functions} %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[BRK8 \hfill]   -- Shape functions for eight-noded brick element
+\item[BRK20 \hfill]  -- Shape functions for twenty-noded brick element
+\item[BRK32 \hfill]  -- Shape functions for thirty-two-noded brick element
+\item[QUAM4 \hfill]  -- Shape functions for four-noded quadrilateral membrane element
+\item[QUAM8 \hfill]  -- Shape functions for eight-noded quadrilateral membrane element
+\item[QUAM12 \hfill] -- Shape functions for twelve-noded quadrilateral membrane element
+\item[ROD2 \hfill]   -- Shape functions for two-noded line element
+\item[ROD3 \hfill]   -- Shape functions for three-noded line element
+\item[ROD4 \hfill]   -- Shape functions for four-noded line element
+\item[TET4 \hfill]   -- Shape functions for four-noded tetrahedral element
+\item[TET10 \hfill]  -- Shape functions for ten-noded tetrahedral element
+\item[TET20 \hfill]  -- Shape functions for twenty-noded tetrahedral element
+\item[TRIM3 \hfill]  -- Shape functions for three-noded triangular membrane element
+\item[TRIM6 \hfill]  -- Shape functions for six-noded triangular membrane element
+\item[TRIM10 \hfill] -- Shape functions for ten-noded triangular membrane element
+\item[WDG6 \hfill]   -- Shape functions for six-noded wedge element
+\item[WDG15 \hfill]  -- Shape functions for fifteen-noded wedge element
+\end{list}
+%\section*{Strain-Displacement Matrices} %PAPER
+\subsection*{Strain-Displacement Matrices}  %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[B2C2 \hfill]   -- Forms strain-displacement matrix for 2-D plane elasticity
+\item[B2P2 \hfill]   -- Forms strain-displacement matrix for axisymmetric elasticity
+\item[B3C3 \hfill]   -- Forms strain-displacement matrix for 3-D elasticity
+\end{list}
+%\section*{Stress-Strain Matrices}   %PAPER
+\subsection*{Stress-Strain Matrices}   %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[DAXI \hfill]   -- Forms stress-strain matrix for axisymmetric elasticity
+\item[DISO \hfill]   -- Forms stress-strain matrix for 3-D elasticity
+\item[DPLT \hfill]   -- Forms stress-strain matrix for 2-D plate bending
+\item[DPSN \hfill]   -- Forms stress-strain matrix for plane strain
+\item[DPSS \hfill]   -- Forms stress-strain matrix for plane stress
+\end{list}
+%\section*{Assembly Routines}    %PAPER
+\subsection*{Assembly Routines}   HTML%
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[IASRHS \hfill] -- Assembles the imaginary part of a complex right-hand side
+\item[IASSYM \hfill] -- Assembles the imaginary part of a symmetric complex system matrix
+\item[IASUSM \hfill] -- Assembles the imaginary part of a unsymmetric complex system matrix
+\item[ASFUL \hfill]  -- Assembles a full system matrix
+\item[ASFULG \hfill] -- General assembly of a full system matrix
+\item[ASLMS \hfill]  -- Assembles a system lumped mass matrix
+\item[ASRHS \hfill]  -- Assembles the right-hand side of a system
+\item[ASSYM \hfill]  -- Assembles an symmetric system matrix
+\item[ASSYMG \hfill] -- General assembly of a symmetric system matrix
+\item[ASUSM \hfill]  -- Assembles a unsymmetric system matrix
+\item[ASUSMG \hfill] -- General assembly of an unsymmetric system matrix
+\item[RASRHS \hfill] -- Assembles the real part of a complex right-hand side
+\item[RASSYM \hfill] -- Assembles the real part of a symmetric complex system matrix
+\item[RASUSM \hfill] -- Assembles the real part of a unsymmetric complex system matrix
+\end{list}
+%\section*{Utility Routines}   %PAPER
+\subsection*{Utility Routines}      %HTML
+\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}
+\item[ADUNIT \hfill] -- Control the advisory message unit number
+\item[BNDWTH \hfill] -- Calculates semi-bandwidth of system matrix
+\item[DCSTRI \hfill] -- Calculates the direction cosines for triangular elements
+\item[DCSQUA \hfill] -- Calculates the direction cosines for quadrilateral elements
+\item[DCSBRK \hfill] -- Calculates the direction cosines for hexahedral elements
+\item[DIRECT \hfill] -- Construction of steering vector for system matrix assembly
+\item[ELGEOM \hfill] -- Construction of element geometry array for an element
+\item[ERRMES \hfill] -- Controls processing of error conditions
+\item[ERUNIT \hfill] -- Control the error message unit number
+\item[FORMNF \hfill] -- Forms nodal freedom array
+\item[FREDIF \hfill] -- Calculates of maximum freedom number difference for an element
+\item[NORM \hfill]   -- Computes the $L^2$ norm of a vector
+\item[SHAPFN \hfill] -- Forms shape function matrix {\bf~N}
+\item[SELECT \hfill] -- Constructs an element solution vector
+\item[SIDENO \hfill] -- Forms list of element and side numbers from boundary node list
+\item[UPDATE \hfill] -- Updates solution vector with system solution
+\end{list}

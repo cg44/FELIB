@@ -1,0 +1,1 @@
+awk -f script3 < subjects.tex | sort -d -f

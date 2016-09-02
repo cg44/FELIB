@@ -1,0 +1,28 @@
+BEGIN {FS = "\""
+printf"\\documentstyle[twoside,11pt]{felib0}\n"
+printf"\\def\\kwic#1#2#3#4{\n"
+printf"\\parbox{77mm}{ {#1} \\hfill {#2}}\n"
+printf"\\parbox[t]{77mm}{ {#3} \\hfill {#4}}\n"
+printf"\\par\\noindent}\n"
+printf"\\release{4}\n"
+printf"\\routine{KEYWORDS}\n"
+printf"\\title{Keyword in Context}\n"
+printf"\\date{september 90}\n"
+printf"\\begin{document}\n"
+printf"\\vspace*{5mm}\\centerline{\\bf Permute Index}\\vspace*{5mm}\n"
+printf"This section of the Level 0 Manual contains a key--word--in--context\n"
+printf"index produced from the alphabetic contents. Each line contains\n"
+printf"a routine name with a permute keyword in blod type\n"
+printf"\\newpage\n"
+printf"\\footnotesize\n"
+printf"\\noindent\n"
+printf"\\kwic{}{}{}{}\n"
+}
+{
+if(index($6," ") != 0 )
+{printf"\kwic{%s}{%s}{{\\bf %s} %s}{%s}\n",$2,$4,substr($6,1,index($6," ")-1),substr($6,index($6," ")+1,length($6)),$8}
+else
+{printf"\kwic{%s}{%s}{{\\bf %s}}{%s}\n",$2,$4,$6,$8}}
+END {
+printf"\\end{document}\n"
+}

@@ -1,0 +1,1 @@
+awk -f script4 <subjects.tex | sort -d -f | awk -f script5 

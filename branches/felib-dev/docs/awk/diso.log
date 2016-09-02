@@ -1,0 +1,26 @@
+This is TeX, Version 2.0 for Berkeley UNIX (preloaded format=lplain 88.1.20)  8 AUG 1991 12:14
+**diso 
+(diso.tex
+LaTeX Version 2.09 <3 Jan 1988>
+(/u/cg/tex/felib0.sty
+Document Style FELIB Level 0. Released 1 January 1990
+(/u/cg/tex/felib11.sty)
+\c@part=\count78
+\c@section=\count79
+\c@subsection=\count80
+\c@subsubsection=\count81
+\c@paragraph=\count82
+\c@subparagraph=\count83
+\c@figure=\count84
+\c@table=\count85
+) (diso.aux)
+Underfull \hbox (badness 10000) in paragraph at lines 13--18
+
+
+\hbox(0.0+0.0)x422.0
+.\glue(\rightskip) 0.0
+
+(itest.tex) [1
+
+] [2] (diso.aux)
+Output written on diso.dvi (2 pages, 4024 bytes).

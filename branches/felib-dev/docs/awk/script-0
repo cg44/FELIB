@@ -1,0 +1,127 @@
+BEGIN	{
+	 char["A"]="a";char["B"]="b";char["C"]="c";char["D"]="d";
+      	 char["E"]="e";char["F"]="f";char["G"]="g";char["H"]="h";
+      	 char["I"]="i";char["J"]="j";char["K"]="k";char["L"]="l";
+      	 char["M"]="m";char["N"]="n";char["O"]="o";char["P"]="p";
+      	 char["Q"]="q";char["R"]="r";char["S"]="s";char["T"]="t";
+      	 char["U"]="u";char["V"]="v";char["W"]="w";char["X"]="x";
+      	 char["Y"]="y";char["Z"]="z";s="";ignore="no";output="";
+	 printf"\\documentstyle{felib0}\n";
+	 printf"%\n";
+	 printf"\\release{4}\n";
+	 printf"\\date{July 2000}\n";
+	}
+{
+for(j=0;j<=NF;j++){
+	while((i=index($j,"$")) != 0){
+		$j = substr($j,1,i-1) " " substr($j,i+1,length($j))
+	}
+	while((i=index($j,"{{<}}")) != 0){
+		$j = substr($j,1,i-1) "$\geq$" substr($j,i+5,length($j))
+	}
+	while((i=index($j,"{{>}}")) != 0){
+		$j = substr($j,1,i-1) "$\leq$" substr($j,i+5,length($j))
+	}
+	while((i=index($j,"<")) != 0){
+		$j = substr($j,1,i-1) "$\lt$" substr($j,i+1,length($j))
+	}
+	while((i=index($j,">")) != 0){
+		$j = substr($j,1,i-1) "$\gt$" substr($j,i+1,length($j))
+	}
+}
+output = $0
+while((i=index(output,"$")) != 0){
+	output = substr(output,1,i-1) " " substr(output,i+1,length(output))
+}
+while((i=index(output,"{{<}}")) != 0){
+	output = substr(output,1,i-1) "$\geq$" substr(output,i+5,length(output))
+}
+while((i=index(output,"{{>}}")) != 0){
+	output = substr(output,1,i-1) "$\leq$" substr(output,i+5,length(output))
+}
+while((i=index(output,"<")) != 0){
+	output = substr(output,1,i-1) "$\lt$" substr(output,i+1,length(output))
+}
+while((i=index(output,">")) != 0){
+	output = substr(output,1,i-1) "$\gt$" substr(output,i+1,length(output))
+}
+if($1 == ".dn") {
+	if(s != "") printf"\\end{%s}\n",s;
+	ignore="no";
+	if(NF == 2){
+	     if($2 == "{{Purpose}}") 
+		 printf"\\begin{document}\n"
+	         s=char[substr($2,3,1)]substr($2,4,index($2,"}}")-4);
+                 printf"%\n";
+	         printf"\\begin{%s}\n",s;
+		}
+	if(NF == 3){
+	    s=char[substr($3,1,1)]substr($3,2,index($3,"}}")-2);
+            printf"%\n";
+	    printf"\\begin{%s}\n",s}
+	if(NF == 4){
+ 	    s=char[substr($2,3,1)]substr($2,4,index($2,"}}")-4);	
+            printf"%\n";
+	    printf"\\begin{%s}\n",s}
+}
+else if(substr($1,1,5) == ".OHEA") {
+	printf"\\routine{%s}\n",substr($4,index($4,"/")+1,length($4)-index($4,"/")-1);        k=1;
+        for(i=1;i<=2;i+=1){ j=index(substr(output,k,length(output)-k+1),"/");k=j+k};
+	printf"\\title{%s}\n",substr(output,k,index(substr(output,k,length(output)-k+1),"/")-1)
+	}
+else if(substr($1,1,2) == "_*") printf"     *      %s\\\\\n",$2
+else if(substr($1,1,4) == "C___")  printf"C           %s\\\\\n",substr(output,5,length(output)-5)
+else if(substr($1,1,2) == "C_") {
+	if((i=index(output,"{{")) == 0) printf"C     %s\\\\\n",substr(output,3,length(output)-2)
+	else {j=index(output,"}}");
+	     printf"C     \%s %s\\\\\n",substr(output,i+2,j-i-2),substr(output,j+3,length(output)-j-2)
+	}
+	}
+else if((i=index(output,"[")) != 0){ j=index(output,"]");k=index(output,"_");
+	printf"\\ref{%s} %s\\\\\n",substr(output,i+1,j-i-1),substr(output,k+1,length(output)-k);
+	}
+else if(substr($1,1,2) == "_S") printf"      %s\\\\\n",substr(output,2,length(output)-1)
+else if(((i=index(output,"- __") != 0)) && (s == "parameters") && ignore == "no"){
+		if($1 == "ITEST") {
+			print"\\input itest.tex";
+			ignore="yes"
+		}
+		else
+			printf"\\param{%s} %s\\\\\n",$1,substr(output,i+4 ,length(output)-i-3)
+	}
+else if(((i=index(output,"- _") != 0)) && (s == "parameters")  && ignore == "no"){
+		if($1 == "ITEST") {
+			print"\\input itest.tex";
+			ignore="yes"
+		}
+		else
+			printf"\\param{%s} %s\\\\\n",$1,substr(output,i+3 ,length(output)-i-2)
+	}
+else if(((i=index(output,"-") != 0)) && (s == "parameters")  && ignore == "no" && length($1) == 6){
+		if($1 == "ITEST") {
+			print"\\input itest.tex";
+			ignore="yes"
+		}
+		else
+			printf"\\param{%s} %s\\\\\n",$1,substr(output,i+2 ,length(output)-i-2)
+	}
+else if($1 == "_ITEST"){printf"\\error{%s}",$3
+	                for(i=4;i <= NF;i++) printf" %s",$i
+	                printf"\n"
+                       }
+else if((i=index(output,"____")) != 0){
+		if(ignore=="no") printf"      %s\n",substr(output,i+4,length(output)-i-3)}
+else if((i=index(output,"___")) != 0){
+		if(ignore=="no") printf"      %s\n",substr(output,i+3,length(output)-i-2)}
+else if((i=index(output,"__")) != 0){
+		if(ignore=="no") printf"      %s\n",substr(output,i+2,length(output)-i-1)}
+else if((i=index(output,"_")) != 0){
+		if(substr(output,length($output),1) == ",") printf"      %s\\\\\n",substr(output,i+1,length(output)-i)
+		else if(ignore=="no") printf"      %s\n",substr(output,i+1,length(output)-i)}
+else if($1 == "Errors") {}
+else if(substr($1,1,4) == "C***") {}
+else if(substr($1,1,1) == ".") {}
+else {printf"%s\n",output}
+}
+END {printf"\\end{%s}\n",s;
+     printf"\\end{document}\n"}

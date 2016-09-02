@@ -1,0 +1,3 @@
+awk -f script3 <subjects.tex >subjects.txt
+ptx -f -w100 -ikwic.ignore <subjects.txt >subjects.ptx
+awk -f script2 <subjects.ptx >kwic.tex

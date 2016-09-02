@@ -1,0 +1,21 @@
+BEGIN {
+printf"\\documentstyle[twoside,11pt]{felib0}\n"
+printf"\\release{4}\n"
+printf"\\routine{ALPHABETIC}\n"
+printf"\\title{Alphabetic Contents}\n"
+printf"\\date{September 90}\n"
+printf"\\begin{document}\n"
+printf"\\vspace*{5mm}\\centerline{\\bf Alphabetic Contents}\\vspace*{5mm}\n"
+printf"This contents list is an alphabetic list of the routines in the\n"
+printf"the Level~0 Library and is intended to give a quick but brief idea\n"
+printf"of a routine's purpose. Before using any of the routines the full\n"
+printf"routine documentation should be read.\n"
+printf"\\begin{list}{}{\leftmargin=57pt \labelwidth=55pt}\n"
+}
+{
+printf"%s\n",$0
+}
+END {
+printf"\\end{list}\n"
+printf"\\end{document}\n"
+}

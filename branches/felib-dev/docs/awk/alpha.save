@@ -1,0 +1,130 @@
+\documentstyle{felib0}
+\release{4}
+\routine{ALPHABETIC}
+\title{Alphabetic Contents}
+\date{September 90}
+\begin{document}
+\vspace*{5mm}\centerline{\bf Alphabetic Contents}\vspace*{5mm}
+This contents list is an alphabetic list of the routines in the
+the Level~0 Library and is intended to give a quick but brief idea
+of a routine's purpose. Before using any of the routines the full
+routine documentation should be read.
+\begin{list}{}{\leftmargin=80pt \labelwidth=55pt \itemsep=0pt}
+\item[ADUNIT \hfill] -- Control the advisory message unit number
+\item[ASFUL \hfill]  -- Assembles a full system matrix
+\item[ASFULG \hfill] -- General assembly of a full system matrix
+\item[ASLMS \hfill]  -- Assembles a system lumped mass matrix
+\item[ASRHS \hfill]  -- Assembles the right-hand side of a system
+\item[ASSYM \hfill]  -- Assembles an symmetric system matrix
+\item[ASSYMG \hfill] -- General assembly of a symmetric system matrix
+\item[ASUSM \hfill]  -- Assembles a unsymmetric system matrix
+\item[ASUSMG \hfill] -- General assembly of an unsymmetric system matrix
+\item[B2C2 \hfill]   -- Forms strain-displacement matrix for 2-D plane elasticity
+\item[B2P2 \hfill]   -- Forms strain-displacement matrix for axisymmetric elasticity
+\item[B3C3 \hfill]   -- Forms strain-displacement matrix for 3-D elasticity
+\item[BNDWTH \hfill] -- Calculates semi-bandwidth of system matrix
+\item[BQBRK \hfill]  -- Forms quadrature rule for line integration on hexahedrals
+\item[BQQUA \hfill]  -- Forms quadrature rule for line integration on quadrilaterals
+\item[BQTRI \hfill]  -- Forms quadrature rule for line integration on triangles
+\item[BRK20 \hfill]  -- Shape functions for twenty-noded brick element
+\item[BRK32 \hfill]  -- Shape functions for thirty-two-noded brick element
+\item[BRK8 \hfill]   -- Shape functions for eight-noded brick element
+\item[CHOBAK \hfill] -- Choleski backward substitution
+\item[CHOFWD \hfill] -- Choleski forward substitution
+\item[CHORDN \hfill] -- Choleski decomposition into triangular matrices
+\item[CHOSOL \hfill] -- Solves a system of linear equations using Choleski reduction
+\item[CMTNUL \hfill] -- Initialises a complex matrix to zero
+\item[CPRTMT \hfill] -- Prints a complex matrix in a standard form
+\item[CPRTVC \hfill] -- Prints a complex vector in a standard form
+\item[CPRTVL \hfill] -- Prints a complex nodal values in a standard form
+\item[CSYRDN \hfill] -- Complex symmetric decomposition into triangular matrices
+\item[CSYSOL \hfill] -- Solves a complex symmetric linear system
+\item[CSYSUB \hfill] -- Complex forward and backward substitution
+\item[CVCNUL \hfill] -- Initialises a complex vector to zero
+\item[DAXI \hfill]   -- Forms stress-strain matrix for axisymmetric elasticity
+\item[DCSBRK \hfill] -- Calculates the direction cosines for hexahedral elements
+\item[DCSQUA \hfill] -- Calculates the direction cosines for quadrilateral elements
+\item[DCSTRI \hfill] -- Calculates the direction cosines for triangular elements
+\item[DIRECT \hfill] -- Construction of steering vector for system matrix assembly
+\item[DISO \hfill]   -- Forms stress-strain matrix for 3-D elasticity
+\item[DPLT \hfill]   -- Forms stress-strain matrix for 2-D plate bending
+\item[DPSN \hfill]   -- Forms stress-strain matrix for plane strain
+\item[DPSS \hfill]   -- Forms stress-strain matrix for plane stress
+\item[DYAD \hfill]   -- Forms the dyad of two vectors
+\item[ELGEOM \hfill] -- Construction of element geometry array for an element
+\item[ERRMES \hfill] -- Controls processing of error conditions
+\item[ERUNIT \hfill] -- Control the error message unit number
+\item[FORMNF \hfill] -- Forms nodal freedom array
+\item[FREDIF \hfill] -- Calculates of maximum freedom number difference for an element
+\item[GAURDN \hfill] -- Gaussian decomposition into upper and lower triangles
+\item[GAUSOL \hfill] -- Solves a system of linear equations using Gaussian reduction
+\item[GAUSUB \hfill] -- Gaussian forward and backward substitution
+\item[HOUSE \hfill]  -- Householder reduction to tridiagonal form
+\item[IASRHS \hfill] -- Assembles the imaginary part of a complex right-hand side
+\item[IASSYM \hfill] -- Assembles the imaginary part of a symmetric complex system matrix
+\item[IASUSM \hfill] -- Assembles the imaginary part of a unsymmetric complex system matrix
+\item[JACO \hfill]   -- Reduction to tridiagonal form by Jacobi rotations
+\item[LINQUA \hfill] -- Calculates a unit length on the boundaries of quadrilaterals
+\item[LINTRI \hfill] -- Calculates a unit length on the boundaries of triangles
+\item[MATADD \hfil] -- Adds two full matrices together
+\item[MATCOP \hfill] -- Copies one full matrix into another
+\item[MATIDN \hfill] -- Initialises a matrix to the identity matrix
+\item[MATINV \hfill] -- Inverts a full matrix (for limited sizes)
+\item[MATMUL \hfill] -- Multiplies two matrices together
+\item[MATNUL \hfill] -- Initialises a full matrix to zeros
+\item[MATRAN \hfill] -- Forms the transpose of a full matrix
+\item[MATSUB \hfill] -- Subtracts one full matrix from another
+\item[MATVEC \hfill] -- Multiplies a full matrix by a vector
+\item[MVSYB \hfill]  -- Multiplies a symmetric band matrix by a vector
+\item[MVUSB \hfill]  -- Multiplies a unsymmetric band matrix by a vector
+\item[NORM \hfill]   -- Computes the $L^2$ norm of a vector
+\item[PRTGEO \hfill] -- Prints the mesh geometry in a standard format
+\item[PRTMAT \hfill] -- Prints a matrix in standard format
+\item[PRTTOP \hfill] -- Prints the element topology in a standard format
+\item[PRTVAL \hfill] -- Prints the nodal values in a standard format
+\item[PRTVEC \hfill] -- Prints a vector in standard format
+\item[QBRK6 \hfill]  -- Six-point quadrature rule for cube
+\item[QBRK8 \hfill]  -- Eight-point quadrature rule for cube
+\item[QLIN2 \hfill]  -- Two-point, one-dimensional quadrature
+\item[QLIN3 \hfill]  -- Three-point, one-dimensional quadrature
+\item[QLVAL \hfill]  -- Eigenvalue extraction using QL transformations
+\item[QLVEC \hfill]  -- Eigenvalue and eigenvector extraction using QL transformations
+\item[QQUA4 \hfill]  -- Four-point quadrature rule for rectangular region
+\item[QQUA9 \hfill]  -- Nine-point quadrature rule for rectangular region
+\item[QTET4 \hfill]  -- Four-point quadrature rule for tetrahedral region
+\item[QTRI4 \hfill]  -- Four-point quadrature rule for triangular region
+\item[QTRI7 \hfill]  -- Seven-point quadrature rule for triangular region
+\item[QUAM12 \hfill] -- Shape functions for twelve-noded quadrilateral membrane element
+\item[QUAM4 \hfill]  -- Shape functions for four-noded quadrilateral membrane element
+\item[QUAM8 \hfill]  -- Shape functions for eight-noded quadrilateral membrane element
+\item[QWDG6 \hfill]  -- Six-point quadrature rule for wedge-shaped region
+\item[QWDG8 \hfill]  -- Eight-point quadrature rule for wedge-shaped region
+\item[RASRHS \hfill] -- Assembles the real part of a complex right-hand side
+\item[RASSYM \hfill] -- Assembles the real part of a symmetric complex system matrix
+\item[RASUSM \hfill] -- Assembles the real part of a unsymmetric complex system matrix
+\item[ROD2 \hfill]   -- Shape functions for two-noded line element
+\item[ROD3 \hfill]   -- Shape functions for three-noded line element
+\item[ROD4 \hfill]   -- Shape functions for four-noded line element
+\item[SCAPRD \hfill] -- Forms the scalar product of two vectors
+\item[SELECT \hfill] -- Constructs an element solution vector
+\item[SHAPFN \hfill] -- Forms shape function matrix {\bf~N}
+\item[SIDENO \hfill] -- Forms list of element and side numbers from boundary node list
+\item[SURBRK \hfill] -- Calculates a unit of area on boundary faces
+\item[TET10 \hfill]  -- Shape functions for ten-noded tetrahedral element
+\item[TET20 \hfill]  -- Shape functions for twenty-noded tetrahedral element
+\item[TET4 \hfill]   -- Shape functions for four-noded tetrahedral element
+\item[TRIM10 \hfill] -- Shape functions for ten-noded triangular membrane element
+\item[TRIM3 \hfill]  -- Shape functions for three-noded triangular membrane element
+\item[TRIM6 \hfill]  -- Shape functions for six-noded triangular membrane element
+\item[UPDATE \hfill] -- Updates solution vector with system solution
+\item[VECADD \hfill] -- Adds two vectors together
+\item[VECCOP \hfill] -- Copies one vector into another
+\item[VECMAT \hfill] -- Pre-multiplies a full matrix by a vector
+\item[VECNUL \hfill] -- Initialises a vector to zeros
+\item[VECSUB \hfill] -- Subtracts one vector from another
+\item[VMSYB \hfill]  -- Pre-multiplies a symmetric band matrix by a vector
+\item[VMUSB \hfill]  -- Pre-multiplies an unsymmetric band matrix by a vector
+\item[WDG15 \hfill]  -- Shape functions for fifteen-noded wedge element
+\item[WDG6 \hfill]   -- Shape functions for six-noded wedge element
+\end{list}
+\end{document}
