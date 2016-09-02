@@ -1,0 +1,10 @@
+      SUBROUTINE MSMULT(A,IA,C,M,N)
+C
+C      THIS SUBROUTINE MULTIPLIES A MATRIX BY A SCALAR
+C
+      REAL A(IA,*)
+      DO 1 I=1,M
+      DO 1 J=1,N
+    1 A(I,J)=A(I,J)*C
+      RETURN
+      END

@@ -1,0 +1,34 @@
+      SUBROUTINE SOLVBA(PB,IPB,COPY,ICOPY,ANS,N,IW)
+C
+C      THIS SUBROUTINE PERFORMS THE GAUSSIAN BACK-SUBSTITUTION
+C      ON THE REDUCED MATRIX 'PB'.
+C
+      REAL PB(IPB,*),COPY(ICOPY,*),ANS(*)
+      IWP1=IW+1
+      IQ=2*IWP1-1
+      N1=N-1
+      DO 1 IV=1,N1
+      I=INT(COPY(IWP1,IV)+.5)
+      IF(I.EQ.IV)GOTO 2
+      S=ANS(IV)
+      ANS(IV)=ANS(I)
+      ANS(I)=S
+    2 L=IV+IWP1-1
+      IF(L.GT.N)L=N
+      IV1=IV+1
+      DO 3 I=IV1,L
+    3 ANS(I)=ANS(I)-COPY(I-IV,IV)*ANS(IV)
+    1 CONTINUE
+      ANS(N)=ANS(N)/PB(N,1)
+      IV=N-1
+    6 S=ANS(IV)
+      L=IQ
+      IF(IV+L-1.GT.N)L=N-IV+1
+      DO 4 I=2,L
+      S=S-PB(IV,I)*ANS(IV+I-1)
+    4 CONTINUE
+      ANS(IV)=S/PB(IV,1)
+      IV=IV-1
+      IF(IV.NE.0)GOTO 6
+      RETURN
+      END

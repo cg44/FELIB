@@ -1,0 +1,26 @@
+      SUBROUTINE FORMLN(DER,IDER,FUN,SAMP,ISAMP,I,J)
+C
+C      THIS SUBROUTINE FORMS THE SHAPE FUNCTIONS AND
+C      THEIR DERIVATIVES FOR 4-NODED QUADRILATERAL ELEMENTS
+C
+      REAL DER(IDER,*),FUN(*),SAMP(ISAMP,*)
+      ETA=SAMP(I,1)
+      XI=SAMP(J,1)
+      ETAM=.25*(1.-ETA)
+      ETAP=.25*(1.+ETA)
+      XIM=.25*(1.-XI)
+      XIP=.25*(1.+XI)
+      FUN(1)=4.*XIM*ETAM
+      FUN(2)=4.*XIM*ETAP
+      FUN(3)=4.*XIP*ETAP
+      FUN(4)=4.*XIP*ETAM
+      DER(1,1)=-ETAM
+      DER(1,2)=-ETAP
+      DER(1,3)=ETAP
+      DER(1,4)=ETAM
+      DER(2,1)=-XIM
+      DER(2,2)=XIM
+      DER(2,3)=XIP
+      DER(2,4)=-XIP
+      RETURN
+      END

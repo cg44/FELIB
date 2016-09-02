@@ -1,0 +1,9 @@
+      SUBROUTINE NULVEC(VEC,N)
+C
+C      THIS SUBROUTINE NULLS A COLUMN VECTOR
+C
+      REAL VEC(*)
+      DO 1 I=1,N
+    1 VEC(I)=0.
+      RETURN
+      END

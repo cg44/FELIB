@@ -1,0 +1,38 @@
+      SUBROUTINE FMQUAD(DER,IDER,FUN,SAMP,ISAMP,I,J)
+C
+C      THIS SUBROUTINE FORMS THE SHAPE FUNCTIONS AND
+C      THEIR DERIVATIVES FOR 8-NODED QUADRILATERAL ELEMENTS
+C
+      REAL DER(IDER,*),FUN(*),SAMP(ISAMP,*)
+      ETA=SAMP(I,1)
+      XI=SAMP(J,1)
+      ETAM=.25*(1.-ETA)
+      ETAP=.25*(1.+ETA)
+      XIM=.25*(1.-XI)
+      XIP=.25*(1.+XI)
+      FUN(1)=4.*ETAM*XIM*(-XI-ETA-1.)
+      FUN(2)=32.*ETAM*XIM*ETAP
+      FUN(3)=4.*ETAP*XIM*(-XI+ETA-1.)
+      FUN(4)=32.*XIM*XIP*ETAP
+      FUN(5)=4.*ETAP*XIP*(XI+ETA-1.)
+      FUN(6)=32.*ETAP*XIP*ETAM
+      FUN(7)=4.*XIP*ETAM*(XI-ETA-1.)
+      FUN(8)=32.*XIM*XIP*ETAM
+      DER(1,1)=ETAM*(2.*XI+ETA)
+      DER(1,2)=-8.*ETAM*ETAP
+      DER(1,3)=ETAP*(2.*XI-ETA)
+      DER(1,4)=-4.*ETAP*XI
+      DER(1,5)=ETAP*(2.*XI+ETA)
+      DER(1,6)=8.*ETAP*ETAM
+      DER(1,7)=ETAM*(2.*XI-ETA)
+      DER(1,8)=-4.*ETAM*XI
+      DER(2,1)=XIM*(XI+2.*ETA)
+      DER(2,2)=-4.*XIM*ETA
+      DER(2,3)=XIM*(2.*ETA-XI)
+      DER(2,4)=8.*XIM*XIP
+      DER(2,5)=XIP*(XI+2.*ETA)
+      DER(2,6)=-4.*XIP*ETA
+      DER(2,7)=XIP*(2.*ETA-XI)
+      DER(2,8)=-8.*XIM*XIP
+      RETURN
+      END

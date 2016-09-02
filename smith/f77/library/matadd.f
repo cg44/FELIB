@@ -1,0 +1,10 @@
+      SUBROUTINE MATADD(A,IA,B,IB,M,N)
+C
+C      THIS SUBROUTINE ADDS TWO EQUAL SIZED ARRAYS
+C
+      REAL A(IA,*),B(IB,*)
+      DO 1 I=1,M
+      DO 1 J=1,N
+    1 A(I,J)=A(I,J)+B(I,J)
+      RETURN
+      END

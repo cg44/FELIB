@@ -1,0 +1,34 @@
+      PROGRAM P48
+C
+C      PROGRAM 4.8 L-R TRANSFORMATION FOR EIGENVALUES
+C
+C      ALTER NEXT TO CHANGE PROBLEM SIZE
+C
+      PARAMETER (IN=20)
+C
+      REAL A(IN,IN),U(IN,IN),L(IN,IN),EOLD(IN),ENEW(IN)
+C
+      READ (5,*) N,((A(I,J),J=1,N),I=1,N)
+      READ (5,*) TOL,ITS
+      WRITE(6,*) ('************ L-R TRANSFORMATION ******************')
+      WRITE(6,*)
+      WRITE(6,*) ('MATRIX A')
+      CALL PRINTA(A,IN,N,N,6)
+      WRITE(6,*)
+      CALL NULVEC(EOLD,N)
+      ITERS = 0
+    1 ITERS = ITERS + 1
+      CALL LUFAC(A,U,L,IN,N)
+      CALL MATMUL(U,IN,L,IN,A,IN,N,N,N)
+      DO 2 I = 1,N
+    2 ENEW(I) = A(I,I)
+      CALL CHECON(ENEW,EOLD,N,TOL,ICON)
+      IF (ITERS.LT.ITS .AND. ICON.EQ.0) GO TO 1
+      WRITE(6,*) ('FINAL TRANSFORMED DIAGONAL OF MATRIX A')
+      CALL PRINTV(ENEW,N,6)
+      WRITE(6,*)
+      WRITE(6,*) ('ITERATIONS TO CONVERGENCE')
+      WRITE(6,1000) ITERS
+ 1000 FORMAT (I5)
+      STOP
+      END

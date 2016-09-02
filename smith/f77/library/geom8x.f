@@ -1,0 +1,38 @@
+      SUBROUTINE GEOM8X(IP,IQ,NXE,AA,BB,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE COORDINATES AND STEERING VECTOR
+C      FOR 8-NODE QUADS COUNTING IN X-DIRECTION
+C
+      REAL COORD(ICOORD,*)
+      INTEGER G(*),NF(INF,*),NUM(8)
+      NUM(1)=IQ*(3*NXE+2)+2*IP-1
+      NUM(2)=IQ*(3*NXE+2)+IP-NXE-1
+      NUM(3)=(IQ-1)*(3*NXE+2)+2*IP-1
+      NUM(4)=NUM(3)+1
+      NUM(5)=NUM(4)+1
+      NUM(6)=NUM(2)+1
+      NUM(7)=NUM(1)+2
+      NUM(8)=NUM(1)+1
+      INC=0
+      DO 1 I=1,8
+      DO 1 J=1,2
+      INC=INC+1
+    1 G(INC)=NF(NUM(I),J)
+      COORD(1,1)=AA*(IP-1)
+      COORD(2,1)=AA*(IP-1)
+      COORD(3,1)=AA*(IP-1)
+      COORD(5,1)=AA*IP
+      COORD(6,1)=AA*IP
+      COORD(7,1)=AA*IP
+      COORD(4,1)=.5*(COORD(3,1)+COORD(5,1))
+      COORD(8,1)=.5*(COORD(7,1)+COORD(1,1))
+      COORD(1,2)=-BB*IQ
+      COORD(8,2)=-BB*IQ
+      COORD(7,2)=-BB*IQ
+      COORD(3,2)=-BB*(IQ-1)
+      COORD(4,2)=-BB*(IQ-1)
+      COORD(5,2)=-BB*(IQ-1)
+      COORD(2,2)=.5*(COORD(1,2)+COORD(3,2))
+      COORD(6,2)=.5*(COORD(5,2)+COORD(7,2))
+      RETURN
+      END

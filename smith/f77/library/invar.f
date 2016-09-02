@@ -1,0 +1,25 @@
+      SUBROUTINE INVAR(STRESS,SIGM,DSBAR,THETA)
+C
+C      THIS SUBROUTINE FORMS THE STRESS INVARIANTS (2-D)
+C
+      REAL STRESS(*)
+      SX=STRESS(1)
+      SY=STRESS(2)
+      TXY=STRESS(3)
+      SZ=STRESS(4)
+      SIGM=(SX+SY+SZ)/3.
+      DSBAR=SQRT((SX-SY)**2+(SY-SZ)**2+(SZ-SX)**2+6.*TXY**2)/SQRT(2.)
+      IF(DSBAR.EQ.0.)THEN
+      THETA=0.
+      ELSE
+      DX=(2.*SX-SY-SZ)/3.
+      DY=(2.*SY-SZ-SX)/3.
+      DZ=(2.*SZ-SX-SY)/3.
+      XJ3=DX*DY*DZ-DZ*TXY**2
+      SINE=-13.5*XJ3/DSBAR**3
+      IF(SINE.GT.1.)SINE=1.
+      IF(SINE.LT.-1.)SINE=-1.
+      THETA=ASIN(SINE)/3.
+      END IF
+      RETURN
+      END

@@ -1,0 +1,18 @@
+      SUBROUTINE FORMGP(IP,IQ,NYE,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE 'STEERING' VECTOR FOR A
+C      4-NODE RECTANGULAR PLATE BENDING ELEMENT
+C
+      INTEGER G(*),NF(INF,*),NUM(4)
+      I1=(IP-1)*(NYE+1)+IQ
+      I2=I1+1
+      I3=IP*(NYE+1)+IQ
+      I4=I3+1
+      DO 1 I=1,4
+      G(I)=NF(I1,I)
+      G(I+4)=NF(I2,I)
+      G(I+8)=NF(I4,I)
+      G(I+12)=NF(I3,I)
+    1 CONTINUE
+      RETURN
+      END

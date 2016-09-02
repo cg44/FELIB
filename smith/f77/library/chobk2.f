@@ -1,0 +1,19 @@
+      SUBROUTINE CHOBK2(KB,IKB,LOADS,N,IW)
+C
+C      THIS SUBROUTINE PERFORMS BACKWARD CHOLESKI SUBSTITUTION
+C      FOR RIGHT HAND SIDE 'LOADS'
+C
+      REAL KB(IKB,*),LOADS(*)
+      LOADS(N)=LOADS(N)/KB(N,IW+1)
+      I=N-1
+    1 X=0.
+      L=I+IW
+      IF(I.GT.N-IW)L=N
+      M=I+1
+      DO 2 J=M,L
+    2 X=X+KB(J,IW+I-J+1)*LOADS(J)
+      LOADS(I)=(LOADS(I)-X)/KB(I,IW+1)
+      I=I-1
+      IF(I.NE.0)GOTO 1
+      RETURN
+      END

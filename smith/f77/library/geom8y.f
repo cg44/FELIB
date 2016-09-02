@@ -1,0 +1,39 @@
+      SUBROUTINE GEOM8Y(IP,IQ,NYE,AA,BB,COORD,ICOORD,G,NF,INF)
+C
+C      THIS SUBROUTINE FORMS THE COORDINATES AND STEERING VECTOR
+C      FOR 8-NODE QUADS COUNTING IN THE Y-DIRECTION
+C
+C
+      REAL COORD(ICOORD,*)
+      INTEGER NUM(8),G(*),NF(INF,*)
+      NUM(1)=(IP-1)*(3*NYE+2)+2*IQ+1
+      NUM(2)=NUM(1)-1
+      NUM(3)=NUM(2)-1
+      NUM(4)=(IP-1)*(3*NYE+2)+2*NYE+IQ+1
+      NUM(5)=IP*(3*NYE+2)+2*IQ-1
+      NUM(6)=NUM(5)+1
+      NUM(7)=NUM(6)+1
+      NUM(8)=NUM(4)+1
+      INC=0
+      DO 1 I=1,8
+      DO 1 J=1,2
+      INC=INC+1
+    1 G(INC)=NF(NUM(I),J)
+      COORD(1,1)=(IP-1)*AA
+      COORD(2,1)=(IP-1)*AA
+      COORD(3,1)=(IP-1)*AA
+      COORD(5,1)=IP*AA
+      COORD(6,1)=IP*AA
+      COORD(7,1)=IP*AA
+      COORD(4,1)=(COORD(3,1)+COORD(5,1))*.5
+      COORD(8,1)=COORD(4,1)
+      COORD(3,2)=-(IQ-1)*BB
+      COORD(4,2)=-(IQ-1)*BB
+      COORD(5,2)=-(IQ-1)*BB
+      COORD(1,2)=-IQ*BB
+      COORD(8,2)=-IQ*BB
+      COORD(7,2)=-IQ*BB
+      COORD(2,2)=(COORD(1,2)+COORD(3,2))*.5
+      COORD(6,2)=COORD(2,2)
+      RETURN
+      END

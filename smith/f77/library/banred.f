@@ -1,0 +1,26 @@
+      SUBROUTINE BANRED(BK,N,IW)
+C
+C      THIS SUBROUTINE PERFORMS GAUSSIAN REDUCTION OF
+C      THE STIFFNESS MATRIX STORED AS A VECTOR BK(N*(IW+1))
+C
+      REAL BK(*)
+      DO 1 I=2,N
+      IL1=I-1
+      KBL=IL1+IW+1
+      IF(KBL-N)3,3,2
+    2 KBL=N
+    3 DO 1 J=I,KBL
+      IJ=(J-I)*N+I
+      SUM=BK(IJ)
+      NKB=J-IW
+      IF(NKB)4,4,5
+    4 NKB=1
+    5 IF(NKB-IL1)6,6,8
+    6 DO 7 M=NKB,IL1
+      NI=(I-M)*N+M
+      NJ=(J-M)*N+M
+    7 SUM=SUM-BK(NI)*BK(NJ)/BK(M)
+    8 BK(IJ)=SUM
+    1 CONTINUE
+      RETURN
+      END

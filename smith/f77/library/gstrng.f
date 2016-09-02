@@ -1,0 +1,14 @@
+      SUBROUTINE GSTRNG(IP,NODOF,NF,INF,G)
+C
+C      THIS SUBROUTINE SELECTS THE G-VECTOR FROM THE NF-DATA
+C
+      INTEGER NF(INF,*),G(*),NODE(2)
+      NODE(1)=IP
+      NODE(2)=IP+1
+      L=0
+      DO 1 I=1,2
+      DO 1 J=1,NODOF
+      L=L+1
+    1 G(L)=NF(NODE(I),J)
+      RETURN
+      END
