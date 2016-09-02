@@ -1,0 +1,70 @@
+C***********************************************************************
+C$SPLIT$TRIM3$*********************************************************
+C***********************************************************************
+      SUBROUTINE TRIM3(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      RETURNS THE VALUES OF THE SHAPE FUNCTIONS AND THEIR
+C      DERIVATIVES AT A SPECIFIED POINT FOR A THREE-NODED C0
+C      CONTINUOUS TRIANGULAR ELEMENT.  APPROXIMATED FUNCTION
+C      CONTINUOUS ACROSS ELEMENT BOUNDARIES
+C
+C HISTORY
+C      RELEASE 1.1  29 OCT 1979 (CG) --- SERC COPYRIGHT
+C      COMMENTED    22 OCT 1980 (KR)
+C
+C ARGUMENTS IN
+C      IFUN    LENGTH OF VECTOR FUN (.GE.3)
+C      IDER    FIRST DIMENSION OF ARRAY DER (.GE.2)
+C      JDER    SECOND DIMENSION OF ARRAY DER (.GE.3)
+C      XI      FIRST LOCAL COORDINATE
+C      ETA     SECOND LOCAL COORDINATE
+C      ITEST   ERROR CHECKING OPTION
+C
+C ARGUMENTS OUT
+C      FUN     VECTOR OF LENGTH IFUN.  FUN(I) CONTAINS THE
+C              VALUE OF THE I'TH SHAPE FUNCTION AT THE POINT
+C              (XI,ETA), FOR I=1(1)3
+C      DER     ARRAY OF DIMENSION (IDER,JDER).  DER(I,J)
+C              CONTAINS THE DERIVATIVE OF THE J'TH SHAPE
+C              FUNCTION WITH RESPECT TO THE I'TH COORDINATE FOR
+C              I=1(1)2 AND J=1(1)3
+C
+C ROUTINES CALLED
+C      ERRMES
+C
+C
+C     SUBROUTINE TRIM3(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)
+C***********************************************************************
+C
+      INTEGER ERRMES, IDER, IERROR, IFUN, ITEST, JDER
+      DOUBLE PRECISION DER, ETA, FUN, SRNAME, XI, YMIN, YMAX, 
+     *     DUMMY, XMIN, XMAX, VEPS
+      DIMENSION DER(IDER,JDER), FUN(IFUN)
+      DATA SRNAME /8H TRIM3  /
+                        IF (ITEST.EQ.-1) GO TO 1010
+                        IERROR = 0
+                        IF (IFUN.LT.3) IERROR = 1
+                        IF (IDER.LT.2 .OR. JDER.LT.3) IERROR = 2
+                        YMIN = 1.0D0/DSQRT(3.0D0)*(XI-1.0D0)-
+     *                       VEPS(DUMMY)
+                        YMAX = 1.0D0/DSQRT(3.0D0)*(1.0D0-XI)+
+     *                       VEPS(DUMMY)
+                        XMIN=-(0.5D0+VEPS(DUMMY))
+                        XMAX=1.0D0+VEPS(DUMMY)
+                        IF ((XI.LT.XMIN .OR. XI.GT.XMAX)
+     *                      .OR. (ETA.LT.YMIN .OR.
+     *                       ETA.GT.YMAX)) IERROR = 3
+                        ITEST = ERRMES(ITEST,IERROR,SRNAME)
+                        IF (ITEST.NE.0) RETURN
+ 1010 FUN(1) = 1.0D0/3.0D0*(1.0D0+2.0D0*XI)
+      FUN(2) = 1.0D0/3.0D0*(1.0D0-XI-DSQRT(3.0D0)*ETA)
+      FUN(3) = 1.0D0/3.0D0*(1.0D0-XI+DSQRT(3.0D0)*ETA)
+      DER(1,1) = 2.0D0/3.0D0
+      DER(1,2) = -1.0D0/3.0D0
+      DER(1,3) = -1.0D0/3.0D0
+      DER(2,1) = 0.0D0
+      DER(2,2) = -1.0D0/DSQRT(3.0D0)
+      DER(2,3) = +1.0D0/DSQRT(3.0D0)
+      RETURN
+      END

@@ -1,0 +1,95 @@
+C***********************************************************************
+C$SPLIT$BRK8$*********************************************************
+C***********************************************************************
+      SUBROUTINE BRK8(FUN, IFUN, DER, IDER, JDER, XI, ETA, ZETA,
+     *     ITEST)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      RETURNS THE VALUES OF SHAPE FUNCTIONS AND DERIVATIVES
+C      AT A SPECIFIED POINT FOR AN 8-NODED BRICK ELEMENT.  THE
+C      FUNCTION IS CONTINUOUS ACROSS ELEMENT BOUNDARIES.
+C
+C HISTORY
+C      RELEASE 1.1  29 OCT 1979 (CG) --- SERC COPYRIGHT
+C      COMMENTED    10 OCT 1980 (KR)
+C
+C ARGUMENTS IN
+C      IFUN    DIMENSION OF VECTOR FUN (.GE.8)
+C      IDER    FIRST DIMENSION OF ARRAY DER (.GE.3)
+C      JDER    SECOND DIMENSION OF ARRAY DER (.GE.8)
+C      XI      VALUE OF LOCAL COORDINATE AT WHICH FUNCTION AND
+C              DERIVATIVE VALUES REQUIRED
+C      ETA     VALUE OF SECOND LOCAL COORDINATE
+C      ZETA    VALUE OF THIRD LOCAL COORDINATE
+C      ITEST   ERROR CHECKING OPTION
+C
+C ARGUMENTS OUT
+C      FUN     REAL VECTOR OF DIMENSION IFUN.  FUN(I) CONTAINS
+C              VALUE OF I'TH SHAPE FUNCTION AT (XI,ETA,ZETA)
+C      DER     REAL ARRAY OF DIMENSIONS (IDER,JDER).  DER(I,J)
+C              CONTAINS THE DERIVATIVE OF THE J'TH SHAPE
+C              FUNCTION WITH RESPECT TO THE I'TH COORDINATE AT
+C              THE POINT (XI,ETA,ZETA)
+C
+C ROUTINES CALLED
+C      ERRMES
+C
+C
+C     SUBROUTINE BRK8(FUN, IFUN, DER, IDER, JDER, XI, ETA, ZETA,ITEST)
+C***********************************************************************
+C
+      INTEGER ERRMES, IDER, IERROR, IFUN, ITEST, JDER
+      DOUBLE PRECISION DER, ETA, ETAM, ETAP, FUN, SRNAME, XI,
+     *     XIM, XIP, ZETA, ZETAM, ZETAP, VAL, VEPS, DUMMY
+      DIMENSION DER(IDER,JDER), FUN(IFUN)
+      DATA SRNAME /8H BRK8   /
+                        IF (ITEST.EQ.-1) GO TO 1010
+                        IERROR = 0
+                        IF (IFUN.LT.8) IERROR = 1
+                        IF (IDER.LT.3 .OR. JDER.LT.8) IERROR = 2
+                        VAL=1.0D0+VEPS(DUMMY)
+                        IF (DABS(XI).GT.VAL .OR. DABS(ETA)
+     *                     .GT.VAL .OR. DABS(ZETA).GT.VAL)
+     *                     IERROR = 3
+                        ITEST = ERRMES(ITEST,IERROR,SRNAME)
+                        IF (ITEST.NE.0) RETURN
+ 1010 ETAM = 1.0D0 - ETA
+      ETAP = 1.0D0 + ETA
+      XIM = 1.0D0 - XI
+      XIP = 1.0D0 + XI
+      ZETAM = 1.0D0 - ZETA
+      ZETAP = 1.0D0 + ZETA
+      FUN(1) = 0.125D0*XIM*ETAM*ZETAM
+      FUN(2) = 0.125D0*XIM*ETAP*ZETAM
+      FUN(3) = 0.125D0*XIP*ETAP*ZETAM
+      FUN(4) = 0.125D0*XIP*ETAM*ZETAM
+      FUN(5) = 0.125D0*XIM*ETAM*ZETAP
+      FUN(6) = 0.125D0*XIM*ETAP*ZETAP
+      FUN(7) = 0.125D0*XIP*ETAP*ZETAP
+      FUN(8) = 0.125D0*XIP*ETAM*ZETAP
+      DER(1,1) = -0.125D0*ETAM*ZETAM
+      DER(1,2) = -0.125D0*ETAP*ZETAM
+      DER(1,3) = 0.125D0*ETAP*ZETAM
+      DER(1,4) = 0.125D0*ETAM*ZETAM
+      DER(1,5) = -0.125D0*ETAM*ZETAP
+      DER(1,6) = -0.125D0*ETAP*ZETAP
+      DER(1,7) = 0.125D0*ETAP*ZETAP
+      DER(1,8) = 0.125D0*ETAM*ZETAP
+      DER(2,1) = -0.125D0*XIM*ZETAM
+      DER(2,2) = 0.125D0*XIM*ZETAM
+      DER(2,3) = 0.125D0*XIP*ZETAM
+      DER(2,4) = -0.125D0*XIP*ZETAM
+      DER(2,5) = -0.125D0*XIM*ZETAP
+      DER(2,6) = 0.125D0*XIM*ZETAP
+      DER(2,7) = 0.125D0*XIP*ZETAP
+      DER(2,8) = -0.125D0*XIP*ZETAP
+      DER(3,1) = -0.125D0*XIM*ETAM
+      DER(3,2) = -0.125D0*XIM*ETAP
+      DER(3,3) = -0.125D0*XIP*ETAP
+      DER(3,4) = -0.125D0*XIP*ETAM
+      DER(3,5) = 0.125D0*XIM*ETAM
+      DER(3,6) = 0.125D0*XIM*ETAP
+      DER(3,7) = 0.125D0*XIP*ETAP
+      DER(3,8) = 0.125D0*XIP*ETAM
+      RETURN
+      END

@@ -1,0 +1,105 @@
+C***********************************************************************
+C$SPLIT$B2P2$*********************************************************
+C***********************************************************************
+      SUBROUTINE B2P2(B, IB, JB, DER, IDER, JDER, FUN, IFUN,
+     *     COORD, ICOORD, JCOORD, NODEL, ITEST)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      FORMS THE STRAIN-DISPLACEMENT MATRIX FOR AXISYMMETRIC
+C      ELASTICITY
+C
+C HISTORY
+C
+C      COPYRIGHT (C) 1979 : SERC, RUTHERFORD APPLETON LABORATORY
+C                           CHILTON, DIDCOT, OXFORDSHIRE OX11 0QX
+C
+C      RELEASE 1.1  29 OCT 1979 (IMS)
+C      COMMENTED    12 FEB 1980 (KR)
+C
+C ARGUMENTS IN
+C      IB      FIRST DIMENSION OF ARRAY B (.GE. 3)
+C      JB      SECOND DIMENSION OF B (.GE. 2*NODEL)
+C      DER     DER(I,J) CONTAINS THE DERIVATIVE OF THE J'TH
+C              SHAPE FUNCTION WITH RESPECT TO THE I'TH GLOBAL
+C              COORDINATE
+C      IDER    FIRST DIMENSION OF DER (.GE. 2)
+C      JDER    SECOND DIMENSION OF DER (.GE. NODEL)
+C      FUN     FUN(I) CONATINS THE VALUE OF THE I'TH SHAPE
+C              FUNCTION AT THE POINT UNDER CONSIDERATION
+C      IFUN    FIRST DIMENSION OF FUN (.GE. 4)
+C      COORD   COORD(I,J) CONTAINS THE J'TH GLOBAL COORDINATE
+C              OF THE I'TH NODE
+C      ICOORD  FIRST DIMENSION OF COORD (.GE. NUMBER OF NODES
+C              IN THE MESH)
+C      JCOORD  SECOND DIMENSION OF COORD (.GE. DIMENSIONALITY
+C              OF PROBLEM)
+C      NODEL   NUMBER OF NODES ON ELEMENT
+C      ITEST   ERROR CHECKING OPTION
+C
+C ARGUMENTS OUT
+C      B       CONATINS VALUES OF STRAIN-DISPLACEMENT MATRIX
+C
+C ROUTINES CALLED
+C      MATNUL  ERRMES
+C
+C
+C     SUBROUTINE B2P2(B, IB, JB, DER, IDER, JDER, FUN, IFUN,
+C    *     COORD, ICOORD, JCOORD, NODEL, ITEST)
+C***********************************************************************
+C
+      INTEGER ERRMES, IB, ICOORD, IDER, IERROR, IFUN, ITEST,
+     *     JB, JCOORD, JDER, JTEST, K, L, M, NODEL
+      DOUBLE PRECISION B, COORD, DER, FUN, SRNAME, SUM, TOL,
+     *     VTOL, X
+      DIMENSION B(IB,JB), COORD(ICOORD,JCOORD),
+     *     DER(IDER,JDER), FUN(IFUN)
+      DATA SRNAME /8H B2P2   /
+C
+C     INTIALISATION
+C
+      K = 4
+      L = 2*NODEL
+      TOL = VTOL(X)
+C
+C     PARAMETER CHECKING
+C
+      JTEST = ITEST
+      IF (JTEST.EQ.-1) GO TO 1010
+      IERROR = 0
+      IF (IDER.LT.2 .OR. JDER.LT.NODEL) IERROR = 3
+      IF (IB.LT.3 .OR. JB.LT.L) IERROR = 2
+      IF (NODEL.LE.0) IERROR = 1
+      ITEST = ERRMES(JTEST,IERROR,SRNAME)
+      IF (ITEST.NE.0) RETURN
+C
+C     MAIN LOOPS
+C
+ 1010 CALL MATNUL(B, IB, JB, K, L, ITEST)
+C
+C     CALCULATE AVERAGE RADIUS
+C
+      SUM = 0.0D0
+      DO 1020 K=1,NODEL
+         SUM = SUM + FUN(K)*COORD(K,1)
+ 1020 CONTINUE
+C
+C     CHECK VALUE OF SUM - RBAR
+C
+      IF(JTEST.EQ.-1) GO TO 1030
+      IERROR = 0
+      IF(DABS(SUM).LT.TOL) IERROR=4
+      ITEST = ERRMES(JTEST,IERROR,SRNAME)
+      IF (ITEST.NE.0) RETURN
+C
+ 1030 DO 1040 M=1,NODEL
+         K = 2*M
+         L = K - 1
+         B(1,L) = DER(1,M)
+         B(3,K) = DER(1,M)
+         B(2,K) = DER(2,M)
+         B(3,L) = DER(2,M)
+         B(4,L) = FUN(M)/SUM
+ 1040 CONTINUE
+C
+      RETURN
+      END
