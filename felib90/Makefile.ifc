@@ -1,8 +1,0 @@
-#ifc - Intel compiler
-
-MODULES=-I../$(MODULES_DIR)
-FFLAGS=-quiet -pg
-LFLAGS=-quiet -pg
-MOD_MV=-mv *.mod ../$(MODULES_DIR)
-PATH=/opt/intel/fc/9.0/bin:/usr/bin:/bin:.
-

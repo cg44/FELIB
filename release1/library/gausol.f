@@ -1,0 +1,194 @@
+      SUBROUTINE GAUSOL(A, IA, JA, AL, IAL, JAL, N, HBAND, ROPIV,
+     *     IROPIV, R, IR, ITEST)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      CALCULATES THE SOLUTION OF A SET OF UNSYMMETRIC REAL
+C      BANDED EQUATIONS WITH A SINGLE RHS USING GAUSSIAN
+C      ELIMINATION WITH PARTIAL PIVOTING
+C
+C HISTORY
+C      RELEASE 1.1  29 OCT 1979 (CG)
+C      COMMENTED    11 OCT 1980 (KR)
+C
+C ARGUMENTS IN
+C      A       ARRAY OF DIMENSION (IA,JA).  ON ENTRY, CONTAINS
+C              THE ELEMENTS OF THE BAND MATRIX
+C      IA      FIRST DIMENSION OF A (.GE.N)
+C      JA      SECOND DIMENSION OF A (.GE.MIN(2*HBAND-1,N))
+C      IAL     FIRST DIMENSION OF ARRAY AL (.GE.N)
+C      JAL     SECOND DIMENSION OF ARRAY AL (.GE.HBAND-1)
+C      N       ORDER OF BAND MATRIX A
+C      HBAND   SEMI-BANDWIDTH OF MATRIX A
+C      IROPIV  DIMENSION OF VECTOR ROPIV (.GE.N)
+C      R       ON ENTRY, CONTAINS THE VECTOR OF RHS'S
+C      IR      DIMENSION OF R (.GE.N)
+C      ITEST   ERROR CHECKING OPTION
+C
+C ARGUMENTS OUT
+C      A       ON EXIT, CONTAINS THE UPPER TRIANGULAR MATRIX U,
+C              WITH THE DIAGONAL ELEMENTS OF U STORED AS THEIR
+C              RECIPROCALS.  THE I'TH ROW OF U IS STORED IN THE
+C              I'TH ROW OF A, WITH THE DIAGONAL ELEMENT OF U IN
+C              THE LOCATION A(I,1)
+C      AL      CONTAINS THE SUB-DIAGONAL ELEMENTS OF L, THE
+C              LOWER TRIANGULAR MATRIX.  THE MULTIPLIERS L(I,R)
+C              OBTAINED AT THE R'TH MAJOR STEP OF THE
+C              ELIMINATION ARE STORED IN A(R,I-R)
+C      ROPIV   CONTAINS DETAILS OF THE ROW INTERCHANGES.
+C              ROPIV(R)=R IF NO INTERCHANGE OCCURS AT THE R'TH
+C              MAJOR STEP; IF ROWS R AND J ARE INTERCHANGED
+C              THEN ROPIV(R)=J
+C      R       ON EXIT, CONTAINS THE SOLUTION VECTOR
+C
+C ROUTINES CALLED
+C      VEPS    ERRMES
+C
+C
+C     SUBROUTINE GAUSOL(A, IA, JA, AL, IAL, JAL, N, HBAND, ROPIV,
+C    *     IROPIV, R, IR, ITEST)
+C***********************************************************************
+C
+      INTEGER ERRMES, HBAND, I, IA, IAL, IK, IR, IRO, IROPIV,
+     *     IERROR, ITEST, IW, J, JA, JAL, JR, K, M,
+     *     N, ROPIV, L, JJ, II, KK
+      DOUBLE PRECISION A, AL, EPS, ONE, R, SRNAME, X, Y, ZERO
+      DIMENSION A(IA,JA), AL(IAL,JAL), R(IR), ROPIV(IROPIV)
+      DATA ONE /1.0D0/, SRNAME /8H GAUSOL /, ZERO /0.0D0/
+                        IF(ITEST.EQ.-1) GO TO 999
+                        IERROR=0
+                        IF(IA.LT.N.OR.JA.LT.2*HBAND-1) IERROR=5
+                        IF(IAL.LT.N.OR.JAL.LT.HBAND) IERROR=4
+                        IF(IROPIV.LT.N) IERROR=3
+                        IF(IR.LT.N) IERROR=2
+                        IF(N.LE.0.OR.HBAND.LE.0) IERROR=1
+                        ITEST=ERRMES(ITEST,IERROR,SRNAME)
+                        IF(ITEST.NE.0) RETURN
+999                     IERROR = 6
+      EPS = VEPS(X)
+      IW = MIN0(N,2*HBAND-1)
+      M = HBAND
+      K = IW - HBAND
+      IF (K.LE.0) GO TO 1040
+      DO 1030 I=1,K
+      L = IW - M
+      DO 1010 J=1,M
+      JJ = J + L
+      A(I,J) = A(I,JJ)
+ 1010 CONTINUE
+      M = M + 1
+      DO 1020 J=M,IW
+      A(I,J) = ZERO
+ 1020 CONTINUE
+ 1030 CONTINUE
+ 1040 M = N - IW + HBAND + 1
+      J = IW + 1
+      IF (M.GT.N) GO TO 1070
+      DO 1060 I=M,N
+      J = J - 1
+      DO 1050 K=J,IW
+      A(I,K) = ZERO
+ 1050 CONTINUE
+ 1060 CONTINUE
+C+++++
+C     INSERT ZEROS
+C
+ 1070 DO 1100 I=1,N
+      X = ZERO
+      DO 1080 J=1,IW
+      X = X + DABS(A(I,J))
+ 1080 CONTINUE
+      IF (X.GT.ZERO) GO TO 1090
+      IRO = I
+      GO TO 1260
+ 1090 AL(I,1) = ONE/X
+ 1100 CONTINUE
+C+++++
+C     ROPIV NORMS OF A CALCULATED AND THEIRO RECIPROCALS
+C     STORED IN FIROST COLUMN OF AL
+C
+                        IERROR = 7
+      DO 1180 IRO=1,N
+      X = ZERO
+      M = MIN0(IRO+HBAND-1,N)
+      DO 1110 I=IRO,M
+      Y = DABS(A(I,1))*AL(I,1)
+      IF (Y.LE.X) GO TO 1110
+      X = Y
+      J = I
+ 1110 CONTINUE
+      IF (X.LT.EPS) GO TO 1260
+      ROPIV(IRO) = J
+C+++++
+C     IRO'TH PIVOT ELEMENT SELECTED
+C
+      IF (J.EQ.IRO) GO TO 1130
+      DO 1120 I=1,IW
+      X = A(IRO,I)
+      A(IRO,I) = A(J,I)
+      A(J,I) = X
+ 1120 CONTINUE
+      AL(J,1) = AL(IRO,1)
+C+++++
+C     ROW PIVOTS IRO AND J INTERCHANGED
+C
+ 1130 JR = IRO + 1
+      Y = ONE/A(IRO,1)
+      IF (JR.GT.M) GO TO 1170
+      DO 1160 I=JR,M
+      X = A(I,1)*Y
+      IF (IW.LT.2) GO TO 1150
+      DO 1140 J=2,IW
+      A(I,J-1) = A(I,J) - X*A(IRO,J)
+ 1140 CONTINUE
+ 1150 IK = I - IRO
+      AL(IRO,IK) = X
+      A(I,IW) = ZERO
+ 1160 CONTINUE
+ 1170 A(IRO,1) = Y
+ 1180 CONTINUE
+C+++++
+C     ELIMINATION COMPLETE
+C
+      M = HBAND - 1
+      DO 1210 K=1,N
+      M = MIN0(M+1,N)
+      J = ROPIV(K)
+      IF (J.EQ.K) GO TO 1190
+      X = R(K)
+      R(K) = R(J)
+      R(J) = X
+C+++++
+C     ROW PIVOTS K AND J INTERCHANGED
+C
+ 1190 IK = K + 1
+      IF (IK.GT.M) GO TO 1220
+      X = R(K)
+      DO 1200 I=IK,M
+      II = I - K
+      R(I) = R(I) - X*AL(K,II)
+ 1200 CONTINUE
+ 1210 CONTINUE
+C+++++
+C     FORWARD SUBSTITUTION COMPLETE
+C
+ 1220 DO 1250 K=1,N
+      M = MIN0(K,IW)
+      I = N + 1 - K
+      II = I - 1
+      Y = A(I,1)
+      X = R(I)
+      IF (M.EQ.1) GO TO 1240
+      DO 1230 J=2,M
+      KK = J + II
+      X = X - A(I,J)*R(KK)
+ 1230 CONTINUE
+ 1240 R(I) = X*Y
+ 1250 CONTINUE
+C+++++
+C     BACKWARD SUBSTITUTION COMPLETE
+C
+      RETURN
+ 1260 A(IRO,1) = ZERO
+                        ITEST = ERRMES(ITEST,IERROR,SRNAME)
+      RETURN
+      END

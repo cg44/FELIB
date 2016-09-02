@@ -1,0 +1,41 @@
+      SUBROUTINE CHORDN(KB, IKB, JKB, N, HBAND, ITEST)
+      INTEGER A, B, HBAND, I, IK, IKB, ITEST, J, JKB, K, L,
+     *     LK, N, W, IERROR, ERRMES
+      DOUBLE PRECISION KB, X, SRNAME
+      DIMENSION KB(IKB,JKB)
+      DATA SRNAME /8H CHORDN  /
+      IF(ITEST.EQ.-1) GO TO 999
+      IERROR=0
+C     IF(N.LE.0.OR.HBAND.LE.0) IERROR=1
+      IF(IKB.LT.N.OR.JKB.LT.HBAND) IERROR=1
+      ITEST=ERRMES(ITEST,IERROR,SRNAME)
+      IF(ITEST.NE.0) RETURN
+999   W = HBAND - 1
+      DO 1050 I=1,N
+      X = 0.0D0
+      DO 1010 J=1,W
+      X = X + KB(I,J)*KB(I,J)
+ 1010 CONTINUE
+      IF(ITEST.EQ.-1) GO TO 998
+      IERROR=0
+      IF((KB(I,W+1)-X).LE.0.0E0) IERROR=2
+      ITEST=ERRMES(ITEST,IERROR,SRNAME)
+      IF(ITEST.NE.0) RETURN
+998   KB(I,W+1) = DSQRT(KB(I,W+1)-X)
+      DO 1040 K=1,W
+      X = 0.0D0
+      IF (I+K.GT.N) GO TO 1040
+      IF (K.EQ.W) GO TO 1030
+      L = W - K
+ 1020 IK = I + K
+      LK = L + K
+      X = X + KB(IK,L)*KB(I,LK)
+      L = L - 1
+      IF (L.NE.0) GO TO 1020
+ 1030 A = I + K
+      B = W - K + 1
+      KB(A,B) = (KB(A,B)-X)/KB(I,W+1)
+ 1040 CONTINUE
+ 1050 CONTINUE
+      RETURN
+      END

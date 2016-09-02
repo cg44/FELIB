@@ -1,0 +1,30 @@
+      SUBROUTINE CHOBAK(KB, IKB, JKB, LOADS, ILOADS, N, HBAND,
+     *     ITEST)
+      INTEGER HBAND, I, IJ, IKB, ILOADS, ITEST, J, JKB, L,
+     *     M, N, W, IERROR, ERRMES
+      DOUBLE PRECISION KB, LOADS, X, SRNAME
+      DIMENSION KB(IKB,JKB), LOADS(ILOADS)
+      DATA SRNAME /8H CHOBAK /
+      IF(ITEST.EQ.-1) GO TO 99
+      IERROR=0
+      IF(ILOADS.LT.N) IERROR=3
+      IF(IKB.LT.N.OR.JKB.LT.HBAND) IERROR=2
+      IF(N.LE.0.OR.HBAND.LE.0) IERROR=1
+      ITEST=ERRMES(ITEST,IERROR,SRNAME)
+      IF(ITEST.NE.0) RETURN
+99    W = HBAND - 1
+      LOADS(N) = LOADS(N)/KB(N,W+1)
+      I = N - 1
+ 1010 X = 0.0D0
+      L = I + W
+      IF (I.GT.N-W) L = N
+      M = I + 1
+      DO 1020 J=M,L
+      IJ = W + I - J + 1
+      X = X + KB(J,IJ)*LOADS(J)
+ 1020 CONTINUE
+      LOADS(I) = (LOADS(I)-X)/KB(I,W+1)
+      I = I - 1
+      IF (I.NE.0) GO TO 1010
+      RETURN
+      END

@@ -1,0 +1,1318 @@
+C***********************************************************************
+C$SPLIT$SEG1P1$*********************************************************
+C***********************************************************************
+      INTEGER DIF, DIMEN, DOFEL, DOFNOD, ELNUM, ELTOP, ELTYP,                  1
+     *     HBAND, I, IABSS, IB, IBT, IBTDB, ICOORD, ID, IDB,                   1
+     *     IDER, IDERIV, IELDIS, IELK, IELTOP, IFUN, IGEOM,                    1
+     *     IJAC, IJACIN, ILOADS, INF, IQUAD, IRESTR, ISTEER,                   1
+     *     ISTRN, ISTRS, ISYSK, ITEST, IWGHT, J, JABSS, JB,                    1
+     *     JBT, JBTDB, JCOORD, JD, JDB, JDER, JDERIV, JELK,                    1
+     *     JELTOP, JGEOM, JJAC, JJACIN, JNF, JRESTR, JSTEER,                   1
+     *     JSYSK, K, LODNOD, NELE, NF, NIN, NODEL, NODNUM,                     1
+     *     NOUT, NQP, NTEMP, NUMSS, NWORK, RESNOD, RESTR, STEER,               1
+     *     TOTDOF, TOTELS, TOTNOD                                              1
+      DOUBLE PRECISION ABSS, B, BT, BTDB, COORD, D, DB, DER,                   2
+     *     DERIV, DET, E, ELDIS, ELK, ETA, FUN, GEOM, JAC,                     2
+     *     JACIN, LOADS, NU, QUOT, STRN, STRS, SYSK, WGHT,                     2
+     *     WORK, XI                                                            2
+      LOGICAL FIRST                                                            3
+      DIMENSION ABSS(3,9), B(6,24), BT(24,6), BTDB(24,24),                     4
+     *     COORD(100,3), D(6,6), DB(6,24), DER(3,8), DERIV(3,8),               4
+     *     ELDIS(24), ELK(24,24), ELTOP(100,10), FUN(8),                       4
+     *     GEOM(8,3), JAC(3,3), JACIN(3,3), LOADS(100),                        4
+     *     NF(100,3), NWORK(8), RESTR(100,4), STEER(24),                       4
+     *     STRN(6), STRS(6), SYSK(100,25), WGHT(9), WORK(3)                    4
+      DATA IABSS /3/, IB /6/, IBT /24/, IBTDB /24/, ICOORD /100/,              5
+     *     ID /6/, IDB /6/, IDER /3/, IDERIV /3/, IELDIS /24/,                 5
+     *     IELK /24/, IELTOP /100/, IFUN /8/, IGEOM /8/,                       5
+     *     IJAC /3/, IJACIN /3/, ILOADS /100/, INF /100/,                      5
+     *     IRESTR /100/, ISTEER /24/, ISTRN /6/, ISTRS /6/,                    5
+     *     ISYSK /100/, IWGHT /9/, JABSS /9/, JB /24/, JBT /6/,                5
+     *     JBTDB /24/, JCOORD /3/, JD /6/, JDB /24/, JDER /8/,                 5
+     *     JDERIV /8/, JELK /24/, JELTOP /10/, JGEOM /3/,                      5
+     *     JJAC /3/, JJACIN /3/, JNF /3/, JRESTR /4/,                          5
+     *     JSYSK /25/                                                          5
+C
+      DATA NIN /5/, NOUT /6/, NTEMP /7/                                        6
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0                                                                7
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)                                                        8
+      READ (NIN,8010) TOTNOD, DIMEN                                            9
+      WRITE (NOUT,9020) TOTNOD, DIMEN                                         10
+      DO 1020 I=1,TOTNOD                                                      11
+      READ (NIN,8020) NODNUM, (WORK(J),J=1,DIMEN)                             12
+      WRITE (NOUT,9030) NODNUM, (WORK(J),J=1,DIMEN)                           13
+      DO 1010 J=1,DIMEN                                                       14
+      COORD(NODNUM,J) = WORK(J)                                               15
+ 1010 CONTINUE                                                                16
+ 1020 CONTINUE                                                                17
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)                                                       18
+      READ (NIN,8010) ELTYP, TOTELS, NODEL                                    19
+      WRITE (NOUT,9020) ELTYP, TOTELS, NODEL                                  20
+      DO 1040 I=1,TOTELS                                                      21
+      READ (NIN,8010) ELNUM, (NWORK(J),J=1,NODEL)                             22
+      WRITE (NOUT,9020) ELNUM, (NWORK(J),J=1,NODEL)                           23
+      ELTOP(ELNUM,1) = ELTYP                                                  24
+      ELTOP(ELNUM,2) = NODEL                                                  25
+      DO 1030 J=1,NODEL                                                       26
+      ELTOP(ELNUM,J+2) = NWORK(J)                                             27
+ 1030 CONTINUE                                                                28
+ 1040 CONTINUE                                                                29
+C
+C                            INPUT OF MATERIAL PROPERTIES AND
+C                            CONSTRUCTION OF STRESS-STRAIN MATRIX D
+C                            FOR PLANE STRAIN
+C
+      WRITE (NOUT,9050)                                                       30
+      READ (NIN,8030) NU, E                                                   31
+      WRITE (NOUT,9060) NU, E                                                 32
+      CALL DPSN(D, ID, JD, E, NU, NUMSS, ITEST)                               33
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF RESTRAINED NODE
+C                            DATA AND CONSTRUCTION OF NODAL FREEDOM
+C                            ARRAY NF
+C
+      WRITE (NOUT,9070)                                                       34
+      READ (NIN,8010) DOFNOD                                                  35
+      WRITE (NOUT,9020) DOFNOD                                                36
+      READ (NIN,8010) RESNOD                                                  37
+      WRITE (NOUT,9020) RESNOD                                                38
+      K = DOFNOD + 1                                                          39
+      DO 1050 I=1,RESNOD                                                      40
+      READ (NIN,8010) (RESTR(I,J),J=1,K)                                      41
+      WRITE (NOUT,9020) (RESTR(I,J),J=1,K)                                    42
+ 1050 CONTINUE                                                                43
+      CALL FORMNF(RESTR, IRESTR, JRESTR, RESNOD, TOTNOD, DOFNOD,              44
+     *     NF, INF, JNF, TOTDOF, ITEST)                                       44
+C
+C                            LOADING DATA INPUT
+C
+      WRITE (NOUT,9080)                                                       45
+      CALL VECNUL(LOADS, ILOADS, TOTDOF, ITEST)                               46
+      READ (NIN,8010) LODNOD                                                  47
+      WRITE (NOUT,9020) LODNOD                                                48
+      DO 1070 I=1,LODNOD                                                      49
+      READ (NIN,8020) NODNUM, (WORK(J),J=1,DOFNOD)                            50
+      WRITE (NOUT,9030) NODNUM, (WORK(J),J=1,DOFNOD)                          51
+      DO 1060 J=1,DOFNOD                                                      52
+      K = NF(NODNUM,J)                                                        53
+      IF (K.EQ.0) GO TO 1060                                                  54
+      LOADS(K) = WORK(J)                                                      55
+ 1060 CONTINUE                                                                56
+ 1070 CONTINUE                                                                57
+C
+C                            CALCULATION OF SEMI-BANDWIDTH
+C
+      FIRST = .TRUE.                                                          58
+      DO 1080 NELE=1,TOTELS                                                   59
+      CALL FREDIF(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  60
+     *     DOFNOD, FIRST, DIF, ITEST)                                         60
+ 1080 CONTINUE                                                                61
+      HBAND = DIF + 1                                                         62
+C
+C*                           ************************************
+C*                           *                                  *
+C*                           * GLOBAL STIFFNESS MATRIX ASSEMBLY *
+C*                           *                                  *
+C*                           ************************************
+C
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)                   63
+      DOFEL = NODEL*DOFNOD                                                    64
+      CALL QQUA4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)                 65
+      DO 1120 NELE=1,TOTELS                                                   66
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,                 67
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)                          67
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            USING NQP QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)                       68
+      DO 1110 IQUAD=1,NQP                                                     69
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)                                                      70
+      ETA = ABSS(2,IQUAD)                                                     71
+      CALL QUAM4(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)                  72
+      CALL MATMUL(DER, IDER, JDER, GEOM, IGEOM, JGEOM, JAC, IJAC,             73
+     *     JJAC, DIMEN, NODEL, DIMEN, ITEST)                                  73
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,              74
+     *     DET, ITEST)                                                        74
+      CALL MATMUL(JACIN, IJACIN, JJACIN, DER, IDER, JDER, DERIV,              75
+     *     IDERIV, JDERIV, DIMEN, DIMEN, NODEL, ITEST)                        75
+C
+C                            FORMATION OF STRAIN-DISPLACEMENT
+C                            MATRIX B AND OUTPUT TO WORK FILE FOR
+C                            LATER RECOVERY PROCESS
+C
+      CALL B2C2(B, IB, JB, DERIV, IDERIV, JDERIV, NODEL, ITEST)               76
+      WRITE (NTEMP) ((B(I,J),I=1,NUMSS),J=1,DOFEL)                            77
+C
+C                            FORMATION OF ELEMENT STIFFNESS ELK
+C
+      CALL MATMUL(D, ID, JD, B, IB, JB, DB, IDB, JDB, NUMSS, NUMSS,           78
+     *     DOFEL, ITEST)                                                      78
+      CALL MATRAN(B, IB, JB, BT, IBT, JBT, NUMSS, DOFEL, ITEST)               79
+      CALL MATMUL(BT, IBT, JBT, DB, IDB, JDB, BTDB, IBTDB, JBTDB,             80
+     *     DOFEL, NUMSS, DOFEL, ITEST)                                        80
+      QUOT = DET*WGHT(IQUAD)                                                  81
+      DO 1100 I=1,DOFEL                                                       82
+      DO 1090 J=1,DOFEL                                                       83
+      BTDB(I,J) = BTDB(I,J)*QUOT                                              84
+ 1090 CONTINUE                                                                85
+ 1100 CONTINUE                                                                86
+      CALL MATADD(ELK, IELK, JELK, BTDB, IBTDB, JBTDB, DOFEL,                 87
+     *     DOFEL, ITEST)                                                      87
+ 1110 CONTINUE                                                                88
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX
+C                            SYSK
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  89
+     *     DOFNOD, STEER, ISTEER, ITEST)                                      89
+      CALL ASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,                  90
+     *     ISTEER, HBAND, DOFEL, ITEST)                                       90
+ 1120 CONTINUE                                                                91
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+C                            SOLUTION OF SYSTEM MATRIX FOR THE
+C                            NODAL DISPLACEMENTS
+C
+      WRITE (NOUT,9090)                                                       92
+      CALL PRTVEC(LOADS, ILOADS, TOTDOF, ITEST)                               93
+      CALL CHOSOL(SYSK, ISYSK, JSYSK, LOADS, ILOADS, TOTDOF, HBAND,           94
+     *     ITEST)                                                             94
+      WRITE (NOUT,9100)                                                       95
+      CALL PRTVEC(LOADS, ILOADS, TOTDOF, ITEST)                               96
+C
+C*                           **************************
+C*                           *                        *
+C*                           * STRESS-STRAIN RECOVERY *
+C*                           *                        *
+C*                           **************************
+C
+C                            RECOVERY OF STRESSES AND STRAINS AT
+C                            THE QUADRATURE SAMPLING POINTS USING
+C                            THE ELEMENT STRAIN-DISPLACEMENT MATRIX
+C                            B FROM THE WORK FILE
+C
+      REWIND NTEMP                                                            97
+      DO 1150 NELE=1,TOTELS                                                   98
+      WRITE (NOUT,9110) NELE                                                  99
+C
+C                            SELECT NODAL DISPLACEMENTS FOR ELEMENT
+C                            NELE USING THE STEERING VECTOR
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                 100
+     *     DOFNOD, STEER, ISTEER, ITEST)                                     100
+      DO 1140 IQUAD=1,NQP                                                    101
+      CALL VECNUL(ELDIS, IELDIS, DOFEL, ITEST)                               102
+      DO 1130 I=1,DOFEL                                                      103
+      JSTEER = STEER(I)                                                      104
+      IF (JSTEER.NE.0) ELDIS(I) = LOADS(JSTEER)                              105
+ 1130 CONTINUE                                                               106
+C
+C                            RECOVER B MATRIX FOR POINT IQUAD AND
+C                            CALCULATE THE STRESSES AND STRAINS
+C
+      READ (NTEMP) ((B(I,J),I=1,NUMSS),J=1,DOFEL)                            107
+      CALL MATVEC(B, IB, JB, ELDIS, IELDIS, NUMSS, DOFEL, STRN,              108
+     *     ISTRN, ITEST)                                                     108
+      CALL MATVEC(D, ID, JD, STRN, ISTRN, NUMSS, NUMSS, STRS,                109
+     *     ISTRS, ITEST)                                                     109
+      WRITE (NOUT,9120) IQUAD                                                110
+      CALL PRTVEC(STRN, ISTRN, NUMSS, ITEST)                                 111
+      CALL PRTVEC(STRS, ISTRS, NUMSS, ITEST)                                 112
+ 1140 CONTINUE                                                               113
+ 1150 CONTINUE                                                               114
+      STOP                                                                   115
+ 8010 FORMAT (16I5)                                                          116
+ 8020 FORMAT (I5, 6F10.0)                                                    117
+ 8030 FORMAT (2F10.0)                                                        118
+ 9010 FORMAT (1H //24H**** NODAL GEOMETRY ****//)                            119
+ 9020 FORMAT (16I5)                                                          120
+ 9030 FORMAT (I5, 6F10.5)                                                    121
+ 9040 FORMAT (1H //26H**** ELEMENT TOPOLOGY ****//)                          122
+ 9050 FORMAT (1H //29H**** MATERIAL PROPERTIES ****//)                       123
+ 9060 FORMAT (2F10.5)                                                        124
+ 9070 FORMAT (1H //24H**** RESTRAINT DATA ****//)                            125
+ 9080 FORMAT (1H //22H**** LOADING DATA ****//)                              126
+ 9090 FORMAT (1H //26H **** VECTOR OF LOADS ****//)                          127
+ 9100 FORMAT (1H //42H **** EQUILIBRIUM DISPLACEMENTS (U,V) ****//)          128
+ 9110 FORMAT (1H //39H **** STRAINS AND STRESSES FOR ELEMENT , I3,           129
+     *     5H ****//)                                                        129
+ 9120 FORMAT (1H /18H QUADRATURE POINT , I3/)                                130
+      END                                                                    131
+C***********************************************************************
+C$SPLIT$SEG2P1$*********************************************************
+C***********************************************************************
+      INTEGER DIMEN, DOFEL, DOFNOD, ELNUM, ELTOP, ELTYP, I,                    1
+     *     IABSS, IB, IBT, IBTDB, ICOORD, ID, IDB, IDER, IDERIV,               1
+     *     IDIAG, IELK, IELM, IELTOP, IFTF, IFUN, IGEOM, IJAC,                 1
+     *     IJACIN, INF, IQUAD, IRESTR, ISHP, ISTEER, ISUB,                     1
+     *     ISYSK, ISYSM, ITEST, ITSHP, IWGHT, J, JABSS, JB,                    1
+     *     JBT, JBTDB, JCOORD, JD, JDB, JDER, JDERIV, JELK,                    1
+     *     JELM, JELTOP, JFTF, JGEOM, JJAC, JJACIN, JNF, JRESTR,               1
+     *     JSHP, JSYSK, JTSHP, K, NELE, NF, NIN, NMODES, NODEL,                1
+     *     NODNUM, NOUT, NQP, NUMSS, NWORK, RESNOD, RESTR,                     1
+     *     STEER, TOTDOF, TOTELS, TOTNOD                                       1
+      DOUBLE PRECISION ABSS, AREA, B, BT, BTDB, COORD, D, DB,                  2
+     *     DER, DERIV, DET, DIAG, E, ELK, ELM, EPS, ETA, FTF,                  2
+     *     FUN, GEOM, JAC, JACIN, NU, QUOT, RHO, SHP, SUB,                     2
+     *     SYSK, SYSM, TOL, TSHP, VEPS, VTOL, WGHT, WORK, X,                   2
+     *     XI                                                                  2
+      DIMENSION ABSS(3,9), B(6,24), BT(24,6), BTDB(24,24),                     3
+     *     COORD(100,3), D(6,6), DB(6,24), DER(3,8), DERIV(3,8),               3
+     *     DIAG(100), ELK(24,24), ELM(24,24), ELTOP(100,10),                   3
+     *     FTF(24,24), FUN(8), GEOM(8,3), JAC(3,3), JACIN(3,3),                3
+     *     NF(100,3), NWORK(8), RESTR(50,4), SHP(3,24),                        3
+     *     STEER(24), SUB(100), SYSK(100,100), SYSM(100),                      3
+     *     TSHP(24,3), WGHT(9), WORK(3)                                        3
+      DATA IABSS /3/, IB /6/, IBT /24/, IBTDB /24/, ICOORD /100/,              4
+     *     ID /6/, IDB /6/, IDER /3/, IDERIV /3/, IDIAG /100/,                 4
+     *     IELK /24/, IELM /24/, IELTOP /100/, IFTF /24/,                      4
+     *     IFUN /8/, IGEOM /8/, IJAC /3/, IJACIN /3/,                          4
+     *     INF /100/, IRESTR /50/, ISHP /3/, ISTEER /24/,                      4
+     *     ISUB /100/, ISYSK /100/, ISYSM /100/, ITSHP /24/,                   4
+     *     IWGHT /9/, JABSS /9/, JB /24/, JBT /6/, JBTDB /8/,                  4
+     *     JCOORD /3/, JD /6/, JDB /24/, JDER /8/, JDERIV /8/,                 4
+     *     JELK /24/, JELM /24/, JELTOP /10/, JFTF /24/,                       4
+     *     JGEOM /3/, JJAC /3/, JJACIN /3/, JNF /3/, JRESTR /4/,               4
+     *     JSHP /24/, JSYSK /100/, JTSHP /3/                                   4
+C
+      DATA NIN /5/, NOUT /6/                                                   5
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0                                                                6
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)                                                        7
+      READ (NIN,8010) TOTNOD, DIMEN                                            8
+      WRITE (NOUT,9020) TOTNOD, DIMEN                                          9
+      DO 1020 I=1,TOTNOD                                                      10
+      READ (NIN,8020) NODNUM, (WORK(J),J=1,DIMEN)                             11
+      WRITE (NOUT,9030) NODNUM, (WORK(J),J=1,DIMEN)                           12
+      DO 1010 J=1,DIMEN                                                       13
+      COORD(NODNUM,J) = WORK(J)                                               14
+ 1010 CONTINUE                                                                15
+ 1020 CONTINUE                                                                16
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)                                                       17
+      READ (NIN,8010) ELTYP, TOTELS, NODEL                                    18
+      WRITE (NOUT,9020) ELTYP, TOTELS, NODEL                                  19
+      DO 1040 I=1,TOTELS                                                      20
+      READ (NIN,8010) ELNUM, (NWORK(J),J=1,NODEL)                             21
+      WRITE (NOUT,9020) ELNUM, (NWORK(J),J=1,NODEL)                           22
+      ELTOP(ELNUM,1) = ELTYP                                                  23
+      ELTOP(ELNUM,2) = NODEL                                                  24
+      DO 1030 J=1,NODEL                                                       25
+      ELTOP(ELNUM,J+2) = NWORK(J)                                             26
+ 1030 CONTINUE                                                                27
+ 1040 CONTINUE                                                                28
+C
+C                            INPUT OF MATERIAL PROPERTIES AND
+C                            CONSTRUCTION OF STRESS-STRAIN MATRIX D
+C                            FOR PLANE STRAIN
+C
+      WRITE (NOUT,9050)                                                       29
+      READ (NIN,8030) NU, E, RHO                                              30
+      WRITE (NOUT,9060) NU, E, RHO                                            31
+      CALL DPSN(D, ID, JD, E, NU, NUMSS, ITEST)                               32
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF RESTRAINED NODE
+C                            DATA AND CONSTRUCTION OF NODAL FREEDOM
+C                            ARRAY NF
+C
+      WRITE (NOUT,9070)                                                       33
+      READ (NIN,8010) DOFNOD                                                  34
+      WRITE (NOUT,9020) DOFNOD                                                35
+      READ (NIN,8010) RESNOD                                                  36
+      WRITE (NOUT,9020) RESNOD                                                37
+      K = DOFNOD + 1                                                          38
+      DO 1050 I=1,RESNOD                                                      39
+      READ (NIN,8010) (RESTR(I,J),J=1,K)                                      40
+      WRITE (NOUT,9020) (RESTR(I,J),J=1,K)                                    41
+ 1050 CONTINUE                                                                42
+      CALL FORMNF(RESTR, IRESTR, JRESTR, RESNOD, TOTNOD, DOFNOD,              43
+     *     NF, INF, JNF, TOTDOF, ITEST)                                       43
+      READ (NIN,8010) NMODES                                                  44
+C
+C*                           *******************************
+C*                           *                             *
+C*                           * SYSTEM STIFFNESS MATRIX AND *
+C*                           *     MASS MATRIX ASSEMBLY    *
+C*                           *                             *
+C*                           *******************************
+C
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, TOTDOF, ITEST)                  45
+      CALL VECNUL(SYSM, ISYSM, TOTDOF, ITEST)                                 46
+      DOFEL = NODEL*DOFNOD                                                    47
+      CALL QQUA4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)                 48
+      DO 1090 NELE=1,TOTELS                                                   49
+      AREA = 0.0D0                                                            50
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,                 51
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)                          51
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            AND ELEMENT LUMPED MASS USING NQP
+C                            QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)                       52
+      CALL MATNUL(ELM, IELM, JELM, DOFEL, DOFEL, ITEST)                       53
+      DO 1080 IQUAD=1,NQP                                                     54
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)                                                      55
+      ETA = ABSS(2,IQUAD)                                                     56
+      CALL QUAM4(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)                  57
+      CALL MATMUL(DER, IDER, JDER, GEOM, IGEOM, JGEOM, JAC, IJAC,             58
+     *     JJAC, DIMEN, NODEL, DIMEN, ITEST)                                  58
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,              59
+     *     DET, ITEST)                                                        59
+      CALL MATMUL(JACIN, IJACIN, JJACIN, DER, IDER, JDER, DERIV,              60
+     *     IDERIV, JDERIV, DIMEN, DIMEN, NODEL, ITEST)                        60
+C
+C                            FORMATION OF STRAIN-DISPLACEMENT
+C                            MATRIX B AND FORMATION OF INTEGRAND
+C                            FOR ELEMENT STIFFNESS MATRIX ELK
+C
+      CALL B2C2(B, IB, JB, DERIV, IDERIV, JDERIV, NODEL, ITEST)               61
+      CALL MATMUL(D, ID, JD, B, IB, JB, DB, IDB, JDB, NUMSS, NUMSS,           62
+     *     DOFEL, ITEST)                                                      62
+      CALL MATRAN(B, IB, JB, BT, IBT, JBT, NUMSS, DOFEL, ITEST)               63
+      CALL MATMUL(BT, IBT, JBT, DB, IDB, JDB, BTDB, IBTDB, JBTDB,             64
+     *     DOFEL, NUMSS, DOFEL, ITEST)                                        64
+C
+C                            FORMATION OF INTEGRAND FOR ELEMENT
+C                            MASS MATRIX ELM
+C
+      CALL SHAPFN(SHP, ISHP, JSHP, FUN, IFUN, NODEL, DOFNOD, ITEST)           65
+      CALL MATRAN(SHP, ISHP, JSHP, TSHP, ITSHP, JTSHP, DOFNOD,                66
+     *     DOFEL, ITEST)                                                      66
+      CALL MATMUL(TSHP, ITSHP, JTSHP, SHP, ISHP, JSHP, FTF, IFTF,             67
+     *     JFTF, DOFEL, DOFNOD, DOFEL, ITEST)                                 67
+C
+      QUOT = DET*WGHT(IQUAD)                                                  68
+      AREA = AREA + QUOT                                                      69
+      DO 1070 I=1,DOFEL                                                       70
+      DO 1060 J=1,DOFEL                                                       71
+      BTDB(I,J) = BTDB(I,J)*QUOT                                              72
+      FTF(I,J) = FTF(I,J)*QUOT                                                73
+ 1060 CONTINUE                                                                74
+ 1070 CONTINUE                                                                75
+      CALL MATADD(ELK, IELK, JELK, BTDB, IBTDB, JBTDB, DOFEL,                 76
+     *     DOFEL, ITEST)                                                      76
+      CALL MATADD(ELM, IELM, JELM, FTF, IFTF, JFTF, DOFEL, DOFEL,             77
+     *     ITEST)                                                             77
+ 1080 CONTINUE                                                                78
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX
+C                            SYSK, SYSTEM LUMPED MASS MATRIX SYSM
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  79
+     *     DOFNOD, STEER, ISTEER, ITEST)                                      79
+      CALL ASFUL(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,                  80
+     *     ISTEER, DOFEL, ITEST)                                              80
+      CALL ASLMS(SYSM, ISYSM, ELM, IELM, JELM, STEER, ISTEER,                 81
+     *     DOFEL, DOFNOD, AREA, ITEST)                                        81
+ 1090 CONTINUE                                                                82
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+      CALL PRTVEC(SYSM, ISYSM, TOTDOF, ITEST)                                 83
+C
+C                            REDUCTION OF SYSTEM MASS MATRIX BY
+C                            CHOLESKI REDUCTION AND CONSTRUCTION OF
+C                            MODIFIED SYSTEM STIFFNESS MATRIX
+C
+      DO 1100 I=1,TOTDOF                                                      84
+      SYSM(I) = 1.0D0/DSQRT(SYSM(I)*RHO)                                      85
+ 1100 CONTINUE                                                                86
+      DO 1120 I=1,TOTDOF                                                      87
+      DO 1110 J=1,TOTDOF                                                      88
+      SYSK(I,J) = SYSM(I)*SYSK(I,J)*SYSM(J)                                   89
+ 1110 CONTINUE                                                                90
+ 1120 CONTINUE                                                                91
+C
+C                            HOUSEHOLDER TRIDIAGONALISATION OF SYSK
+C                            AND EIGENVALUE AND EIGENVECTOR
+C                            RECOVERY USING QL TRANSFORMATIONS
+C
+      TOL = VTOL(X)                                                           92
+      CALL HOUSE(SYSK, ISYSK, JSYSK, SYSK, ISYSK, JSYSK, DIAG,                93
+     *     IDIAG, SUB, ISUB, TOTDOF, TOL, ITEST)                              93
+      EPS = VEPS(X)                                                           94
+      CALL QLVEC(DIAG, IDIAG, SUB, ISUB, SYSK, ISYSK, JSYSK,                  95
+     *     TOTDOF, EPS, ITEST)                                                95
+      CALL PRTVEC(DIAG, IDIAG, TOTDOF, ITEST)                                 96
+      DO 1140 J=1,NMODES                                                      97
+      DO 1130 I=1,TOTDOF                                                      98
+      DIAG(I) = SYSK(I,J)*SYSM(I)                                             99
+ 1130 CONTINUE                                                               100
+      CALL PRTVEC(DIAG, IDIAG, TOTDOF, ITEST)                                101
+ 1140 CONTINUE                                                               102
+      STOP                                                                   103
+ 8010 FORMAT (16I5)                                                          104
+ 8020 FORMAT (I5, 6F10.0)                                                    105
+ 8030 FORMAT (6F10.0)                                                        106
+ 9010 FORMAT (//24H**** NODAL GEOMETRY ****//)                               107
+ 9020 FORMAT (16I5)                                                          108
+ 9030 FORMAT (I5, 6F10.5)                                                    109
+ 9040 FORMAT (//26H**** ELEMENT TOPOLOGY ****//)                             110
+ 9050 FORMAT (//29H**** MATERIAL PROPERTIES ****//)                          111
+ 9060 FORMAT (2F10.5)                                                        112
+ 9070 FORMAT (//24H**** RESTRAINT DATA ****//)                               113
+      END                                                                    114
+C***********************************************************************
+C$SPLIT$SEG2P2$*********************************************************
+C***********************************************************************
+      INTEGER DIF, DIMEN, DOFEL, DOFNOD, ELNUM, ELTOP, ELTYP,
+     *     FREDOM, HBAND, I, IABSS, IB, IBT, IBTDB, ICOORD,
+     *     ID, ID2X0, ID2X0, ID2X1, ID2X1, IDB, IDER, IDERIV,
+     *     IDX0, IDX1, IELK, IELM, IELTOP, IFTF, IFUN, IGEOM,
+     *     IJAC, IJACIN, ILOADS, INF, IQUAD, IRESTR, ISHP,
+     *     ISTEER, ISYSK, ISYSM, ISYSW, ITEST, ITSHP, IWGHT,
+     *     IWORK, IX0, IX1, J, JABSS, JB, JBT, JBTDB, JCOORD,
+     *     JD, JDB, JDER, JDERIV, JELK, JELM, JELTOP, JFTF,
+     *     JGEOM, JJAC, JJACIN, JNF, JRESTR, JSHP, JSYSK, JSYSM,
+     *     JSYSW, JTSHP, K, NELE, NF, NIN, NODEL, NODNUM, NOUT,
+     *     NQP, NSTEPS, NUMSS, NWORK, OUTNOD, RESNOD, RESTR,
+     *     STEER, TOTDOF, TOTELS, TOTLOD, TOTNOD
+      DOUBLE PRECISION ABSS, ALPHA, AMP, AREA, B, BETA, BT,
+     *     BTDB, C1, C2, C3, C4, C5, C6, C7, COORD, D, D2X0,
+     *     D2X1, DB, DER, DERIV, DET, DTIM, DX0, DX1, E, ELK,
+     *     ELM, ETA, FORCE, FTF, FUN, GEOM, JAC, JACIN, LOAD,
+     *     LOADS, NU, OMEGA, PHASE, QUOT, RHO, SHP, SYSK, SYSM,
+     *     SYSW, T, THETA, TIME, TSHP, WGHT, WORK, X0, X1,
+     *     XI
+      LOGICAL FIRST
+      DIMENSION ABSS(3,9), B(6,24), BT(24,6), BTDB(24,24),
+     *     D(6,6), DB(6,24), DER(3,8), DERIV(3,8), ELK(24,24),
+     *     ELM(24,24), FTF(24,24), FUN(8), GEOM(8,3),
+     *     JAC(3,3), JACIN(3,3), NWORK(8), SHP(3,24), STEER(8),
+     *     TSHP(24,3), WGHT(9)
+C
+C                            PROBLEM DEPENDENT ARRAYS
+C
+      DIMENSION COORD(100,3), D2X0(100), D2X1(100), DX0(100),
+     *     DX1(100), ELTOP(100,10), LOADS(100), NF(100,3),
+     *     RESTR(50,4), SYSK(100,25), SYSM(100,25),
+     *     SYSW(100,25), WORK(100), X0(100), X1(100)
+C
+      DATA IABSS /3/, IB /6/, IBT /24/, IBTDB /24/, ID /6/,
+     *     IDB /6/, IDER /3/, IDERIV /3/, IELK /24/, IELM /24/,
+     *     IFTF /24/, IFUN /8/, IGEOM /8/, IJAC /3/, IJACIN /3/,
+     *     ISHP /3/, ISTEER /8/, ITSHP /24/, IWGHT /9/,
+     *     JABSS /9/, JB /24/, JBT /6/, JBTDB /24/, JD /6/,
+     *     JDB /24/, JDER /8/, JDERIV /8/, JELK /24/, JELM /24/,
+     *     JFTF /24/, JGEOM /3/, JJAC /3/, JJACIN /3/,
+     *     JSHP /24/, JTSHP /3/
+C
+C                            PROBLEM DEPENDENT DATA STATEMENTS
+C
+      DATA ICOORD /100/, ID2X0 /100/, ID2X1 /100/, IDX0 /100/,
+     *     IDX1 /100/, IELTOP /100/, ILOADS /100/, INF /100/,
+     *     IRESTR /50/, ISYSK /100/, ISYSM /100/, ISYSW /100/,
+     *     IWORK /100/, IX0 /100/, IX1 /100/, JCOORD /3/,
+     *     JELTOP /10/, JNF /3/, JRESTR /4/, JSYSK /25/,
+     *     JSYSM /25/, JSYSW /25/
+C
+      DATA NIN /5/, NOUT /6/
+C
+C                            STEP UP TIME DEPENDENT FORCING
+C                            FUNCTION AS STATEMENT FUNCTION
+C
+      FORCE(T) = AMP*DCOS(OMEGA*T+PHASE)
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)
+      READ (NIN,8010) TOTNOD, DIMEN
+      WRITE (NOUT,9020) TOTNOD, DIMEN
+      DO 1020 I=1,TOTNOD
+      READ (NIN,8020) NODNUM, (WORK(J),J=1,DIMEN)
+      WRITE (NOUT,9030) NODNUM, (WORK(J),J=1,DIMEN)
+      DO 1010 J=1,DIMEN
+      COORD(NODNUM,J) = WORK(J)
+ 1010 CONTINUE
+ 1020 CONTINUE
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)
+      READ (NIN,8010) ELTYP, TOTELS, NODEL
+      WRITE (NOUT,9020) ELTYP, TOTELS, NODEL
+      DO 1040 I=1,TOTELS
+      READ (NIN,8010) ELNUM, (NWORK(J),J=1,NODEL)
+      WRITE (NOUT,9020) ELNUM, (NWORK(J),J=1,NODEL)
+      ELTOP(ELNUM,1) = ELTYP
+      ELTOP(ELNUM,2) = NODEL
+      DO 1030 J=1,NODEL
+      ELTOP(ELNUM,J+2) = NWORK(J)
+ 1030 CONTINUE
+ 1040 CONTINUE
+C
+C                            INPUT OF MATERIAL PROPERTIES AND
+C                            CONSTRUCTION OF STRSS-STRAIN MATRIX D
+C                            FOR PLANE STRAIN
+C
+      WRITE (NOUT,9050)
+      READ (NIN,8030) NU, E, RHO
+      WRITE (NOUT,9060) NU, E, RHO
+      CALL DPSN(D, ID, JD, E, NU, NUMSS, ITEST)
+C
+C                            INPUT OF TIME STEPPING PARAMETERS ,
+C                            RAYLEIGH DAMPING COEFFICIENTS
+C
+      READ (NIN,8020) NSTEPS, DTIM, THETA
+      WRITE (NOUT,9030) NSTEPS, DTIM, THETA
+      READ (NIN,8030) ALPHA, BETA
+      WRITE (NOUT,9060) ALPHA, BETA
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF RESTRAINED NODE
+C                            DATA AND CONSTRUCTION OF NODAL FREEDOM
+C                            ARRAY NF
+C
+      WRITE (NOUT,9070)
+      READ (NIN,8010) DOFNOD
+      WRITE (NOUT,9020) DOFNOD
+      READ (NIN,8010) RESNOD
+      WRITE (NOUT,9020) RESNOD
+      K = DOFNOD + 1
+      DO 1050 I=1,RESNOD
+      READ (NIN,8010) (RESTR(I,J),J=1,K)
+      WRITE (NOUT,9020) (RESTR(I,J),J=1,K)
+ 1050 CONTINUE
+      CALL FORMNF(RESTR, IRESTR, JRESTR, RESNOD, TOTNOD, DOFNOD,
+     *     NF, INF, JNF, TOTDOF, ITEST)
+C
+C                            LOADING DATA INPUT AND FORCING
+C                            FUNCTION PARAMETERS
+C
+      READ (NIN,8030) AMP, OMEGA, PHASE
+      WRITE (NOUT,9060) AMP, OMEGA, PHASE
+      READ (NIN,8010) TOTLOD
+      WRITE (NOUT,9020) TOTLOD
+      DO 1070 I=1,TOTLOD
+      READ (NIN,8010) NODNUM, (NWORK(J),J=1,DOFNOD)
+      WRITE (NOUT,9020) NODNUM, (NWORK(J),J=1,DOFNOD)
+      DO 1060 J=1,DOFNOD
+      IF (NWORK(J).EQ.0) GO TO 1060
+      K = NF(NODNUM,J)
+      IF (K.EQ.0) GO TO 1060
+      RESTR(I,1) = K
+ 1060 CONTINUE
+ 1070 CONTINUE
+      WRITE (NOUT,9020) (RESTR(I,1),I=1,TOTLOD)
+C
+C                            OUTPUT CONTROL DATA
+C
+      READ (NIN,8010) OUTNOD,FREDOM
+      WRITE (NOUT,9020) OUTNOD,FREDOM
+C
+C
+C                            CALCULATION OF SEMI-BANDWIDTH
+C
+      FIRST = .TRUE.
+      DO 1080 NELE=1,TOTELS
+      CALL FREDIF(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,
+     *     DOFNOD, FIRST, DIF, ITEST)
+ 1080 CONTINUE
+      HBAND = DIF + 1
+C
+C*                           *******************************
+C*                           *                             *
+C*                           * SYSTEM STIFFNESS MATRIX AND *
+C*                           *     MASS MATRIX ASSEMBLY    *
+C*                           *                             *
+C*                           *******************************
+C
+      CALL VECNUL(WORK, IWORK, TOTDOF, ITEST)
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)
+      CALL MATNUL(SYSM, ISYSM, JSYSM, TOTDOF, HBAND, ITEST)
+      DOFEL = NODEL*DOFNOD
+      CALL QQUA4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)
+      DO 1120 NELE=1,TOTELS
+      AREA = 0.0D0
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            AND ELEMENT LUMPED MASS USING NQP
+C                            QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)
+      CALL MATNUL(ELM, IELM, JELM, DOFEL, DOFEL, ITEST)
+      DO 1110 IQUAD=1,NQP
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)
+      ETA = ABSS(2,IQUAD)
+      CALL QUAM4(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)
+      CALL MATMUL(DER, IDER, JDER, GEOM, IGEOM, JGEOM, JAC, IJAC,
+     *     JJAC, DIMEN, NODEL, DIMEN, ITEST)
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,
+     *     DET, ITEST)
+      CALL MATMUL(JACIN, IJACIN, JJACIN, DER, IDER, JDER, DERIV,
+     *     IDERIV, JDERIV, DIMEN, DIMEN, NODEL, ITEST)
+C
+C                            FORMATION OF STRAIN-DISPLACEMENT
+C                            MATRIX B AND FORMATION OF INTEGRAND
+C                            FOR ELEMENT STIFFNESS MATRIX ELK
+C
+      CALL B2C2(B, IB, JB, DERIV, IDERIV, JDERIV, NODEL, ITEST)
+      CALL MATMUL(D, ID, JD, B, IB, JB, DB, IDB, JDB, NUMSS, NUMSS,
+     *     DOFEL, ITEST)
+      CALL MATRAN(B, IB, JB, BT, IBT, JBT, NUMSS, DOFEL, ITEST)
+      CALL MATMUL(BT, IBT, JBT, DB, IDB, JDB, BTDB, IBTDB, JBTDB,
+     *     DOFEL, NUMSS, DOFEL, ITEST)
+C
+C                            FORMATION OF INTEGRAND FOR ELEMENT
+C                            MASS MATRIX ELM
+C
+      CALL SHAPFN(SHP, ISHP, JSHP, FUN, IFUN, NODEL, DOFNOD, ITEST)
+      CALL MATRAN(SHP, ISHP, JSHP, TSHP, ITSHP, JTSHP, DOFNOD,
+     *     DOFEL, ITEST)
+      CALL MATMUL(TSHP, ITSHP, JTSHP, SHP, ISHP, JSHP, FTF, IFTF,
+     *     JFTF, DOFEL, DOFNOD, DOFEL, ITEST)
+C
+      QUOT = DET*WGHT(IQUAD)
+      AREA = AREA + QUOT
+      DO 1100 I=1,DOFEL
+      DO 1090 J=1,DOFEL
+      BTDB(I,J) = BTDB(I,J)*QUOT
+      FTF(I,J) = FTF(I,J)*QUOT
+ 1090 CONTINUE
+ 1100 CONTINUE
+      CALL MATADD(ELK, IELK, JELK, BTDB, IBTDB, JBTDB, DOFEL,
+     *     DOFEL, ITEST)
+      CALL MATADD(ELM, IELM, JELM, FTF, IFTF, JFTF, DOFEL, DOFEL,
+     *     ITEST)
+ 1110 CONTINUE
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX
+C                            SYSK, SYSTEM LUMPED MASS MATRIX SYSM
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,
+     *     DOFNOD, STEER, ISTEER, ITEST)
+      CALL ASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+      CALL ASSYM(SYSM, ISYSM, JSYSM, ELM, IELM, JELM, STEER,
+     *     ISTEER, HBAND, DOFEL, ITEST)
+ 1120 CONTINUE
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+C                            SET INITIAL CONDITIONS
+C
+      CALL VECNUL(X0, IX0, TOTDOF, ITEST)
+      CALL VECNUL(DX0, IDX0, TOTDOF, ITEST)
+      CALL VECNUL(D2X0, ID2X0, TOTDOF, ITEST)
+      C1 = ALPHA + 1.D0/(THETA*DTIM)
+      C2 = BETA + THETA*DTIM
+      C3 = (1.D0-THETA)*DTIM
+      C4 = BETA - (1.D0-THETA)*DTIM
+      C5 = 1.D0/(THETA*DTIM)
+      C6 = (1.D0-THETA)/THETA
+      C7 = THETA*DTIM
+C
+C                            CONSTRUCTION OF MODIFIED SYSTEM
+C                            MATRICES AND REDUCTION OF LEFT HAND
+C                            SIDE MATRIX SYSK BY CHOLESKI
+C                            REDUCTION.
+C
+      DO 1140 I=1,TOTDOF
+      DO 1130 J=1,HBAND
+      SYSW(I,J) = C1*SYSM(I,J) + C4*SYSK(I,J)
+      SYSK(I,J) = C1*SYSM(I,J) + C2*SYSK(I,J)
+      SYSM(I,J) = SYSM(I,J)/THETA
+ 1130 CONTINUE
+ 1140 CONTINUE
+      CALL CHORDN(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)
+C
+C                            SOLUTION FOR DISPLACMENTS, VELOCITIES
+C                            AND ACCELERATIONS AT EACH TIME STEP
+C
+      WRITE (NOUT,9080) OUTNOD,FREDOM
+      FREDOM=NF(OUTNOD,FREDOM)
+      WRITE (NOUT,9090)
+      WRITE (NOUT,9100)
+      TIME = 0.0D0
+      DO 1170 I=1,NSTEPS
+      TIME = TIME + DTIM
+      CALL VECNUL(LOADS, ILOADS, TOTDOF, ITEST)
+      LOAD = C7*FORCE(TIME) + C3*FORCE(TIME-DTIM)
+      DO 1150 J=1,TOTLOD
+      K = RESTR(J,1)
+      LOADS(K) = LOAD
+ 1150 CONTINUE
+      CALL MVSLT(SYSM, ISYSM, JSYSM, DX0, IDX0, WORK, IWORK,
+     *     TOTDOF, HBAND, ITEST)
+      CALL VECADD(LOADS, ILOADS, WORK, IWORK, TOTDOF, ITEST)
+      CALL MVSLT(SYSW, ISYSW, JSYSW, X0, IX0, WORK, IWORK, TOTDOF,
+     *     HBAND, ITEST)
+      CALL VECADD(LOADS, ILOADS, WORK, IWORK, TOTDOF, ITEST)
+      CALL CHOFWD(SYSK, ISYSK, JSYSK, LOADS, ILOADS, TOTDOF, HBAND,
+     *     ITEST)
+      CALL CHOBAK(SYSK, ISYSK, JSYSK, LOADS, ILOADS, TOTDOF, HBAND,
+     *     ITEST)
+      CALL VECCOP(LOADS, ILOADS, X1, IX1, TOTDOF, ITEST)
+      DO 1160 K=1,TOTDOF
+      DX1(K) = C5*(X1(K)-X0(K)) - C6*DX0(K)
+      D2X1(K) = C5*(DX1(K)-DX0(K)) - C6*D2X0(K)
+ 1160 CONTINUE
+      CALL VECCOP(X1, IX1, X0, IX1, TOTDOF, ITEST)
+      CALL VECCOP(DX1, IDX1, DX0, IDX0, TOTDOF, ITEST)
+      CALL VECCOP(D2X1, ID2X1, D2X0, ID2X0, TOTDOF, ITEST)
+      WRITE (NOUT,9110) TIME, X1(FREDOM), DX1(FREDOM), D2X1(FREDOM)
+ 1170 CONTINUE
+      STOP
+ 8010 FORMAT (16I5)
+ 8020 FORMAT (I5, 6F10.0)
+ 8030 FORMAT (6F10.0)
+ 9010 FORMAT (1H //25H **** NODAL GEOMETRY ****//)
+ 9020 FORMAT (1H 16I5)
+ 9030 FORMAT (1H I5, 6F10.5)
+ 9040 FORMAT (1H //27H **** ELEMENT TOPOLOGY ****//)
+ 9050 FORMAT (1H //30H **** MATERIAL PROPERTIES ****//)
+ 9060 FORMAT (1H 10D10.3)
+ 9070 FORMAT (1H //25H **** RESTRAINT DATA ****//)
+ 9080 FORMAT(1H1,17HRESULTS FOR NODE ,I5,8HFREEDOM ,I1///)
+ 9090 FORMAT (1H ///45X, 1H', 14X, 1H")
+ 9100 FORMAT (1H , 14X, 1HT, 3(14X, 1HX)//)
+ 9110 FORMAT (1H , 10X, 4(D10.3, 5X))
+      END
+C***********************************************************************
+C$SPLIT$SEG3P1$*********************************************************
+C***********************************************************************
+      INTEGER BNDNOD, BNODE, DIF, DIMEN, DOFEL, DOFNOD, ELNUM,                 1
+     *     ELTOP, ELTYP, HBAND, I, IABSS, ICOORD, ID, IDL,                     1
+     *     IDT, IDTPD, IELK, IELTOP, IFUN, IJAC, IJACIN, ILOADS,               1
+     *     IGEOM, INF, IP, IPD, IQUAD, ISTEER, ISYSK, ITEST,                   1
+     *     IWGHT, J, JABSS, JCOORD, JD, JDL, JDT, JDTPD,                       1
+     *     JELK, JELTOP, JJAC, JJACIN, JGEOM, JNF, JP, JPD,                    1
+     *     JSYSK, NELE, NF, NIN, NODEL, NODNUM, NOUT, NQP,                     1
+     *     NWORK, STEER, TOTDOF, TOTELS, TOTNOD                                1
+      DOUBLE PRECISION ABSS, BVAL, COORD, D, DET, DL, DT, DTPD,                2
+     *     ELK, ETA, FUN, JAC, JACIN, LOADS, GEOM, P, PD,                      2
+     *     PERM, QUOT, SCALE, SYSK, WGHT, WORK, XI                             2
+      LOGICAL FIRST                                                            3
+      DIMENSION ABSS(3,9), BNODE(30), BVAL(30), COORD(100,3),                  4
+     *     D(3,8), DL(3,8), DT(8,3), DTPD(8,8), ELK(8,8),                      4
+     *     ELTOP(100,10), FUN(8), JAC(3,3), JACIN(3,3),                        4
+     *     LOADS(100), GEOM(8,3), NF(100,1), NWORK(8),                         4
+     *     P(3,3), PD(3,8), PERM(3), STEER(8), SYSK(100,25),                   4
+     *     WGHT(9), WORK(3)                                                    4
+      DATA IABSS /3/, ICOORD /100/, ID /3/, IDL /3/, IDT /8/,                  5
+     *     IDTPD /8/, IELK /8/, IELTOP /100/, IFUN /8/,                        5
+     *     IJAC /3/, IJACIN /3/, ILOADS /100/, IGEOM /8/,                      5
+     *     INF /100/, IP /3/, IPD /3/, ISTEER /8/, ISYSK /100/,                5
+     *     IWGHT /9/, JABSS /9/, JCOORD /3/, JD /8/, JDL /8/,                  5
+     *     JDT /3/, JDTPD /8/, JELK /8/, JELTOP /10/, JJAC /3/,                5
+     *     JJACIN /3/, JGEOM /3/, JNF /1/, JP /3/, JPD /8/,                    5
+     *     JSYSK /25/, SCALE /1.0D+10/                                         5
+C
+      DATA NIN /5/, NOUT /6/                                                   6
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0                                                                7
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)                                                        8
+      READ (NIN,8010) TOTNOD, DIMEN                                            9
+      WRITE (NOUT,9020) TOTNOD, DIMEN                                         10
+      DO 1020 I=1,TOTNOD                                                      11
+      READ (NIN,8020) NODNUM, (WORK(J),J=1,DIMEN)                             12
+      WRITE (NOUT,9030) NODNUM, (WORK(J),J=1,DIMEN)                           13
+      DO 1010 J=1,DIMEN                                                       14
+      COORD(NODNUM,J) = WORK(J)                                               15
+ 1010 CONTINUE                                                                16
+ 1020 CONTINUE                                                                17
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)                                                       18
+      READ (NIN,8010) ELTYP, TOTELS, NODEL                                    19
+      WRITE (NOUT,9020) ELTYP, TOTELS, NODEL                                  20
+      DO 1040 I=1,TOTELS                                                      21
+      READ (NIN,8010) ELNUM, (NWORK(J),J=1,NODEL)                             22
+      WRITE (NOUT,9020) ELNUM, (NWORK(J),J=1,NODEL)                           23
+      ELTOP(ELNUM,1) = ELTYP                                                  24
+      ELTOP(ELNUM,2) = NODEL                                                  25
+      DO 1030 J=1,NODEL                                                       26
+      ELTOP(ELNUM,J+2) = NWORK(J)                                             27
+ 1030 CONTINUE                                                                28
+ 1040 CONTINUE                                                                29
+C
+C                            INPUT OF PERMEABILITIES AND CON-
+C                            STRUCTION OF PERMEABILITY MATRIX P
+C
+      WRITE (NOUT,9050)                                                       30
+      READ (NIN,8030) (PERM(I),I=1,DIMEN)                                     31
+      WRITE (NOUT,9060) (PERM(I),I=1,DIMEN)                                   32
+      CALL MATNUL(P, IP, JP, DIMEN, DIMEN, ITEST)                             33
+      DO 1050 I=1,DIMEN                                                       34
+      P(I,I) = PERM(I)                                                        35
+ 1050 CONTINUE                                                                36
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF BOUNDARY CON-
+C                            DITIONS AND CONSTRUCTION OF NODAL
+C                            FREEDOM ARRAY NF
+C
+      WRITE (NOUT,9070)                                                       37
+      READ (NIN,8010) DOFNOD                                                  38
+      WRITE (NOUT,9020) DOFNOD                                                39
+      READ (NIN,8010) BNDNOD                                                  40
+      WRITE (NOUT,9020) BNDNOD                                                41
+      DO 1060 I=1,BNDNOD                                                      42
+      READ (NIN,8040) BNODE(I), BVAL(I)                                       43
+      WRITE (NOUT,9030) BNODE(I), BVAL(I)                                     44
+ 1060 CONTINUE                                                                45
+      TOTDOF = 0                                                              46
+      DO 1080 I=1,TOTNOD                                                      47
+      DO 1070 J=1,DOFNOD                                                      48
+      TOTDOF = TOTDOF + 1                                                     49
+      NF(I,J) = TOTDOF                                                        50
+ 1070 CONTINUE                                                                51
+ 1080 CONTINUE                                                                52
+C
+C                            CALCULATION OF SEMI-BANDWIDTH
+C
+      FIRST = .TRUE.                                                          53
+      DO 1090 NELE=1,TOTELS                                                   54
+      CALL FREDIF(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  55
+     *     DOFNOD, FIRST, DIF, ITEST)                                         55
+ 1090 CONTINUE                                                                56
+      HBAND = DIF + 1                                                         57
+C
+C*                           ************************************
+C*                           *                                  *
+C*                           * SYSTEM STIFFNESS MATRIX ASSEMBLY *
+C*                           *                                  *
+C*                           ************************************
+C
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)                   58
+      DOFEL = NODEL*DOFNOD                                                    59
+      CALL QQUA4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)                 60
+      DO 1130 NELE=1,TOTELS                                                   61
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,                 62
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)                          62
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            USING NQP QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)                       63
+      DO 1120 IQUAD=1,NQP                                                     64
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)                                                      65
+      ETA = ABSS(2,IQUAD)                                                     66
+      CALL QUAM4(FUN, IFUN, DL, IDL, JDL, XI, ETA, ITEST)                     67
+      CALL MATMUL(DL, IDL, JDL, GEOM, IGEOM, JGEOM, JAC, IJAC,                68
+     *     JJAC, DIMEN, NODEL, DIMEN, ITEST)                                  68
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,              69
+     *     DET, ITEST)                                                        69
+      CALL MATMUL(JACIN, IJACIN, JJACIN, DL, IDL, JDL, D, ID, JD,             70
+     *     DIMEN, DIMEN, NODEL, ITEST)                                        70
+C
+C                            FORMATION OF ELEMENT STIFFNESS ELK
+C
+      CALL MATMUL(P, IP, JP, D, ID, JD, PD, IPD, JPD, DIMEN, DIMEN,           71
+     *     DOFEL, ITEST)                                                      71
+      CALL MATRAN(D, ID, JD, DT, IDT, JDT, DIMEN, DOFEL, ITEST)               72
+      CALL MATMUL(DT, IDT, JDT, PD, IPD, JPD, DTPD, IDTPD, JDTPD,             73
+     *     DOFEL, DIMEN, DOFEL, ITEST)                                        73
+      QUOT = DET*WGHT(IQUAD)                                                  74
+      DO 1110 I=1,DOFEL                                                       75
+      DO 1100 J=1,DOFEL                                                       76
+      DTPD(I,J) = DTPD(I,J)*QUOT                                              77
+ 1100 CONTINUE                                                                78
+ 1110 CONTINUE                                                                79
+      CALL MATADD(ELK, IELK, JELK, DTPD, IDTPD, JDTPD, DOFEL,                 80
+     *     DOFEL, ITEST)                                                      80
+ 1120 CONTINUE                                                                81
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX
+C                            SYSK
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  82
+     *     DOFNOD, STEER, ISTEER, ITEST)                                      82
+      CALL ASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,                  83
+     *     ISTEER, HBAND, DOFEL, ITEST)                                       83
+ 1130 CONTINUE                                                                84
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+C                            MODIFICATION OF STIFFNESS MATRIX AND
+C                            RIGHT-HAND SIDE TO IMPLEMENT BOUNDARY
+C                            CONDITIONS
+C
+      CALL VECNUL(LOADS, ILOADS, TOTDOF, ITEST)                               85
+      DO 1140 I=1,BNDNOD                                                      86
+      J = BNODE(I)                                                            87
+      SYSK(J,HBAND) = SYSK(J,HBAND)*SCALE                                     88
+      LOADS(J) = SYSK(J,HBAND)*BVAL(I)                                        89
+ 1140 CONTINUE                                                                90
+C
+C                            SOLUTION OF SYSTEM MATRIX FOR THE
+C                            NODAL VALUES OF THE POTENTIAL
+C
+      CALL CHOSOL(SYSK, ISYSK, JSYSK, LOADS, ILOADS, TOTDOF, HBAND,           91
+     *     ITEST)                                                             91
+      WRITE (NOUT,9080)                                                       92
+      CALL PRTVEC(LOADS, ILOADS, TOTDOF, ITEST)                               93
+      STOP                                                                    94
+ 8010 FORMAT (16I5)                                                           95
+ 8020 FORMAT (I5, 6F10.0)                                                     96
+ 8030 FORMAT (2F10.0)                                                         97
+ 8040 FORMAT (I5, 6F10.0)                                                     98
+ 9010 FORMAT (//24H**** NODAL GEOMETRY ****//)                                99
+ 9020 FORMAT (16I5)                                                          100
+ 9030 FORMAT(I5,6F10.5)                                                      101
+ 9040 FORMAT (//26H**** ELEMENT TOPOLOGY ****//)                             102
+ 9050 FORMAT (//24H**** PERMEABILITIES ****//)                               103
+ 9060 FORMAT (2F10.5)                                                        104
+ 9070 FORMAT (//29H**** BOUNDARY CONDITIONS ****//)                          105
+ 9080 FORMAT (//26H**** NODAL POTENTIALS ****//)                             106
+      END                                                                    107
+C***********************************************************************
+C$SPLIT$SEG4P1$*********************************************************
+C***********************************************************************
+      INTEGER BNDNOD, BNODE, DIF, DIMEN, DOFEL, DOFNOD, ELNUM,                 1
+     *     ELTOP, ELTYP, HBAND, I, IABSS, ICOORD, ID, IDL,                     1
+     *     IDT, IDTPD, IELK, IELM, IELTOP, IFTF, IFUN, IJAC,                   1
+     *     IJACIN, ILOADS, IGEOM, INF, INTNOD, IP, IPD, IQUAD,                 1
+     *     ISTEER, ISYSK, ISYSM, ITEST, IWGHT, IWORK1, IWORK2,                 1
+     *     J, JABSS, JCOORD, JD, JDL, JDT, JDTPD, JELK,                        1
+     *     JELM, JELTOP, JFTF, JJAC, JJACIN, JGEOM, JNF, JP,                   1
+     *     JPD, JSYSK, JSYSM, NELE, NF, NIN, NODEL,                            1
+     *     NODNUM, NOUT, NQP, NSTEPS, NWORK, STEER,                            1
+     *     TOTDOF, TOTELS, TOTNOD                                              1
+      DOUBLE PRECISION ABSS, BVAL, COORD, D, DET, DL, DT, DTIM,                2
+     *     DTPD, ELK, ELM, ETA, FTF, FUN, JAC, JACIN, LOADS,                   2
+     *     GEOM, P, PD, PERM, QUOT, SCALE, SYSK, SYSM, THETA,                  2
+     *     WGHT, WORK1, WORK2, XI                                              2
+      LOGICAL FIRST                                                            3
+      DIMENSION ABSS(3,9), BNODE(30), BVAL(30), COORD(100,3),                  4
+     *     D(3,8), DL(3,8), DT(8,3), DTPD(8,8), ELK(8,8),                      4
+     *     ELM(8,8), ELTOP(100,10), FTF(8,8), FUN(8), JAC(3,3),                4
+     *     JACIN(3,3), LOADS(100), GEOM(8,3), NF(100,1),                       4
+     *     NWORK(8), P(3,3), PD(3,8), PERM(3), STEER(8),                       4
+     *     SYSK(100,25), SYSM(100,25), WGHT(9), WORK1(100),                    4
+     *     WORK2(100)                                                          4
+      DATA IABSS /3/, ICOORD /100/, ID /3/, IDL /3/, IDT /8/,                  6
+     *     IDTPD /8/, IELK /8/, IELM /8/, IELTOP /100/,                        6
+     *     IFTF /8/, IFUN /8/, IJAC /3/, IJACIN /3/, ILOADS /100/,             6
+     *     IGEOM /8/, INF /100/, IP /3/, IPD /3/, ISTEER /8/,                  6
+     *     ISYSK /100/, ISYSM /100/, IWGHT /9/, IWORK1 /100/,                  6
+     *     IWORK2 /100/, JABSS /9/, JCOORD /3/, JD /8/,                        6
+     *     JDL /8/, JDT /3/, JDTPD /8/, JELK /8/, JELM /8/,                    6
+     *     JELTOP /10/, JFTF /8/, JJAC /3/, JJACIN /3/, JGEOM /3/,             6
+     *     JNF /1/, JP /3/, JPD /8/, JSYSK /25/, JSYSM /25/,                   6
+     *     SCALE /1.0D+20/                                                     6
+C
+      DATA NIN /5/, NOUT /6/                                                   7
+C
+C                            SET ITEST FOR FULL CHECKING
+C
+      ITEST = 0                                                                8
+C
+C*                           **********************
+C*                           *                    *
+C*                           * INPUT DATA SECTION *
+C*                           *                    *
+C*                           **********************
+C
+C                            INPUT OF NODAL GEOMETRY
+C
+      WRITE (NOUT,9010)                                                        9
+      READ (NIN,8010) TOTNOD, DIMEN                                           10
+      WRITE (NOUT,9020) TOTNOD, DIMEN                                         11
+      DO 1020 I=1,TOTNOD                                                      12
+      READ (NIN,8020) NODNUM, (WORK1(J),J=1,DIMEN)                            13
+      WRITE (NOUT,9030) NODNUM, (WORK1(J),J=1,DIMEN)                          14
+      DO 1010 J=1,DIMEN                                                       15
+      COORD(NODNUM,J) = WORK1(J)                                              16
+ 1010 CONTINUE                                                                17
+ 1020 CONTINUE                                                                18
+C
+C                            INPUT OF ELEMENT TOPOLOGY
+C
+      WRITE (NOUT,9040)                                                       19
+      READ (NIN,8010) ELTYP, TOTELS, NODEL                                    20
+      WRITE (NOUT,9020) ELTYP, TOTELS, NODEL                                  21
+      DO 1040 I=1,TOTELS                                                      22
+      READ (NIN,8010) ELNUM, (NWORK(J),J=1,NODEL)                             23
+      WRITE (NOUT,9020) ELNUM, (NWORK(J),J=1,NODEL)                           24
+      ELTOP(ELNUM,1) = ELTYP                                                  25
+      ELTOP(ELNUM,2) = NODEL                                                  26
+      DO 1030 J=1,NODEL                                                       27
+      ELTOP(ELNUM,J+2) = NWORK(J)                                             28
+ 1030 CONTINUE                                                                29
+ 1040 CONTINUE                                                                30
+C
+C                            INPUT OF PERMEABILITIES AND CON-
+C                            STRUCTION OF PERMEABILITY MATRIX P
+C
+      WRITE (NOUT,9050)                                                       31
+      READ (NIN,8030) (PERM(I),I=1,DIMEN)                                     32
+      WRITE (NOUT,9060) (PERM(I),I=1,DIMEN)                                   33
+      CALL MATNUL(P, IP, JP, DIMEN, DIMEN, ITEST)                             34
+      DO 1050 I=1,DIMEN                                                       35
+      P(I,I) = PERM(I)                                                        36
+ 1050 CONTINUE                                                                37
+C
+C                            INPUT OF NUMBER OF DEGREES OF FREEDOM
+C                            PER NODE, INPUT OF BOUNDARY CON-
+C                            DITIONS AND CONSTRUCTION OF NODAL
+C                            FREEDOM ARRAY NF
+C
+      WRITE (NOUT,9070)                                                       38
+      READ (NIN,8010) DOFNOD                                                  39
+      WRITE (NOUT,9020) DOFNOD                                                40
+      READ (NIN,8010) BNDNOD                                                  41
+      WRITE (NOUT,9020) BNDNOD                                                42
+      DO 1060 I=1,BNDNOD                                                      43
+      READ (NIN,8040) BNODE(I), BVAL(I)                                       44
+      WRITE (NOUT,9030) BNODE(I), BVAL(I)                                     45
+ 1060 CONTINUE                                                                46
+      TOTDOF = 0                                                              47
+      DO 1080 I=1,TOTNOD                                                      48
+      DO 1070 J=1,DOFNOD                                                      49
+      TOTDOF = TOTDOF + 1                                                     50
+      NF(I,J) = TOTDOF                                                        51
+ 1070 CONTINUE                                                                52
+ 1080 CONTINUE                                                                53
+C
+C                            INPUT OF INITIAL CONDINTIONS
+C
+      WRITE (NOUT,9080)                                                       54
+      CALL VECNUL(LOADS, ILOADS, TOTDOF, ITEST)                               55
+      READ (NIN,8010) INTNOD                                                  56
+      WRITE (NOUT,9090) INTNOD                                                57
+      DO 1090 I=1,INTNOD                                                      58
+      READ (NIN,8040) NODNUM, WORK1(1)                                        59
+      WRITE (NOUT,9030) NODNUM, WORK1(1)                                      60
+      J = NF(NODNUM,1)                                                        61
+      LOADS(J) = WORK1(1)                                                     62
+ 1090 CONTINUE                                                                63
+C
+C                            INPUT TIME STEPPING DATA
+C
+      WRITE (NOUT,9100)                                                       64
+      READ (NIN,8020) NSTEPS, DTIM, THETA                                     65
+      WRITE (NOUT,9110) NSTEPS, DTIM, THETA                                   66
+C
+C                            CALCULATION OF SEMI-BANDWIDTH
+C
+      FIRST = .TRUE.                                                          67
+      DO 1100 NELE=1,TOTELS                                                   68
+      CALL FREDIF(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                  69
+     *     DOFNOD, FIRST, DIF, ITEST)                                         69
+ 1100 CONTINUE                                                                70
+      HBAND = DIF + 1                                                         71
+C
+C*                           ************************************
+C*                           *                                  *
+C*                           * SYSTEM STIFFNESS MATRIX ASSEMBLY *
+C*                           *                                  *
+C*                           ************************************
+C
+      CALL MATNUL(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)                   72
+      CALL MATNUL(SYSM, ISYSM, JSYSM, TOTDOF, HBAND, ITEST)                   73
+      DOFEL = NODEL*DOFNOD                                                    74
+      CALL QQUA4(WGHT, IWGHT, ABSS, IABSS, JABSS, NQP, ITEST)                 75
+      DO 1140 NELE=1,TOTELS                                                   76
+      CALL ELGEOM(NELE, ELTOP, IELTOP, JELTOP, COORD, ICOORD,                 77
+     *     JCOORD, GEOM, IGEOM, JGEOM, DIMEN, ITEST)                          77
+C
+C                            INTEGRATION LOOP FOR ELEMENT STIFFNESS
+C                            USING NQP QUADRATURE POINTS
+C
+      CALL MATNUL(ELK, IELK, JELK, DOFEL, DOFEL, ITEST)                       78
+      CALL MATNUL(ELM, IELM, JELM, DOFEL, DOFEL, ITEST)                       79
+      DO 1130 IQUAD=1,NQP                                                     80
+C
+C                            FORM LINEAR SHAPE FUNCTION AND SPACE
+C                            DERIVATIVES IN THE LOCAL CORRDINATES.
+C                            TRANSFORM LOCAL DERIVATIVES TO GLOBAL
+C                            COORDINATE SYSTEM
+C
+      XI = ABSS(1,IQUAD)                                                      81
+      ETA = ABSS(2,IQUAD)                                                     82
+      CALL QUAM4(FUN, IFUN, DL, IDL, JDL, XI, ETA, ITEST)                     83
+      CALL MATMUL(DL, IDL, JDL, GEOM, IGEOM, JGEOM, JAC, IJAC,                84
+     *     JJAC, DIMEN, NODEL, DIMEN, ITEST)                                  84
+      CALL MATINV(JAC, IJAC, JJAC, JACIN, IJACIN, JJACIN, DIMEN,              85
+     *     DET, ITEST)                                                        85
+      CALL MATMUL(JACIN, IJACIN, JJACIN, DL, IDL, JDL, D, ID, JD,             86
+     *     DIMEN, DIMEN, NODEL, ITEST)                                        86
+C
+C                            FORMATION OF ELEMENT STIFFNESS ELK
+C
+      CALL MATMUL(P, IP, JP, D, ID, JD, PD, IPD, JPD, DIMEN, DIMEN,           87
+     *     DOFEL, ITEST)                                                      87
+      CALL MATRAN(D, ID, JD, DT, IDT, JDT, DIMEN, DOFEL, ITEST)               88
+      CALL MATMUL(DT, IDT, JDT, PD, IPD, JPD, DTPD, IDTPD, JDTPD,             89
+     *     DOFEL, DIMEN, DOFEL, ITEST)                                        89
+      QUOT = DET*WGHT(IQUAD)                                                  90
+      DO 1120 I=1,DOFEL                                                       91
+      DO 1110 J=1,DOFEL                                                       92
+      FTF(I,J) = FUN(I)*FUN(J)*QUOT                                           93
+      DTPD(I,J) = DTPD(I,J)*QUOT                                              94
+ 1110 CONTINUE                                                                95
+ 1120 CONTINUE                                                                96
+      CALL MATADD(ELM, IELM, JELM, FTF, IFTF, JFTF, DOFEL, DOFEL,             97
+     *     ITEST)                                                             97
+      CALL MATADD(ELK, IELK, JELK, DTPD, IDTPD, JDTPD, DOFEL,                 98
+     *     DOFEL, ITEST)                                                      98
+ 1130 CONTINUE                                                                99
+C
+C                            ASSEMBLY OF SYSTEM STIFFNESS MATRIX
+C                            SYSK
+C
+      CALL DIRECT(NELE, ELTOP, IELTOP, JELTOP, NF, INF, JNF,                 100
+     *     DOFNOD, STEER, ISTEER, ITEST)                                     100
+      CALL ASSYM(SYSM, ISYSM, JSYSM, ELM, IELM, JELM, STEER,                 101
+     *     ISTEER, HBAND, DOFEL, ITEST)                                      101
+      CALL ASSYM(SYSK, ISYSK, JSYSK, ELK, IELK, JELK, STEER,                 102
+     *     ISTEER, HBAND, DOFEL, ITEST)                                      102
+ 1140 CONTINUE                                                               103
+C
+C*                           *********************
+C*                           *                   *
+C*                           * EQUATION SOLUTION *
+C*                           *                   *
+C*                           *********************
+C
+C                            MODIFICATION OF STIFFNESS MATRIX AND
+C                            RIGHT-HAND SIDE TO IMPLEMENT BOUNDARY
+C                            CONDITIONS
+C
+      DO 1160 I=1,TOTDOF                                                     104
+      DO 1150 J=1,HBAND                                                      105
+      WORK1(1) = THETA*SYSK(I,J) + SYSM(I,J)/DTIM                            106
+      WORK1(2) = (1.0D0-THETA)*SYSK(I,J) - SYSM(I,J)/DTIM                    107
+      SYSK(I,J) = WORK1(1)                                                   108
+      SYSM(I,J) = -WORK1(2)                                                  109
+ 1150 CONTINUE                                                               110
+ 1160 CONTINUE                                                               111
+      CALL VECNUL(WORK1, IWORK1, TOTDOF, ITEST)                              112
+      DO 1170 I=1,BNDNOD                                                     113
+      J = BNODE(I)                                                           114
+      SYSK(J,HBAND) = SYSK(J,HBAND)*SCALE                                    115
+      WORK1(J) = SYSK(J,HBAND)*BVAL(I)                                       116
+ 1170 CONTINUE                                                               117
+C
+C                            SOLUTION OF SYSTEM MATRIX FOR THE
+C                            NODAL VALUES OF THE POTENTIAL
+C
+      CALL CHORDN(SYSK, ISYSK, JSYSK, TOTDOF, HBAND, ITEST)                  118
+      DO 1180 I=1,NSTEPS                                                     119
+      WRITE (NOUT,9120) I                                                    120
+      CALL MVSLT(SYSM, ISYSM, JSYSM, LOADS, ILOADS, WORK2, IWORK2,           121
+     *     TOTDOF, HBAND, ITEST)                                             121
+      CALL VECADD(WORK2, IWORK2, WORK1, IWORK1, TOTDOF, ITEST)               122
+      CALL CHOFWD(SYSK, ISYSK, JSYSK, WORK2, IWORK2, TOTDOF, HBAND,          123
+     *     ITEST)                                                            123
+      CALL CHOBAK(SYSK, ISYSK, JSYSK, WORK2, IWORK2, TOTDOF, HBAND,          124
+     *     ITEST)                                                            124
+      CALL VECCOP(WORK2, IWORK2, LOADS, ILOADS, TOTDOF, ITEST)               125
+      CALL PRTVEC(LOADS, ILOADS, TOTDOF, ITEST)                              126
+ 1180 CONTINUE                                                               127
+      STOP                                                                   128
+ 8010 FORMAT (16I5)                                                          129
+ 8020 FORMAT (I5, 6F10.0)                                                    130
+ 8030 FORMAT (2F10.0)                                                        131
+ 8040 FORMAT (I5, 6F10.0)                                                    132
+ 9010 FORMAT (//24H**** NODAL GEOMETRY ****//)                               133
+ 9020 FORMAT (16I5)                                                          134
+ 9030 FORMAT (I5, 6F10.5)                                                    135
+ 9040 FORMAT (//26H**** ELEMENT TOPOLOGY ****//)                             136
+ 9050 FORMAT (//24H**** PERMEABILITIES ****//)                               137
+ 9060 FORMAT (2F10.5)                                                        138
+ 9070 FORMAT (//29H**** BOUNDARY CONDITIONS ****//)                          139
+ 9080 FORMAT (//28H**** INITIAL CONDITIONS ****//)                           140
+ 9090 FORMAT (16I5)                                                          141
+ 9100 FORMAT (//28H**** TIME STEPPING DATA ****//)                           142
+ 9110 FORMAT (I5, 6F10.5)                                                    143
+ 9120 FORMAT (//31H**** NODAL POTENTIALS FOR STEP , I3, 6H  ****//)          144
+      END                                                                    145

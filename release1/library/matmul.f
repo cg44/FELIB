@@ -1,0 +1,26 @@
+      SUBROUTINE MATMUL(A, IA, JA, B, IB, JB, C, IC, JC, L, M, N,
+     *     ITEST)
+      INTEGER ERRMES, I, IA, IB, IC, IERROR, ITEST, J, JA,
+     *     JB, JC, K, L, M, N
+      DOUBLE PRECISION A, B, C, SRNAME, X
+      DIMENSION A(IA,JA), B(IB,JB), C(IC,JC)
+      DATA SRNAME /8H MATMUL /
+      IF (ITEST.EQ.-1) GO TO 1010
+      IERROR = 0
+      IF (L.GT.IC .OR. N.GT.JC) IERROR = 4
+      IF (M.GT.IB .OR. N.GT.JB) IERROR = 3
+      IF (L.GT.IA .OR. M.GT.JA) IERROR = 2
+      IF (L.LE.0 .OR. M.LE.0 .OR. N.LE.0) IERROR = 1
+      ITEST = ERRMES(ITEST,IERROR,SRNAME)
+      IF (IERROR.NE.0) RETURN
+ 1010 DO 1040 I=1,L
+      DO 1030 J=1,N
+      X = 0.0D0
+      DO 1020 K=1,M
+      X = X + A(I,K)*B(K,J)
+ 1020 CONTINUE
+      C(I,J) = X
+ 1030 CONTINUE
+ 1040 CONTINUE
+      RETURN
+      END

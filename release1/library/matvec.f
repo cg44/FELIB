@@ -1,0 +1,23 @@
+      SUBROUTINE MATVEC(A, IA, JA, V, IV, K, L, Y, IY, ITEST)
+      INTEGER ERRMES, I, IA, IERROR, ITEST, IV, IY, J, JA,
+     *     K, L
+      DOUBLE PRECISION A, SRNAME, V, X, Y
+      DIMENSION A(IA,JA), V(IV), Y(IY)
+      DATA SRNAME /8H MVMULT /
+      IF (ITEST.EQ.-1) GO TO 1010
+      IERROR = 0
+      IF (K.GT.IY) IERROR = 4
+      IF (L.GT.IV) IERROR = 3
+      IF (K.GT.IA .OR. L.GT.JA) IERROR = 2
+      IF (K.LE.0 .OR. L.LE.0) IERROR = 1
+      ITEST = ERRMES(ITEST,IERROR,SRNAME)
+      IF (IERROR.NE.0) RETURN
+ 1010 DO 1030 I=1,K
+      X = 0.0D0
+      DO 1020 J=1,L
+      X = X + A(I,J)*V(J)
+ 1020 CONTINUE
+      Y(I) = X
+ 1030 CONTINUE
+      RETURN
+      END

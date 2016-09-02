@@ -1,0 +1,64 @@
+      SUBROUTINE TR10FN(FUN, IFUN, DER, IDER, JDER, XI, ETA, ITEST)
+      INTEGER IFUN,IDER,JDER,ITEST,IERROR,ERRMES,I,J
+      DOUBLE PRECISION FUN,DER,XI,ETA,Y1,Y2,SRNAME, L,NV,NS,DNVL,DNS1,
+     *DNS2,DLX,DLY
+      DIMENSION FUN(IFUN),DER(IDER,JDER), L(3), DLX(3),DLY(3)
+      DATA SRNAME /8H TR10FN  /
+      NV(I)=1.D0/2.D0*(3.D0*L(I)-1.D0)*(3.D0*L(I)-2.D0)*L(I)
+      NS(I,J)=9.D0/2.D0*L(I)*L(J)*(3.D0*L(I)-1.D0)
+      DNVL(I)=1.D0/2.D0*(27.D0*L(I)*L(I)-18.D0*L(I)+2.D0)
+      DNS1(I,J)=9.D0/2.D0*L(J)*(6.D0*L(I)-1.D0)
+      DNS2(I,J)=9.D0/2.D0*L(I)*(3.D0*L(I)-1.D0)
+      IF(ITEST.EQ.-1) GO TO 999
+      IERROR=0
+      IF(IFUN.LT.10) IERROR=1
+      IF(IDER.LT.2.OR.JDER.LT.10) IERROR=2
+      Y1=1.0D0/DSQRT(3.0D0)*(XI-1.0D0)
+      Y2=1.0D0/DSQRT(3.0D0)*(1.0D0-XI)
+      IF((XI.LT.-0.5D0.OR.XI.GT.1.0D0).OR.(ETA.LT.Y1.OR.ETA.GT.Y2))
+     *IERROR=3
+      ITEST=ERRMES(ITEST,IERROR,SRNAME)
+      IF(ITEST.NE.0) RETURN
+999   L(1) = 1.0D0/3.0D0*(1.0D0+2.0D0*XI)
+      L(2) = 1.0D0/3.0D0*(1.0D0-XI-DSQRT(3.0D0)*ETA)
+      L(3) = 1.0D0/3.0D0*(1.0D0-XI+DSQRT(3.0D0)*ETA)
+      DLX(1)=2.D0/3.D0
+      DLY(1)=0.D0
+      DLX(2)=-1.D0/3.D0
+      DLY(2)=-1.D0/DSQRT(3.D0)
+      DLX(3)=-1.D0/3.D0
+      DLY(3)=1.D0/DSQRT(3.D0)
+      FUN(1)=NV(1)
+      FUN(2)=NS(1,2)
+      FUN(3)=NS(2,1)
+      FUN(4)=NV(2)
+      FUN(5)=NS(2,3)
+      FUN(6)=NS(3,2)
+      FUN(7)=NV(3)
+      FUN(8)=NS(3,1)
+      FUN(9)=NS(1,3)
+      FUN(10)=27.D0*L(1)*L(2)*L(3)
+      DER(1,1)=DNVL(1)*DLX(1)
+      DER(2,1)=DNVL(1)*DLY(1)
+      DER(1,2)=DNS1(1,2)*DLX(1)+DNS2(1,2)*DLX(2)
+      DER(2,2)=DNS1(1,2)*DLY(1)+DNS2(1,2)*DLY(2)
+      DER(1,3)=DNS1(2,1)*DLX(2)+DNS2(2,1)*DLX(1)
+      DER(2,3)=DNS1(2,1)*DLY(2)+DNS2(2,1)*DLY(1)
+      DER(1,4)=DNVL(2)*DLX(2)
+      DER(2,4)=DNVL(2)*DLY(2)
+      DER(1,5)=DNS1(2,3)*DLX(2)+DNS2(2,3)*DLX(3)
+      DER(2,5)=DNS1(2,3)*DLY(2)+DNS2(2,3)*DLY(3)
+      DER(1,6)=DNS1(3,2)*DLX(3)+DNS2(3,2)*DLX(2)
+      DER(2,6)=DNS1(3,2)*DLY(3)+DNS2(3,2)*DLY(2)
+      DER(1,7)=DNVL(3)*DLX(3)
+      DER(2,7)=DNVL(3)*DLY(3)
+      DER(1,8)=DNS1(3,1)*DLX(3)+DNS2(3,1)*DLX(1)
+      DER(2,8)=DNS1(3,1)*DLY(3)+DNS2(3,1)*DLY(1)
+      DER(1,9)=DNS1(1,3)*DLX(1)+DNS2(1,3)*DLX(3)
+      DER(2,9)=DNS1(1,3)*DLY(1)+DNS2(1,3)*DLY(3)
+      DER(1,10)=27.D0*(DLX(1)*L(2)*L(3)+L(1)*DLX(2)*L(3)+L(1)*L(2)*
+     *DLX(3))
+      DER(2,10)=27.D0*(DLY(1)*L(2)*L(3)+L(1)*DLY(2)*L(3)+L(1)*L(2)*
+     *DLY(3))
+      RETURN
+      END
