@@ -1,0 +1,4 @@
+{
+if(index($1,"\item[") != 0 )
+printf"%s\n",$0
+}

@@ -1,0 +1,145 @@
+C***********************************************************************
+.OHEADER /LEVEL 0/Assembly Operation/DIRECT/
+.EHEADER /DIRECT/Assembly Operation/LEVEL 0/
+.OFOOTER /FELIB-0:May 79//Page#/
+.EFOOTER /Page#//FELIB-0:May 79/
+.dn  {{Purpose}}
+.fill
+DIRECT constructs the steering vector to direct assembly
+of a system stiffness or mass matrix.
+.nfill
+.dn  {{Specification}} (FORTRAN IV)
+_SUBROUTINE DIRECT(NELE,ELTOP,IELTOP,JELTOP,NF,INF,JNF,
+C___DOFNOD,STEER,ISTEER,ITEST)
+C_INTEGER NELE,ELTOP,IELTOP,JELTOP,NF,INF,JNF,DOFNOD,
+C___STEER,ISTEER,ITEST
+C_DIMENSION ELTOP(IELTOP,JELTOP),NF(INF,JNF),STEER(ISTEER)
+.dn  {{Description}}
+.fill
+DIRECT uses the element topologies and the nodal freedom
+information to construct the steering vector STEER.
+.p
+The array ELTOP contains the element topologies, element
+type and the number nodes on the element. The element type
+is stored in ELTOP(NELE,1) and the number of nodes is stored
+in ELTOP(NELE,2). The node numbers associated with the element
+NELE are stored in ELTOP(NELE,i) where i=3,4,...,m+2, where
+m is the number of nodes in that element. n is the total number of elements
+in the mesh
+.p
+The nodal freedom array NF contains the freedom numbers
+associated with each node. The nodal freedom array must
+contain the freedom numbers for every one of the p nodes
+in the problem being considered. A fuller description
+of the contents of NF can be found in th routine
+document FORMNF.
+.p
+The steering vector STEER is of length k, where k$=$DOFNOD*NODEL
+is the total number of degrees of freedom in the element
+NELE, and contains the freedom numbers associated with
+element NELE in the local node order. This order is given
+in the shape function document.
+.nfill
+.dn  {{References}}
+None.
+.dn  {{Parameters}}
+NELE - _INTEGER.
+__On entry, NELE specifies the number of the element
+__for which a steering vector is to be constructed.
+__Unchanged on exit.
+.s1
+ELTOP - _INTEGER array of DIMENSION (IELTOP,JELTOP) where
+__IELTOP *GE* n and JELTOP *GE* m+2.
+__Before entry, ELTOP must contain the element topologies
+__element type, and the number of nodes in the element.
+__Unchanged on exit.
+.s 1
+IELTOP - INTEGER.
+__On entry, IELTOP specifies the first dimension of array
+__ELTOP as declared in the calling (sub)program.
+__Unchanged on exit.
+.s1
+JELTOP - INTEGER.
+__On entry, JELTOP specifies the second dimension of array
+__ELTOP as declared in the calling (sub)program.
+__Unchanged on exit.
+.s1
+NF - __INTEGER array of DIMENSION (INF,JNF) where INF *GE* p and
+__JNF *GE* DOFNOD.
+__Before entry, NF must contain the freedom numbers
+__associated with each node. p is the total number of nodes
+__in the problem.
+__Unchanged on exit.
+.s1
+INF - _INTEGER.
+__On entry, INF specifies the first dimension of array NF as
+__declared in the calling (sub)program. INF *GE* p.
+__Unchanged on exit.
+.s1
+JNF - _INTEGER.
+__On entry, JNF specifies the second dimension of array NF as
+__declared in the calling (sub)program. JNF *GE* DOFNOD.
+__Unchanged on exit.
+.s1
+DOFNOD - INTEGER.
+__On entry, DOFNOD specifies the number of degrees of freedom
+__at each node on the element NELE.
+__Unchanged on exit.
+.s1
+STEER - _INTEGER array of DIMENSION (ISTEER) where ISTEER *GE* k.
+__On successful exit, STEER contains the freedom numbers
+__associated with element NELE arranged the local node order.
+__k is the total number of degrees of freedom on element NELE.
+.s1
+ISTEER - INTEGER.
+__On entry, ISTEER specifies the dimension of the array STEER
+__as declared in the calling (sub)program.
+__Unchanged on exit.
+.s1
+ITEST - _INTEGER.
+__Before entry, ITEST must be assigned a value. Users
+__not familiar with this parameter are advised to
+__assign ITEST to zero.
+.s1
+__The options are:
+.s1
+__0 - _hard fail option. An error message is printed and
+___processing terminated.
+.s1
+__1 - _soft fail option. On correct completion, ITEST is
+___set to zero on exit. If an error is detected then
+___ITEST is set to the appropriate value (see Section 6).
+.s1
+__-1 - _{{no checking is performed}}. ITEST is unchanged on exit.
+.dn  {{Error Indicators}}
+Error detected by the routine:
+.s1
+_ITEST = 1  On entry, NELE or DOFNOD {{<}} 0.
+.s1
+_ITEST = 2  On entry, IELTOP < NELE.
+.s1
+_ITEST = 3  On entry, JNF < DOFNOD.
+.s1
+_ITEST = 4  Attempt to access element outside the
+_           bounds of array ELTOP. JELTOP < m+2 where
+_           m is the number of nodes in the elment NELE.
+.s1
+_ITEST = 5  Attempt to access an element outside the
+_           bounds of array NF. INF < p, where p is
+_           the total number of nodes.
+.s1
+_ITEST = 6  Attempt to access an element outside the
+_           bounds of array STEER. ISTEER < k, where
+_           k = DOFNOD*NODEL, the total number of
+_           degrees of freedom in element NELE.
+.dn  {{Auxiliary Routines}}
+This routine uses the Level 0 Library routine ERRMES.
+.dn  {{Timing}}
+Time taken is proportional to m and DOFNOD.
+.dn  {{Storage}}
+There are no internally declared arrays.
+.dn  {{Accuracy}}
+Not applicable.
+.dn  {{Further Comments}}
+None.
+C***********************************************************************

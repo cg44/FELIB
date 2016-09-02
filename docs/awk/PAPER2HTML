@@ -1,0 +1,11 @@
+{
+if(index($0,"%PAPER") != 0) {
+	for(i=0;substr($0,i,1) == "%";i++);
+	printf"%%%s\n",substr($0,i,length($0))
+	}
+if(index($0,"%HTML") != 0){
+	for(i=0;substr($0,i,1) == "%";i++);
+	printf"%s\n",substr($0,i,length($0))
+	}
+if(index($0,"%PAPER") == 0 && index($0,"%HTML") == 0) printf"%s\n",$0;
+}

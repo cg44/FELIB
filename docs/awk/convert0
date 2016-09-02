@@ -1,0 +1,1 @@
+awk -f /u/mathsoft/felib/docs/awk/script-0 <$1.rin >$1.tex

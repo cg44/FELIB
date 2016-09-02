@@ -1,0 +1,689 @@
+\documentstyle[twoside,11pt]{felib0}
+%
+\def\kwic#1#2#3#4{
+{#1}\hfill{#2}~~{#3}\hfill{#4}\\}
+%
+\release{4}
+\routine{KWIC}
+\title{Keyword in Context}
+\date{september 90}
+%
+\begin{document}
+\kwic{}{B2C2   - Forms strain-displacement matrix for}{{\bf 2-D} plane elasticity}{}
+\kwic{}{DPLT   - Forms stress-strain matrix for}{{\bf 2-D} plate bending}{}
+\kwic{}{B3C3   - Forms strain-displacement matrix for}{{\bf 3-D} elasticity}{}
+\kwic{}{DISO   - Forms stress-strain matrix for}{{\bf 3-D} elasticity}{}
+\kwic{}{MATADD -}{{\bf Adds} two full matrices together}{}
+\kwic{}{VECADD -}{{\bf Adds} two vectors together}{}
+\kwic{number}{}{{\bf ADUNIT} - Control the advisory message unit}{}
+\kwic{}{ADUNIT - Control the}{{\bf advisory} message unit number}{}
+\kwic{}{SURBRK - Calculates a unit of}{{\bf area} on boundary faces}{}
+\kwic{}{ELGEOM - Construction of element geometry}{{\bf array} for an element}{}
+\kwic{}{FORMNF - Forms nodal freedom}{{\bf array}}{}
+\kwic{}{}{{\bf ASFUL}  - Assembles a full system matrix}{}
+\kwic{matrix}{}{{\bf ASFULG} - General assembly of a full system}{}
+\kwic{}{}{{\bf ASLMS}  - Assembles a system lumped mass matrix}{}
+\kwic{system}{}{{\bf ASRHS}  - Assembles the right-hand side of a}{}
+\kwic{}{ASFUL  -}{{\bf Assembles} a full system matrix}{}
+\kwic{}{ASSYM  -}{{\bf Assembles} a symmetric system matrix}{}
+\kwic{}{ASLMS  -}{{\bf Assembles} a system lumped mass matrix}{}
+\kwic{}{ASUSM  -}{{\bf Assembles} an unsymmetric system matrix}{}
+\kwic{right-hand side}{IASRHS -}{{\bf Assembles} the imaginary part of a complex}{}
+\kwic{complex system matrix}{IASSYM -}{{\bf Assembles} the imaginary part of a symmetric}{}
+\kwic{complex system matrix}{IASUSM -}{{\bf Assembles} the imaginary part of a unsymmetric}{}
+\kwic{side}{RASRHS -}{{\bf Assembles} the real part of a complex right-hand}{}
+\kwic{system matrix}{RASSYM -}{{\bf Assembles} the real part of a symmetric complex}{}
+\kwic{complex system matrix}{RASUSM -}{{\bf Assembles} the real part of a unsymmetric}{}
+\kwic{}{ASRHS  -}{{\bf Assembles} the right-hand side of a system}{}
+\kwic{}{of steering vector for system matrix}{{\bf assembly}}{DIRECT - Construction}
+\kwic{}{ASFULG - General}{{\bf assembly} of a full system matrix}{}
+\kwic{}{ASSYMG - General}{{\bf assembly} of a symmetric system matrix}{}
+\kwic{}{ASUSMG - General}{{\bf assembly} of an unsymmetric system matrix}{}
+\kwic{}{}{{\bf ASSYM}  - Assembles a symmetric system matrix}{}
+\kwic{matrix}{}{{\bf ASSYMG} - General assembly of a symmetric system}{}
+\kwic{}{}{{\bf ASUSM}  - Assembles an unsymmetric system matrix}{}
+\kwic{system matrix}{}{{\bf ASUSMG} - General assembly of an unsymmetric}{}
+\kwic{}{B2P2   - Forms strain-displacement matrix for}{{\bf axisymmetric} elasticity}{}
+\kwic{}{DAXI   - Forms stress-strain matrix for}{{\bf axisymmetric} elasticity}{}
+\kwic{2-D plane elasticity}{}{{\bf B2C2}   - Forms strain-displacement matrix for}{}
+\kwic{axisymmetric elasticity}{}{{\bf B2P2}   - Forms strain-displacement matrix for}{}
+\kwic{3-D elasticity}{}{{\bf B3C3}   - Forms strain-displacement matrix for}{}
+\kwic{}{CHOBAK - Choleski}{{\bf backward} substitution}{}
+\kwic{}{CSYSUB - Complex forward and}{{\bf backward} substitution}{}
+\kwic{}{GAUSUB - Gaussian forward and}{{\bf backward} substitution}{}
+\kwic{}{MVSYB  - Multiplies a symmetric}{{\bf band} matrix by a vector}{}
+\kwic{}{MVUSB  - Multiplies an unsymmetric}{{\bf band} matrix by a vector}{}
+\kwic{}{VMSYB  - Pre-multiplies a symmetric}{{\bf band} matrix by a vector}{}
+\kwic{}{VMUSB  - Pre-multiplies an unsymmetric}{{\bf band} matrix by a vector}{}
+\kwic{}{- Forms stress-strain matrix for 2-D plate}{{\bf bending}}{DPLT  }
+\kwic{matrix}{}{{\bf BNDWTH} - Calculates semi-bandwith of system}{}
+\kwic{}{LINQUA - Calculates a unit length on the}{{\bf boundaries} of quadrilaterals}{}
+\kwic{}{LINTRI - Calculates a unit length on the}{{\bf boundaries} of triangles}{}
+\kwic{}{SURBRK - Calculates a unit of area on}{{\bf boundary} faces}{}
+\kwic{}{- Forms list of element and side numbers from}{{\bf boundary} node list}{SIDENO}
+\kwic{integration on hexahedrals}{}{{\bf BQBRK}  - Forms quadrature rule for line}{}
+\kwic{integration on quadrilaterals}{}{{\bf BQQUA}  - Forms quadrature rule for line}{}
+\kwic{integration on triangles}{}{{\bf BQTRI}  - Forms quadrature rule for line}{}
+\kwic{}{BRK20  - Shape functions for twenty-noded}{{\bf brick} element}{}
+\kwic{}{BRK32  - Shape functions for thirty-two-noded}{{\bf brick} element}{}
+\kwic{}{BRK8   - Shape functions for eight-noded}{{\bf brick} element}{}
+\kwic{element}{}{{\bf BRK20}  - Shape functions for twenty-noded brick}{}
+\kwic{brick element}{}{{\bf BRK32}  - Shape functions for thirty-two-noded}{}
+\kwic{element}{}{{\bf BRK8}   - Shape functions for eight-noded brick}{}
+\kwic{for an element}{FREDIF -}{{\bf Calcalutes} of maximum freedom number difference}{}
+\kwic{quadrilaterals}{LINQUA -}{{\bf Calculates} a unit length on the boundaries of}{}
+\kwic{triangles}{LINTRI -}{{\bf Calculates} a unit length on the boundaries of}{}
+\kwic{}{SURBRK -}{{\bf Calculates} a unit of area on boundary faces}{}
+\kwic{}{BNDWTH -}{{\bf Calculates} semi-bandwith of system matrix}{}
+\kwic{elements}{DCSBRK -}{{\bf Calculates} the direction cosines for hexahedral}{}
+\kwic{quadrilateral elements}{DCSQUA -}{{\bf Calculates} the direction cosines for}{}
+\kwic{elements}{DCSTRI -}{{\bf Calculates} the direction cosines for triangular}{}
+\kwic{}{}{{\bf CHOBAK} - Choleski backward substitution}{}
+\kwic{}{}{{\bf CHOFWD} - Choleski forward substitution}{}
+\kwic{}{CHOBAK -}{{\bf Choleski} backward substitution}{}
+\kwic{}{CHORDN -}{{\bf Choleski} decomposition into triangular matrices}{}
+\kwic{}{CHOFWD -}{{\bf Choleski} forward substitution}{}
+\kwic{}{- Solves a system of linear equations using}{{\bf Choleski} reduction}{CHOSOL}
+\kwic{matrices}{}{{\bf CHORDN} - Choleski decomposition into triangular}{}
+\kwic{using Choleski reduction}{}{{\bf CHOSOL} - Solves a system of linear equations}{}
+\kwic{}{}{{\bf CMTNUL} - Initialises a complex matrix to zero}{}
+\kwic{}{CSYSUB -}{{\bf Complex} forward and backward substitution}{}
+\kwic{}{CPRTMT - Prints a}{{\bf complex} matrix in a standard form}{}
+\kwic{}{CMTNUL - Initialises a}{{\bf complex} matrix to zero}{}
+\kwic{}{CPRTVL - Prints a}{{\bf complex} nodal values in a standard form}{}
+\kwic{}{IASRHS - Assembles the imaginary part of a}{{\bf complex} right-hand side}{}
+\kwic{}{RASRHS - Assembles the real part of a}{{\bf complex} right-hand side}{}
+\kwic{matrices}{CSYRDN -}{{\bf Complex} symmetric decomposition into triangular}{}
+\kwic{}{CSYSOL - Solves a}{{\bf complex} symmetric linear system}{}
+\kwic{}{- Assembles the imaginary part of a symmetric}{{\bf complex} system matrix}{IASSYM}
+\kwic{}{- Assembles the imaginary part of a unsymmetric}{{\bf complex} system matrix}{IASUSM}
+\kwic{}{RASSYM - Assembles the real part of a symmetric}{{\bf complex} system matrix}{}
+\kwic{}{- Assembles the real part of a unsymmetric}{{\bf complex} system matrix}{RASUSM}
+\kwic{}{CPRTVC - Prints a}{{\bf complex} vector in a standard form}{}
+\kwic{}{CVCNUL - Initialises a}{{\bf complex} vector to zero}{}
+\kwic{}{SHAPFN - Forms shape function matrix}{{\bf *comp[N]}}{}
+\kwic{}{NORM   -}{{\bf Computes} the L*sub[2] norm of a vector}{}
+\kwic{}{ERRMES - Controls processing of error}{{\bf conditions}}{}
+\kwic{element}{ELGEOM -}{{\bf Construction} of element geometry array for an}{}
+\kwic{matrix assembly}{DIRECT -}{{\bf Construction} of steering vector for system}{}
+\kwic{}{SELECT -}{{\bf Constructs} an element solution vector}{}
+\kwic{}{ADUNIT -}{{\bf Control} the advisory message unit number}{}
+\kwic{}{ERUNIT -}{{\bf Control} the error message unit number}{}
+\kwic{}{ERRMES -}{{\bf Controls} processing of error conditions}{}
+\kwic{}{MATCOP -}{{\bf Copies} one full matrix into another}{}
+\kwic{}{VECCOP -}{{\bf Copies} one vector into another}{}
+\kwic{}{DCSBRK - Calculates the direction}{{\bf cosines} for hexahedral elements}{}
+\kwic{}{DCSQUA - Calculates the direction}{{\bf cosines} for quadrilateral elements}{}
+\kwic{}{DCSTRI - Calculates the direction}{{\bf cosines} for triangular elements}{}
+\kwic{form}{}{{\bf CPRTMT} - Prints a complex matrix in a standard}{}
+\kwic{form}{}{{\bf CPRTVC} - Prints a complex vector in a standard}{}
+\kwic{standard form}{}{{\bf CPRTVL} - Prints a complex nodal values in a}{}
+\kwic{triangular matrices}{}{{\bf CSYRDN} - Complex symmetric decomposition into}{}
+\kwic{system}{}{{\bf CSYSOL} - Solves a complex symmetric linear}{}
+\kwic{substitution}{}{{\bf CSYSUB} - Complex forward and backward}{}
+\kwic{}{QBRK6  - Six-point quadrature rule for}{{\bf cube}}{}
+\kwic{}{QBRK8  - Eight-point quadrature rule for}{{\bf cube}}{}
+\kwic{}{}{{\bf CVCNUL} - Initialises a complex vector to zero}{}
+\kwic{axisymmetric elasticity}{}{{\bf DAXI}   - Forms stress-strain matrix for}{}
+\kwic{hexahedral elements}{}{{\bf DCSBRK} - Calculates the direction cosines for}{}
+\kwic{quadrilateral elements}{}{{\bf DCSQUA} - Calculates the direction cosines for}{}
+\kwic{triangular elements}{}{{\bf DCSTRI} - Calculates the direction cosines for}{}
+\kwic{}{CHORDN - Choleski}{{\bf decomposition} into triangular matrices}{}
+\kwic{}{CSYRDN - Complex symmetric}{{\bf decomposition} into triangular matrices}{}
+\kwic{}{GAURDN - Gaussian}{{\bf decomposition} into upper and lower triangles}{}
+\kwic{}{FREDIF - Calcalutes of maximum freedom number}{{\bf difference} for an element}{}
+\kwic{system matrix assembly}{}{{\bf DIRECT} - Construction of steering vector for}{}
+\kwic{}{DCSBRK - Calculates the}{{\bf direction} cosines for hexahedral elements}{}
+\kwic{}{DCSQUA - Calculates the}{{\bf direction} cosines for quadrilateral elements}{}
+\kwic{}{DCSTRI - Calculates the}{{\bf direction} cosines for triangular elements}{}
+\kwic{elasticity}{}{{\bf DISO}   - Forms stress-strain matrix for 3-D}{}
+\kwic{plate bending}{}{{\bf DPLT}   - Forms stress-strain matrix for 2-D}{}
+\kwic{strain}{}{{\bf DPSN}   - Forms stress-strain matrix for plane}{}
+\kwic{stress}{}{{\bf DPSS}   - Forms stress-strain matrix for plane}{}
+\kwic{}{}{{\bf DYAD}   - Forms the dyad of two vectors}{}
+\kwic{}{DYAD   - Forms the}{{\bf dyad} of two vectors}{}
+\kwic{transformations}{QLVEC  -}{{\bf Eigenvalue} and eigenvector extraction using QL}{}
+\kwic{}{QLVAL  -}{{\bf Eigenvalue} extraction using QL transformations}{}
+\kwic{}{QLVEC  - Eigenvalue and}{{\bf eigenvector} extraction using QL transformations}{}
+\kwic{}{BRK8   - Shape functions for}{{\bf eight-noded} brick element}{}
+\kwic{}{QUAM8  - Shape functions for}{{\bf eight-noded} quadrilateral membrane element}{}
+\kwic{}{QBRK8  -}{{\bf Eight-point} quadrature rule for cube}{}
+\kwic{region}{QWDG8  -}{{\bf Eight-point} quadrature rule for wedge-shaped}{}
+\kwic{}{Forms strain-displacement matrix for 2-D plane}{{\bf elasticity}}{B2C2   -}
+\kwic{}{strain-displacement matrix for axisymmetric}{{\bf elasticity}}{B2P2   - Forms}
+\kwic{}{- Forms strain-displacement matrix for 3-D}{{\bf elasticity}}{B3C3  }
+\kwic{}{- Forms stress-strain matrix for axisymmetric}{{\bf elasticity}}{DAXI  }
+\kwic{}{DISO   - Forms stress-strain matrix for 3-D}{{\bf elasticity}}{}
+\kwic{list}{SIDENO - Forms list of}{{\bf element} and side numbers from boundary node}{}
+\kwic{}{BRK20  - Shape functions for twenty-noded brick}{{\bf element}}{}
+\kwic{}{- Shape functions for thirty-two-noded brick}{{\bf element}}{BRK32 }
+\kwic{}{BRK8   - Shape functions for eight-noded brick}{{\bf element}}{}
+\kwic{}{- Construction of element geometry array for an}{{\bf element}}{ELGEOM}
+\kwic{}{of maximum freedom number difference for an}{{\bf element}}{FREDIF - Calcalutes}
+\kwic{}{ELGEOM - Construction of}{{\bf element} geometry array for an element}{}
+\kwic{}{for twelve-noded quadrilateral membrane}{{\bf element}}{QUAM12 - Shape functions}
+\kwic{}{functions for four-noded quadrilateral membrane}{{\bf element}}{QUAM4  - Shape}
+\kwic{}{for eight-noded quadrilateral membrane}{{\bf element}}{QUAM8  - Shape functions}
+\kwic{}{ROD2   - Shape functions for two-noded line}{{\bf element}}{}
+\kwic{}{ROD3   - Shape functions for three-noded line}{{\bf element}}{}
+\kwic{}{ROD4   - Shape functions for four-noded line}{{\bf element}}{}
+\kwic{}{SELECT - Constructs an}{{\bf element} solution vector}{}
+\kwic{}{- Shape functions for ten-noded tetrahedral}{{\bf element}}{TET10 }
+\kwic{}{- Shape functions for twenty-noded tetrahedral}{{\bf element}}{TET20 }
+\kwic{}{- Shape functions for four-noded tetrahedral}{{\bf element}}{TET4  }
+\kwic{}{PRTTOP - Prints the}{{\bf element} topology in a standard format}{}
+\kwic{}{functions for ten-noded triangular membrane}{{\bf element}}{TRIM10 - Shape}
+\kwic{}{functions for three-noded triangular membrane}{{\bf element}}{TRIM3  - Shape}
+\kwic{}{functions for six-noded triangular membrane}{{\bf element}}{TRIM6  - Shape}
+\kwic{}{- Shape functions for fifteen-noded wedge}{{\bf element}}{WDG15 }
+\kwic{}{WDG6   - Shape functions for six-noded wedge}{{\bf element}}{}
+\kwic{}{Calculates the direction cosines for hexahedral}{{\bf elements}}{DCSBRK -}
+\kwic{}{the direction cosines for quadrilateral}{{\bf elements}}{DCSQUA - Calculates}
+\kwic{}{Calculates the direction cosines for triangular}{{\bf elements}}{DCSTRI -}
+\kwic{for an element}{}{{\bf ELGEOM} - Construction of element geometry array}{}
+\kwic{}{CHOSOL - Solves a system of linear}{{\bf equations} using Choleski reduction}{}
+\kwic{}{GAUSOL - Solves a system of linear}{{\bf equations} using Gaussian reduction}{}
+\kwic{conditions}{}{{\bf ERRMES} - Controls processing of error}{}
+\kwic{}{ERRMES - Controls processing of}{{\bf error} conditions}{}
+\kwic{}{ERUNIT - Control the}{{\bf error} message unit number}{}
+\kwic{}{}{{\bf ERUNIT} - Control the error message unit number}{}
+\kwic{}{QLVAL  - Eigenvalue}{{\bf extraction} using QL transformations}{}
+\kwic{}{QLVEC  - Eigenvalue and eigenvector}{{\bf extraction} using QL transformations}{}
+\kwic{}{SURBRK - Calculates a unit of area on boundary}{{\bf faces}}{}
+\kwic{}{WDG15  - Shape functions for}{{\bf fifteen-noded} wedge element}{}
+\kwic{}{MATINV - Inverts a full matrix}{{\bf (for} limited sizes)}{}
+\kwic{}{JACO   - Reduction to tridiagonal}{{\bf form} by Jacobi rotations}{}
+\kwic{}{CPRTMT - Prints a complex matrix in a standard}{{\bf form}}{}
+\kwic{}{CPRTVC - Prints a complex vector in a standard}{{\bf form}}{}
+\kwic{}{- Prints a complex nodal values in a standard}{{\bf form}}{CPRTVL}
+\kwic{}{HOUSE  - Householder reduction to tridiagonal}{{\bf form}}{}
+\kwic{}{PRTGEO - Prints the mesh geometry in a standard}{{\bf format}}{}
+\kwic{}{PRTMAT - Prints a matrix in standard}{{\bf format}}{}
+\kwic{}{- Prints the element topology in a standard}{{\bf format}}{PRTTOP}
+\kwic{}{PRTVAL - Prints the nodal values in a standard}{{\bf format}}{}
+\kwic{}{PRTVEC - Prints a vector in standard}{{\bf format}}{}
+\kwic{}{}{{\bf FORMNF} - Forms nodal freedom array}{}
+\kwic{boundary node list}{SIDENO -}{{\bf Forms} list of element and side numbers from}{}
+\kwic{}{FORMNF -}{{\bf Forms} nodal freedom array}{}
+\kwic{hexahedrals}{BQBRK  -}{{\bf Forms} quadrature rule for line integration on}{}
+\kwic{quadrilaterals}{BQQUA  -}{{\bf Forms} quadrature rule for line integration on}{}
+\kwic{triangles}{BQTRI  -}{{\bf Forms} quadrature rule for line integration on}{}
+\kwic{}{SHAPFN -}{{\bf Forms} shape function matrix *comp[N]}{}
+\kwic{elasticity}{B2C2   -}{{\bf Forms} strain-displacement matrix for 2-D plane}{}
+\kwic{elasticity}{B3C3   -}{{\bf Forms} strain-displacement matrix for 3-D}{}
+\kwic{axisymmetric elasticity}{B2P2   -}{{\bf Forms} strain-displacement matrix for}{}
+\kwic{bending}{DPLT   -}{{\bf Forms} stress-strain matrix for 2-D plate}{}
+\kwic{}{DISO   -}{{\bf Forms} stress-strain matrix for 3-D elasticity}{}
+\kwic{elasticity}{DAXI   -}{{\bf Forms} stress-strain matrix for axisymmetric}{}
+\kwic{}{DPSN   -}{{\bf Forms} stress-strain matrix for plane strain}{}
+\kwic{}{DPSS   -}{{\bf Forms} stress-strain matrix for plane stress}{}
+\kwic{}{DYAD   -}{{\bf Forms} the dyad of two vectors}{}
+\kwic{}{SCAPRD -}{{\bf Forms} the scalar product of two vectors}{}
+\kwic{}{MATRAN -}{{\bf Forms} the transpose of a full matrix}{}
+\kwic{}{CSYSUB - Complex}{{\bf forward} and backward substitution}{}
+\kwic{}{GAUSUB - Gaussian}{{\bf forward} and backward substitution}{}
+\kwic{}{CHOFWD - Choleski}{{\bf forward} substitution}{}
+\kwic{}{ROD4   - Shape functions for}{{\bf four-noded} line element}{}
+\kwic{}{QUAM4  - Shape functions for}{{\bf four-noded} quadrilateral membrane element}{}
+\kwic{}{TET4   - Shape functions for}{{\bf four-noded} tetrahedral element}{}
+\kwic{region}{QQUA4  -}{{\bf Four-point} quadrature rule for rectangular}{}
+\kwic{region}{QTET4  -}{{\bf Four-point} quadrature rule for tetrahedral}{}
+\kwic{region}{QTRI4  -}{{\bf Four-point} quadrature rule for triangular}{}
+\kwic{difference for an element}{}{{\bf FREDIF} - Calcalutes of maximum freedom number}{}
+\kwic{}{FORMNF - Forms nodal}{{\bf freedom} array}{}
+\kwic{}{FREDIF - Calcalutes of maximum}{{\bf freedom} number difference for an element}{}
+\kwic{}{MATADD - Adds two}{{\bf full} matrices together}{}
+\kwic{}{MATVEC - Multiplies a}{{\bf full} matrix by a vector}{}
+\kwic{}{VECMAT - Pre-multiplies a}{{\bf full} matrix by a vector}{}
+\kwic{}{MATINV - Inverts a}{{\bf full} matrix (for limited sizes)}{}
+\kwic{}{MATSUB - Subtracts one}{{\bf full} matrix from another}{}
+\kwic{}{MATCOP - Copies one}{{\bf full} matrix into another}{}
+\kwic{}{MATRAN - Forms the transpose of a}{{\bf full} matrix}{}
+\kwic{}{MATNUL - Initialises a}{{\bf full} matrix to zeros}{}
+\kwic{}{ASFUL  - Assembles a}{{\bf full} system matrix}{}
+\kwic{}{ASFULG - General assembly of a}{{\bf full} system matrix}{}
+\kwic{}{SHAPFN - Forms shape}{{\bf function} matrix *comp[N]}{}
+\kwic{}{BRK8   - Shape}{{\bf functions} for eight-noded brick element}{}
+\kwic{membrane element}{QUAM8  - Shape}{{\bf functions} for eight-noded quadrilateral}{}
+\kwic{}{WDG15  - Shape}{{\bf functions} for fifteen-noded wedge element}{}
+\kwic{}{ROD4   - Shape}{{\bf functions} for four-noded line element}{}
+\kwic{element}{QUAM4  - Shape}{{\bf functions} for four-noded quadrilateral membrane}{}
+\kwic{}{TET4   - Shape}{{\bf functions} for four-noded tetrahedral element}{}
+\kwic{element}{TRIM6  - Shape}{{\bf functions} for six-noded triangular membrane}{}
+\kwic{}{WDG6   - Shape}{{\bf functions} for six-noded wedge element}{}
+\kwic{}{TET10  - Shape}{{\bf functions} for ten-noded tetrahedral element}{}
+\kwic{element}{TRIM10 - Shape}{{\bf functions} for ten-noded triangular membrane}{}
+\kwic{}{BRK32  - Shape}{{\bf functions} for thirty-two-noded brick element}{}
+\kwic{}{ROD3   - Shape}{{\bf functions} for three-noded line element}{}
+\kwic{element}{TRIM3  - Shape}{{\bf functions} for three-noded triangular membrane}{}
+\kwic{membrane element}{QUAM12 - Shape}{{\bf functions} for twelve-noded quadrilateral}{}
+\kwic{}{BRK20  - Shape}{{\bf functions} for twenty-noded brick element}{}
+\kwic{}{TET20  - Shape}{{\bf functions} for twenty-noded tetrahedral element}{}
+\kwic{}{ROD2   - Shape}{{\bf functions} for two-noded line element}{}
+\kwic{lower triangles}{}{{\bf GAURDN} - Gaussian decomposition into upper and}{}
+\kwic{using Gaussian reduction}{}{{\bf GAUSOL} - Solves a system of linear equations}{}
+\kwic{triangles}{GAURDN -}{{\bf Gaussian} decomposition into upper and lower}{}
+\kwic{}{GAUSUB -}{{\bf Gaussian} forward and backward substitution}{}
+\kwic{}{- Solves a system of linear equations using}{{\bf Gaussian} reduction}{GAUSOL}
+\kwic{substitution}{}{{\bf GAUSUB} - Gaussian forward and backward}{}
+\kwic{}{ASFULG -}{{\bf General} assembly of a full system matrix}{}
+\kwic{}{ASSYMG -}{{\bf General} assembly of a symmetric system matrix}{}
+\kwic{matrix}{ASUSMG -}{{\bf General} assembly of an unsymmetric system}{}
+\kwic{}{ELGEOM - Construction of element}{{\bf geometry} array for an element}{}
+\kwic{}{PRTGEO - Prints the mesh}{{\bf geometry} in a standard format}{}
+\kwic{}{DCSBRK - Calculates the direction cosines for}{{\bf hexahedral} elements}{}
+\kwic{}{- Forms quadrature rule for line integration on}{{\bf hexahedrals}}{BQBRK }
+\kwic{form}{}{{\bf HOUSE}  - Householder reduction to tridiagonal}{}
+\kwic{}{HOUSE  -}{{\bf Householder} reduction to tridiagonal form}{}
+\kwic{complex right-hand side}{}{{\bf IASRHS} - Assembles the imaginary part of a}{}
+\kwic{symmetric complex system matrix}{}{{\bf IASSYM} - Assembles the imaginary part of a}{}
+\kwic{unsymmetric complex system matrix}{}{{\bf IASUSM} - Assembles the imaginary part of a}{}
+\kwic{}{MATIDN - Initialises a matrix to the}{{\bf identity} matrix}{}
+\kwic{}{IASRHS - Assembles the}{{\bf imaginary} part of a complex right-hand side}{}
+\kwic{matrix}{IASSYM - Assembles the}{{\bf imaginary} part of a symmetric complex system}{}
+\kwic{matrix}{IASUSM - Assembles the}{{\bf imaginary} part of a unsymmetric complex system}{}
+\kwic{}{CMTNUL -}{{\bf Initialises} a complex matrix to zero}{}
+\kwic{}{CVCNUL -}{{\bf Initialises} a complex vector to zero}{}
+\kwic{}{MATNUL -}{{\bf Initialises} a full matrix to zeros}{}
+\kwic{}{MATIDN -}{{\bf Initialises} a matrix to the identity matrix}{}
+\kwic{}{VECNUL -}{{\bf Initialises} a vector to zeros}{}
+\kwic{}{BQBRK  - Forms quadrature rule for line}{{\bf integration} on hexahedrals}{}
+\kwic{}{BQQUA  - Forms quadrature rule for line}{{\bf integration} on quadrilaterals}{}
+\kwic{}{BQTRI  - Forms quadrature rule for line}{{\bf integration} on triangles}{}
+\kwic{}{MATINV -}{{\bf Inverts} a full matrix (for limited sizes)}{}
+\kwic{Jacobi rotations}{}{{\bf JACO}   - Reduction to tridiagonal form by}{}
+\kwic{}{JACO   - Reduction to tridiagonal form by}{{\bf Jacobi} rotations}{}
+\kwic{}{LINQUA - Calculates a unit}{{\bf length} on the boundaries of quadrilaterals}{}
+\kwic{}{LINTRI - Calculates a unit}{{\bf length} on the boundaries of triangles}{}
+\kwic{}{MATINV - Inverts a full matrix (for}{{\bf limited} sizes)}{}
+\kwic{}{ROD2   - Shape functions for two-noded}{{\bf line} element}{}
+\kwic{}{ROD3   - Shape functions for three-noded}{{\bf line} element}{}
+\kwic{}{ROD4   - Shape functions for four-noded}{{\bf line} element}{}
+\kwic{}{BQBRK  - Forms quadrature rule for}{{\bf line} integration on hexahedrals}{}
+\kwic{}{BQQUA  - Forms quadrature rule for}{{\bf line} integration on quadrilaterals}{}
+\kwic{}{BQTRI  - Forms quadrature rule for}{{\bf line} integration on triangles}{}
+\kwic{}{CHOSOL - Solves a system of}{{\bf linear} equations using Choleski reduction}{}
+\kwic{}{GAUSOL - Solves a system of}{{\bf linear} equations using Gaussian reduction}{}
+\kwic{}{CSYSOL - Solves a complex symmetric}{{\bf linear} system}{}
+\kwic{boundaries of quadrilaterals}{}{{\bf LINQUA} - Calculates a unit length on the}{}
+\kwic{boundaries of triangles}{}{{\bf LINTRI} - Calculates a unit length on the}{}
+\kwic{node list}{SIDENO - Forms}{{\bf list} of element and side numbers from boundary}{}
+\kwic{}{of element and side numbers from boundary node}{{\bf list}}{SIDENO - Forms list}
+\kwic{}{GAURDN - Gaussian decomposition into upper and}{{\bf lower} triangles}{}
+\kwic{}{NORM   - Computes the}{{\bf L*sub[2]} norm of a vector}{}
+\kwic{}{ASLMS  - Assembles a system}{{\bf lumped} mass matrix}{}
+\kwic{}{ASLMS  - Assembles a system lumped}{{\bf mass} matrix}{}
+\kwic{}{}{{\bf MATADD} - Adds two full matrices together}{}
+\kwic{}{}{{\bf MATCOP} - Copies one full matrix into another}{}
+\kwic{matrix}{}{{\bf MATIDN} - Initialises a matrix to the identity}{}
+\kwic{sizes)}{}{{\bf MATINV} - Inverts a full matrix (for limited}{}
+\kwic{}{}{{\bf MATMUL} - Multiplies two matrices together}{}
+\kwic{}{}{{\bf MATNUL} - Initialises a full matrix to zeros}{}
+\kwic{}{}{{\bf MATRAN} - Forms the transpose of a full matrix}{}
+\kwic{}{CHORDN - Choleski decomposition into triangular}{{\bf matrices}}{}
+\kwic{}{Complex symmetric decomposition into triangular}{{\bf matrices}}{CSYRDN -}
+\kwic{}{MATADD - Adds two full}{{\bf matrices} together}{}
+\kwic{}{MATMUL - Multiplies two}{{\bf matrices} together}{}
+\kwic{}{ASFUL  - Assembles a full system}{{\bf matrix}}{}
+\kwic{}{ASFULG - General assembly of a full system}{{\bf matrix}}{}
+\kwic{}{ASLMS  - Assembles a system lumped mass}{{\bf matrix}}{}
+\kwic{}{- Construction of steering vector for system}{{\bf matrix} assembly}{DIRECT}
+\kwic{}{ASSYM  - Assembles a symmetric system}{{\bf matrix}}{}
+\kwic{}{ASSYMG - General assembly of a symmetric system}{{\bf matrix}}{}
+\kwic{}{ASUSM  - Assembles an unsymmetric system}{{\bf matrix}}{}
+\kwic{}{- General assembly of an unsymmetric system}{{\bf matrix}}{ASUSMG}
+\kwic{}{BNDWTH - Calculates semi-bandwith of system}{{\bf matrix}}{}
+\kwic{}{MATVEC - Multiplies a full}{{\bf matrix} by a vector}{}
+\kwic{}{MVSYB  - Multiplies a symmetric band}{{\bf matrix} by a vector}{}
+\kwic{}{MVUSB  - Multiplies an unsymmetric band}{{\bf matrix} by a vector}{}
+\kwic{}{VECMAT - Pre-multiplies a full}{{\bf matrix} by a vector}{}
+\kwic{}{VMSYB  - Pre-multiplies a symmetric band}{{\bf matrix} by a vector}{}
+\kwic{}{VMUSB  - Pre-multiplies an unsymmetric band}{{\bf matrix} by a vector}{}
+\kwic{}{SHAPFN - Forms shape function}{{\bf matrix} *comp[N]}{}
+\kwic{}{B2C2   - Forms strain-displacement}{{\bf matrix} for 2-D plane elasticity}{}
+\kwic{}{DPLT   - Forms stress-strain}{{\bf matrix} for 2-D plate bending}{}
+\kwic{}{B3C3   - Forms strain-displacement}{{\bf matrix} for 3-D elasticity}{}
+\kwic{}{DISO   - Forms stress-strain}{{\bf matrix} for 3-D elasticity}{}
+\kwic{}{B2P2   - Forms strain-displacement}{{\bf matrix} for axisymmetric elasticity}{}
+\kwic{}{DAXI   - Forms stress-strain}{{\bf matrix} for axisymmetric elasticity}{}
+\kwic{}{MATINV - Inverts a full}{{\bf matrix} (for limited sizes)}{}
+\kwic{}{DPSN   - Forms stress-strain}{{\bf matrix} for plane strain}{}
+\kwic{}{DPSS   - Forms stress-strain}{{\bf matrix} for plane stress}{}
+\kwic{}{MATSUB - Subtracts one full}{{\bf matrix} from another}{}
+\kwic{}{imaginary part of a symmetric complex system}{{\bf matrix}}{IASSYM - Assembles the}
+\kwic{}{imaginary part of a unsymmetric complex system}{{\bf matrix}}{IASUSM - Assembles the}
+\kwic{}{CPRTMT - Prints a complex}{{\bf matrix} in a standard form}{}
+\kwic{}{PRTMAT - Prints a}{{\bf matrix} in standard format}{}
+\kwic{}{MATCOP - Copies one full}{{\bf matrix} into another}{}
+\kwic{}{MATIDN - Initialises a matrix to the identity}{{\bf matrix}}{}
+\kwic{}{MATRAN - Forms the transpose of a full}{{\bf matrix}}{}
+\kwic{}{the real part of a symmetric complex system}{{\bf matrix}}{RASSYM - Assembles}
+\kwic{}{the real part of a unsymmetric complex system}{{\bf matrix}}{RASUSM - Assembles}
+\kwic{}{MATIDN - Initialises a}{{\bf matrix} to the identity matrix}{}
+\kwic{}{CMTNUL - Initialises a complex}{{\bf matrix} to zero}{}
+\kwic{}{MATNUL - Initialises a full}{{\bf matrix} to zeros}{}
+\kwic{}{}{{\bf MATSUB} - Subtracts one full matrix from another}{}
+\kwic{}{}{{\bf MATVEC} - Multiplies a full matrix by a vector}{}
+\kwic{element}{FREDIF - Calcalutes of}{{\bf maximum} freedom number difference for an}{}
+\kwic{}{Shape functions for twelve-noded quadrilateral}{{\bf membrane} element}{QUAM12 -}
+\kwic{}{- Shape functions for four-noded quadrilateral}{{\bf membrane} element}{QUAM4 }
+\kwic{}{- Shape functions for eight-noded quadrilateral}{{\bf membrane} element}{QUAM8 }
+\kwic{}{- Shape functions for ten-noded triangular}{{\bf membrane} element}{TRIM10}
+\kwic{}{- Shape functions for three-noded triangular}{{\bf membrane} element}{TRIM3 }
+\kwic{}{- Shape functions for six-noded triangular}{{\bf membrane} element}{TRIM6 }
+\kwic{}{PRTGEO - Prints the}{{\bf mesh} geometry in a standard format}{}
+\kwic{}{ADUNIT - Control the advisory}{{\bf message} unit number}{}
+\kwic{}{ERUNIT - Control the error}{{\bf message} unit number}{}
+\kwic{}{MATVEC -}{{\bf Multiplies} a full matrix by a vector}{}
+\kwic{}{MVSYB  -}{{\bf Multiplies} a symmetric band matrix by a vector}{}
+\kwic{vector}{MVUSB  -}{{\bf Multiplies} an unsymmetric band matrix by a}{}
+\kwic{}{MATMUL -}{{\bf Multiplies} two matrices together}{}
+\kwic{a vector}{}{{\bf MVSYB}  - Multiplies a symmetric band matrix by}{}
+\kwic{by a vector}{}{{\bf MVUSB}  - Multiplies an unsymmetric band matrix}{}
+\kwic{region}{QQUA9  -}{{\bf Nine-point} quadrature rule for rectangular}{}
+\kwic{}{FORMNF - Forms}{{\bf nodal} freedom array}{}
+\kwic{}{CPRTVL - Prints a complex}{{\bf nodal} values in a standard form}{}
+\kwic{}{PRTVAL - Prints the}{{\bf nodal} values in a standard format}{}
+\kwic{}{list of element and side numbers from boundary}{{\bf node} list}{SIDENO - Forms}
+\kwic{}{}{{\bf NORM}   - Computes the L*sub[2] norm of a vector}{}
+\kwic{}{NORM   - Computes the L*sub[2]}{{\bf norm} of a vector}{}
+\kwic{}{ADUNIT - Control the advisory message unit}{{\bf number}}{}
+\kwic{}{FREDIF - Calcalutes of maximum freedom}{{\bf number} difference for an element}{}
+\kwic{}{ERUNIT - Control the error message unit}{{\bf number}}{}
+\kwic{}{SIDENO - Forms list of element and side}{{\bf numbers} from boundary node list}{}
+\kwic{}{QLIN2  - Two-point,}{{\bf one-dimensional} quadrature}{}
+\kwic{}{QLIN3  - Three-point,}{{\bf one-dimensional} quadrature}{}
+\kwic{}{IASRHS - Assembles the imaginary}{{\bf part} of a complex right-hand side}{}
+\kwic{}{RASRHS - Assembles the real}{{\bf part} of a complex right-hand side}{}
+\kwic{}{IASSYM - Assembles the imaginary}{{\bf part} of a symmetric complex system matrix}{}
+\kwic{}{RASSYM - Assembles the real}{{\bf part} of a symmetric complex system matrix}{}
+\kwic{}{IASUSM - Assembles the imaginary}{{\bf part} of a unsymmetric complex system matrix}{}
+\kwic{}{RASUSM - Assembles the real}{{\bf part} of a unsymmetric complex system matrix}{}
+\kwic{}{- Forms strain-displacement matrix for 2-D}{{\bf plane} elasticity}{B2C2  }
+\kwic{}{DPSN   - Forms stress-strain matrix for}{{\bf plane} strain}{}
+\kwic{}{DPSS   - Forms stress-strain matrix for}{{\bf plane} stress}{}
+\kwic{}{DPLT   - Forms stress-strain matrix for 2-D}{{\bf plate} bending}{}
+\kwic{}{VECMAT -}{{\bf Pre-multiplies} a full matrix by a vector}{}
+\kwic{vector}{VMSYB  -}{{\bf Pre-multiplies} a symmetric band matrix by a}{}
+\kwic{vector}{VMUSB  -}{{\bf Pre-multiplies} an unsymmetric band matrix by a}{}
+\kwic{}{CPRTMT -}{{\bf Prints} a complex matrix in a standard form}{}
+\kwic{form}{CPRTVL -}{{\bf Prints} a complex nodal values in a standard}{}
+\kwic{}{CPRTVC -}{{\bf Prints} a complex vector in a standard form}{}
+\kwic{}{PRTMAT -}{{\bf Prints} a matrix in standard format}{}
+\kwic{}{PRTVEC -}{{\bf Prints} a vector in standard format}{}
+\kwic{format}{PRTTOP -}{{\bf Prints} the element topology in a standard}{}
+\kwic{}{PRTGEO -}{{\bf Prints} the mesh geometry in a standard format}{}
+\kwic{}{PRTVAL -}{{\bf Prints} the nodal values in a standard format}{}
+\kwic{}{ERRMES - Controls}{{\bf processing} of error conditions}{}
+\kwic{}{SCAPRD - Forms the scalar}{{\bf product} of two vectors}{}
+\kwic{format}{}{{\bf PRTGEO} - Prints the mesh geometry in a standard}{}
+\kwic{}{}{{\bf PRTMAT} - Prints a matrix in standard format}{}
+\kwic{standard format}{}{{\bf PRTTOP} - Prints the element topology in a}{}
+\kwic{format}{}{{\bf PRTVAL} - Prints the nodal values in a standard}{}
+\kwic{}{}{{\bf PRTVEC} - Prints a vector in standard format}{}
+\kwic{}{}{{\bf QBRK6}  - Six-point quadrature rule for cube}{}
+\kwic{}{}{{\bf QBRK8}  - Eight-point quadrature rule for cube}{}
+\kwic{}{QLVAL  - Eigenvalue extraction using}{{\bf QL} transformations}{}
+\kwic{}{- Eigenvalue and eigenvector extraction using}{{\bf QL} transformations}{QLVEC }
+\kwic{}{}{{\bf QLIN2}  - Two-point, one-dimensional quadrature}{}
+\kwic{quadrature}{}{{\bf QLIN3}  - Three-point, one-dimensional}{}
+\kwic{transformations}{}{{\bf QLVAL}  - Eigenvalue extraction using QL}{}
+\kwic{using QL transformations}{}{{\bf QLVEC}  - Eigenvalue and eigenvector extraction}{}
+\kwic{rectangular region}{}{{\bf QQUA4}  - Four-point quadrature rule for}{}
+\kwic{rectangular region}{}{{\bf QQUA9}  - Nine-point quadrature rule for}{}
+\kwic{tetrahedral region}{}{{\bf QTET4}  - Four-point quadrature rule for}{}
+\kwic{triangular region}{}{{\bf QTRI4}  - Four-point quadrature rule for}{}
+\kwic{triangular region}{}{{\bf QTRI7}  - Seven-point quadrature rule for}{}
+\kwic{}{QLIN2  - Two-point, one-dimensional}{{\bf quadrature}}{}
+\kwic{}{QLIN3  - Three-point, one-dimensional}{{\bf quadrature}}{}
+\kwic{}{QBRK6  - Six-point}{{\bf quadrature} rule for cube}{}
+\kwic{}{QBRK8  - Eight-point}{{\bf quadrature} rule for cube}{}
+\kwic{hexahedrals}{BQBRK  - Forms}{{\bf quadrature} rule for line integration on}{}
+\kwic{quadrilaterals}{BQQUA  - Forms}{{\bf quadrature} rule for line integration on}{}
+\kwic{triangles}{BQTRI  - Forms}{{\bf quadrature} rule for line integration on}{}
+\kwic{}{QQUA4  - Four-point}{{\bf quadrature} rule for rectangular region}{}
+\kwic{}{QQUA9  - Nine-point}{{\bf quadrature} rule for rectangular region}{}
+\kwic{}{QTET4  - Four-point}{{\bf quadrature} rule for tetrahedral region}{}
+\kwic{}{QTRI4  - Four-point}{{\bf quadrature} rule for triangular region}{}
+\kwic{}{QTRI7  - Seven-point}{{\bf quadrature} rule for triangular region}{}
+\kwic{}{QWDG6  - Six-point}{{\bf quadrature} rule for wedge-shaped region}{}
+\kwic{}{QWDG8  - Eight-point}{{\bf quadrature} rule for wedge-shaped region}{}
+\kwic{}{DCSQUA - Calculates the direction cosines for}{{\bf quadrilateral} elements}{}
+\kwic{}{QUAM12 - Shape functions for twelve-noded}{{\bf quadrilateral} membrane element}{}
+\kwic{}{QUAM4  - Shape functions for four-noded}{{\bf quadrilateral} membrane element}{}
+\kwic{}{QUAM8  - Shape functions for eight-noded}{{\bf quadrilateral} membrane element}{}
+\kwic{}{- Forms quadrature rule for line integration on}{{\bf quadrilaterals}}{BQQUA }
+\kwic{}{- Calculates a unit length on the boundaries of}{{\bf quadrilaterals}}{LINQUA}
+\kwic{quadrilateral membrane element}{}{{\bf QUAM12} - Shape functions for twelve-noded}{}
+\kwic{quadrilateral membrane element}{}{{\bf QUAM4}  - Shape functions for four-noded}{}
+\kwic{quadrilateral membrane element}{}{{\bf QUAM8}  - Shape functions for eight-noded}{}
+\kwic{wedge-shaped region}{}{{\bf QWDG6}  - Six-point quadrature rule for}{}
+\kwic{wedge-shaped region}{}{{\bf QWDG8}  - Eight-point quadrature rule for}{}
+\kwic{right-hand side}{}{{\bf RASRHS} - Assembles the real part of a complex}{}
+\kwic{complex system matrix}{}{{\bf RASSYM} - Assembles the real part of a symmetric}{}
+\kwic{unsymmetric complex system matrix}{}{{\bf RASUSM} - Assembles the real part of a}{}
+\kwic{}{RASRHS - Assembles the}{{\bf real} part of a complex right-hand side}{}
+\kwic{}{RASSYM - Assembles the}{{\bf real} part of a symmetric complex system matrix}{}
+\kwic{matrix}{RASUSM - Assembles the}{{\bf real} part of a unsymmetric complex system}{}
+\kwic{}{QQUA4  - Four-point quadrature rule for}{{\bf rectangular} region}{}
+\kwic{}{QQUA9  - Nine-point quadrature rule for}{{\bf rectangular} region}{}
+\kwic{}{a system of linear equations using Choleski}{{\bf reduction}}{CHOSOL - Solves}
+\kwic{}{a system of linear equations using Gaussian}{{\bf reduction}}{GAUSOL - Solves}
+\kwic{rotations}{JACO   -}{{\bf Reduction} to tridiagonal form by Jacobi}{}
+\kwic{}{HOUSE  - Householder}{{\bf reduction} to tridiagonal form}{}
+\kwic{}{- Four-point quadrature rule for rectangular}{{\bf region}}{QQUA4 }
+\kwic{}{- Nine-point quadrature rule for rectangular}{{\bf region}}{QQUA9 }
+\kwic{}{- Four-point quadrature rule for tetrahedral}{{\bf region}}{QTET4 }
+\kwic{}{- Four-point quadrature rule for triangular}{{\bf region}}{QTRI4 }
+\kwic{}{- Seven-point quadrature rule for triangular}{{\bf region}}{QTRI7 }
+\kwic{}{- Six-point quadrature rule for wedge-shaped}{{\bf region}}{QWDG6 }
+\kwic{}{- Eight-point quadrature rule for wedge-shaped}{{\bf region}}{QWDG8 }
+\kwic{}{- Assembles the imaginary part of a complex}{{\bf right-hand} side}{IASRHS}
+\kwic{}{ASRHS  - Assembles the}{{\bf right-hand} side of a system}{}
+\kwic{}{RASRHS - Assembles the real part of a complex}{{\bf right-hand} side}{}
+\kwic{element}{}{{\bf ROD2}   - Shape functions for two-noded line}{}
+\kwic{element}{}{{\bf ROD3}   - Shape functions for three-noded line}{}
+\kwic{element}{}{{\bf ROD4}   - Shape functions for four-noded line}{}
+\kwic{}{- Reduction to tridiagonal form by Jacobi}{{\bf rotations}}{JACO  }
+\kwic{}{QBRK6  - Six-point quadrature}{{\bf rule} for cube}{}
+\kwic{}{QBRK8  - Eight-point quadrature}{{\bf rule} for cube}{}
+\kwic{}{BQBRK  - Forms quadrature}{{\bf rule} for line integration on hexahedrals}{}
+\kwic{}{BQQUA  - Forms quadrature}{{\bf rule} for line integration on quadrilaterals}{}
+\kwic{}{BQTRI  - Forms quadrature}{{\bf rule} for line integration on triangles}{}
+\kwic{}{QQUA4  - Four-point quadrature}{{\bf rule} for rectangular region}{}
+\kwic{}{QQUA9  - Nine-point quadrature}{{\bf rule} for rectangular region}{}
+\kwic{}{QTET4  - Four-point quadrature}{{\bf rule} for tetrahedral region}{}
+\kwic{}{QTRI4  - Four-point quadrature}{{\bf rule} for triangular region}{}
+\kwic{}{QTRI7  - Seven-point quadrature}{{\bf rule} for triangular region}{}
+\kwic{}{QWDG6  - Six-point quadrature}{{\bf rule} for wedge-shaped region}{}
+\kwic{}{QWDG8  - Eight-point quadrature}{{\bf rule} for wedge-shaped region}{}
+\kwic{}{SCAPRD - Forms the}{{\bf scalar} product of two vectors}{}
+\kwic{vectors}{}{{\bf SCAPRD} - Forms the scalar product of two}{}
+\kwic{}{}{{\bf SELECT} - Constructs an element solution vector}{}
+\kwic{}{BNDWTH - Calculates}{{\bf semi-bandwith} of system matrix}{}
+\kwic{region}{QTRI7  -}{{\bf Seven-point} quadrature rule for triangular}{}
+\kwic{}{SHAPFN - Forms}{{\bf shape} function matrix *comp[N]}{}
+\kwic{}{BRK8   -}{{\bf Shape} functions for eight-noded brick element}{}
+\kwic{membrane element}{QUAM8  -}{{\bf Shape} functions for eight-noded quadrilateral}{}
+\kwic{}{WDG15  -}{{\bf Shape} functions for fifteen-noded wedge element}{}
+\kwic{}{ROD4   -}{{\bf Shape} functions for four-noded line element}{}
+\kwic{membrane element}{QUAM4  -}{{\bf Shape} functions for four-noded quadrilateral}{}
+\kwic{element}{TET4   -}{{\bf Shape} functions for four-noded tetrahedral}{}
+\kwic{membrane element}{TRIM6  -}{{\bf Shape} functions for six-noded triangular}{}
+\kwic{}{WDG6   -}{{\bf Shape} functions for six-noded wedge element}{}
+\kwic{element}{TET10  -}{{\bf Shape} functions for ten-noded tetrahedral}{}
+\kwic{membrane element}{TRIM10 -}{{\bf Shape} functions for ten-noded triangular}{}
+\kwic{element}{BRK32  -}{{\bf Shape} functions for thirty-two-noded brick}{}
+\kwic{}{ROD3   -}{{\bf Shape} functions for three-noded line element}{}
+\kwic{membrane element}{TRIM3  -}{{\bf Shape} functions for three-noded triangular}{}
+\kwic{membrane element}{QUAM12 -}{{\bf Shape} functions for twelve-noded quadrilateral}{}
+\kwic{}{BRK20  -}{{\bf Shape} functions for twenty-noded brick element}{}
+\kwic{element}{TET20  -}{{\bf Shape} functions for twenty-noded tetrahedral}{}
+\kwic{}{ROD2   -}{{\bf Shape} functions for two-noded line element}{}
+\kwic{}{}{{\bf SHAPFN} - Forms shape function matrix *comp[N]}{}
+\kwic{}{the imaginary part of a complex right-hand}{{\bf side}}{IASRHS - Assembles}
+\kwic{}{SIDENO - Forms list of element and}{{\bf side} numbers from boundary node list}{}
+\kwic{}{ASRHS  - Assembles the right-hand}{{\bf side} of a system}{}
+\kwic{}{Assembles the real part of a complex right-hand}{{\bf side}}{RASRHS -}
+\kwic{from boundary node list}{}{{\bf SIDENO} - Forms list of element and side numbers}{}
+\kwic{}{TRIM6  - Shape functions for}{{\bf six-noded} triangular membrane element}{}
+\kwic{}{WDG6   - Shape functions for}{{\bf six-noded} wedge element}{}
+\kwic{}{QBRK6  -}{{\bf Six-point} quadrature rule for cube}{}
+\kwic{region}{QWDG6  -}{{\bf Six-point} quadrature rule for wedge-shaped}{}
+\kwic{}{MATINV - Inverts a full matrix (for limited}{{\bf sizes)}}{}
+\kwic{}{UPDATE - Updates solution vector with system}{{\bf solution}}{}
+\kwic{}{SELECT - Constructs an element}{{\bf solution} vector}{}
+\kwic{}{UPDATE - Updates}{{\bf solution} vector with system solution}{}
+\kwic{}{CSYSOL -}{{\bf Solves} a complex symmetric linear system}{}
+\kwic{Choleski reduction}{CHOSOL -}{{\bf Solves} a system of linear equations using}{}
+\kwic{Gaussian reduction}{GAUSOL -}{{\bf Solves} a system of linear equations using}{}
+\kwic{}{CPRTMT - Prints a complex matrix in a}{{\bf standard} form}{}
+\kwic{}{CPRTVC - Prints a complex vector in a}{{\bf standard} form}{}
+\kwic{}{CPRTVL - Prints a complex nodal values in a}{{\bf standard} form}{}
+\kwic{}{PRTGEO - Prints the mesh geometry in a}{{\bf standard} format}{}
+\kwic{}{PRTMAT - Prints a matrix in}{{\bf standard} format}{}
+\kwic{}{PRTTOP - Prints the element topology in a}{{\bf standard} format}{}
+\kwic{}{PRTVAL - Prints the nodal values in a}{{\bf standard} format}{}
+\kwic{}{PRTVEC - Prints a vector in}{{\bf standard} format}{}
+\kwic{}{DIRECT - Construction of}{{\bf steering} vector for system matrix assembly}{}
+\kwic{}{DPSN   - Forms stress-strain matrix for plane}{{\bf strain}}{}
+\kwic{elasticity}{B2C2   - Forms}{{\bf strain-displacement} matrix for 2-D plane}{}
+\kwic{}{B3C3   - Forms}{{\bf strain-displacement} matrix for 3-D elasticity}{}
+\kwic{elasticity}{B2P2   - Forms}{{\bf strain-displacement} matrix for axisymmetric}{}
+\kwic{}{DPSS   - Forms stress-strain matrix for plane}{{\bf stress}}{}
+\kwic{}{DPLT   - Forms}{{\bf stress-strain} matrix for 2-D plate bending}{}
+\kwic{}{DISO   - Forms}{{\bf stress-strain} matrix for 3-D elasticity}{}
+\kwic{elasticity}{DAXI   - Forms}{{\bf stress-strain} matrix for axisymmetric}{}
+\kwic{}{DPSN   - Forms}{{\bf stress-strain} matrix for plane strain}{}
+\kwic{}{DPSS   - Forms}{{\bf stress-strain} matrix for plane stress}{}
+\kwic{}{CHOBAK - Choleski backward}{{\bf substitution}}{}
+\kwic{}{CHOFWD - Choleski forward}{{\bf substitution}}{}
+\kwic{}{CSYSUB - Complex forward and backward}{{\bf substitution}}{}
+\kwic{}{GAUSUB - Gaussian forward and backward}{{\bf substitution}}{}
+\kwic{}{MATSUB -}{{\bf Subtracts} one full matrix from another}{}
+\kwic{}{VECSUB -}{{\bf Subtracts} one vector from another}{}
+\kwic{faces}{}{{\bf SURBRK} - Calculates a unit of area on boundary}{}
+\kwic{}{MVSYB  - Multiplies a}{{\bf symmetric} band matrix by a vector}{}
+\kwic{}{VMSYB  - Pre-multiplies a}{{\bf symmetric} band matrix by a vector}{}
+\kwic{}{IASSYM - Assembles the imaginary part of a}{{\bf symmetric} complex system matrix}{}
+\kwic{}{RASSYM - Assembles the real part of a}{{\bf symmetric} complex system matrix}{}
+\kwic{matrices}{CSYRDN - Complex}{{\bf symmetric} decomposition into triangular}{}
+\kwic{}{CSYSOL - Solves a complex}{{\bf symmetric} linear system}{}
+\kwic{}{ASSYM  - Assembles a}{{\bf symmetric} system matrix}{}
+\kwic{}{ASSYMG - General assembly of a}{{\bf symmetric} system matrix}{}
+\kwic{}{ASRHS  - Assembles the right-hand side of a}{{\bf system}}{}
+\kwic{}{CSYSOL - Solves a complex symmetric linear}{{\bf system}}{}
+\kwic{}{ASLMS  - Assembles a}{{\bf system} lumped mass matrix}{}
+\kwic{}{ASFUL  - Assembles a full}{{\bf system} matrix}{}
+\kwic{}{ASFULG - General assembly of a full}{{\bf system} matrix}{}
+\kwic{}{DIRECT - Construction of steering vector for}{{\bf system} matrix assembly}{}
+\kwic{}{ASSYM  - Assembles a symmetric}{{\bf system} matrix}{}
+\kwic{}{ASSYMG - General assembly of a symmetric}{{\bf system} matrix}{}
+\kwic{}{ASUSM  - Assembles an unsymmetric}{{\bf system} matrix}{}
+\kwic{}{ASUSMG - General assembly of an unsymmetric}{{\bf system} matrix}{}
+\kwic{}{BNDWTH - Calculates semi-bandwith of}{{\bf system} matrix}{}
+\kwic{}{the imaginary part of a symmetric complex}{{\bf system} matrix}{IASSYM - Assembles}
+\kwic{}{the imaginary part of a unsymmetric complex}{{\bf system} matrix}{IASUSM - Assembles}
+\kwic{}{Assembles the real part of a symmetric complex}{{\bf system} matrix}{RASSYM -}
+\kwic{}{the real part of a unsymmetric complex}{{\bf system} matrix}{RASUSM - Assembles}
+\kwic{reduction}{CHOSOL - Solves a}{{\bf system} of linear equations using Choleski}{}
+\kwic{reduction}{GAUSOL - Solves a}{{\bf system} of linear equations using Gaussian}{}
+\kwic{}{UPDATE - Updates solution vector with}{{\bf system} solution}{}
+\kwic{}{TET10  - Shape functions for}{{\bf ten-noded} tetrahedral element}{}
+\kwic{}{TRIM10 - Shape functions for}{{\bf ten-noded} triangular membrane element}{}
+\kwic{tetrahedral element}{}{{\bf TET10}  - Shape functions for ten-noded}{}
+\kwic{tetrahedral element}{}{{\bf TET20}  - Shape functions for twenty-noded}{}
+\kwic{tetrahedral element}{}{{\bf TET4}   - Shape functions for four-noded}{}
+\kwic{}{TET10  - Shape functions for ten-noded}{{\bf tetrahedral} element}{}
+\kwic{}{TET20  - Shape functions for twenty-noded}{{\bf tetrahedral} element}{}
+\kwic{}{TET4   - Shape functions for four-noded}{{\bf tetrahedral} element}{}
+\kwic{}{QTET4  - Four-point quadrature rule for}{{\bf tetrahedral} region}{}
+\kwic{}{BRK32  - Shape functions for}{{\bf thirty-two-noded} brick element}{}
+\kwic{}{ROD3   - Shape functions for}{{\bf three-noded} line element}{}
+\kwic{}{TRIM3  - Shape functions for}{{\bf three-noded} triangular membrane element}{}
+\kwic{}{QLIN3  -}{{\bf Three-point,} one-dimensional quadrature}{}
+\kwic{}{MATADD - Adds two full matrices}{{\bf together}}{}
+\kwic{}{MATMUL - Multiplies two matrices}{{\bf together}}{}
+\kwic{}{VECADD - Adds two vectors}{{\bf together}}{}
+\kwic{}{PRTTOP - Prints the element}{{\bf topology} in a standard format}{}
+\kwic{}{QLVAL  - Eigenvalue extraction using QL}{{\bf transformations}}{}
+\kwic{}{Eigenvalue and eigenvector extraction using QL}{{\bf transformations}}{QLVEC  -}
+\kwic{}{MATRAN - Forms the}{{\bf transpose} of a full matrix}{}
+\kwic{}{- Forms quadrature rule for line integration on}{{\bf triangles}}{BQTRI }
+\kwic{}{- Gaussian decomposition into upper and lower}{{\bf triangles}}{GAURDN}
+\kwic{}{- Calculates a unit length on the boundaries of}{{\bf triangles}}{LINTRI}
+\kwic{}{DCSTRI - Calculates the direction cosines for}{{\bf triangular} elements}{}
+\kwic{}{CHORDN - Choleski decomposition into}{{\bf triangular} matrices}{}
+\kwic{}{CSYRDN - Complex symmetric decomposition into}{{\bf triangular} matrices}{}
+\kwic{}{TRIM10 - Shape functions for ten-noded}{{\bf triangular} membrane element}{}
+\kwic{}{TRIM3  - Shape functions for three-noded}{{\bf triangular} membrane element}{}
+\kwic{}{TRIM6  - Shape functions for six-noded}{{\bf triangular} membrane element}{}
+\kwic{}{QTRI4  - Four-point quadrature rule for}{{\bf triangular} region}{}
+\kwic{}{QTRI7  - Seven-point quadrature rule for}{{\bf triangular} region}{}
+\kwic{}{JACO   - Reduction to}{{\bf tridiagonal} form by Jacobi rotations}{}
+\kwic{}{HOUSE  - Householder reduction to}{{\bf tridiagonal} form}{}
+\kwic{triangular membrane element}{}{{\bf TRIM10} - Shape functions for ten-noded}{}
+\kwic{triangular membrane element}{}{{\bf TRIM3}  - Shape functions for three-noded}{}
+\kwic{triangular membrane element}{}{{\bf TRIM6}  - Shape functions for six-noded}{}
+\kwic{}{QUAM12 - Shape functions for}{{\bf twelve-noded} quadrilateral membrane element}{}
+\kwic{}{BRK20  - Shape functions for}{{\bf twenty-noded} brick element}{}
+\kwic{}{TET20  - Shape functions for}{{\bf twenty-noded} tetrahedral element}{}
+\kwic{}{ROD2   - Shape functions for}{{\bf two-noded} line element}{}
+\kwic{}{QLIN2  -}{{\bf Two-point,} one-dimensional quadrature}{}
+\kwic{}{LINQUA - Calculates a}{{\bf unit} length on the boundaries of quadrilaterals}{}
+\kwic{}{LINTRI - Calculates a}{{\bf unit} length on the boundaries of triangles}{}
+\kwic{}{ADUNIT - Control the advisory message}{{\bf unit} number}{}
+\kwic{}{ERUNIT - Control the error message}{{\bf unit} number}{}
+\kwic{}{SURBRK - Calculates a}{{\bf unit} of area on boundary faces}{}
+\kwic{}{MVUSB  - Multiplies an}{{\bf unsymmetric} band matrix by a vector}{}
+\kwic{}{VMUSB  - Pre-multiplies an}{{\bf unsymmetric} band matrix by a vector}{}
+\kwic{}{IASUSM - Assembles the imaginary part of a}{{\bf unsymmetric} complex system matrix}{}
+\kwic{}{RASUSM - Assembles the real part of a}{{\bf unsymmetric} complex system matrix}{}
+\kwic{}{ASUSM  - Assembles an}{{\bf unsymmetric} system matrix}{}
+\kwic{}{ASUSMG - General assembly of an}{{\bf unsymmetric} system matrix}{}
+\kwic{solution}{}{{\bf UPDATE} - Updates solution vector with system}{}
+\kwic{}{UPDATE -}{{\bf Updates} solution vector with system solution}{}
+\kwic{}{GAURDN - Gaussian decomposition into}{{\bf upper} and lower triangles}{}
+\kwic{}{CHOSOL - Solves a system of linear equations}{{\bf using} Choleski reduction}{}
+\kwic{}{GAUSOL - Solves a system of linear equations}{{\bf using} Gaussian reduction}{}
+\kwic{}{QLVAL  - Eigenvalue extraction}{{\bf using} QL transformations}{}
+\kwic{}{QLVEC  - Eigenvalue and eigenvector extraction}{{\bf using} QL transformations}{}
+\kwic{}{CPRTVL - Prints a complex nodal}{{\bf values} in a standard form}{}
+\kwic{}{PRTVAL - Prints the nodal}{{\bf values} in a standard format}{}
+\kwic{}{}{{\bf VECADD} - Adds two vectors together}{}
+\kwic{}{}{{\bf VECCOP} - Copies one vector into another}{}
+\kwic{vector}{}{{\bf VECMAT} - Pre-multiplies a full matrix by a}{}
+\kwic{}{}{{\bf VECNUL} - Initialises a vector to zeros}{}
+\kwic{}{}{{\bf VECSUB} - Subtracts one vector from another}{}
+\kwic{}{DIRECT - Construction of steering}{{\bf vector} for system matrix assembly}{}
+\kwic{}{VECSUB - Subtracts one}{{\bf vector} from another}{}
+\kwic{}{CPRTVC - Prints a complex}{{\bf vector} in a standard form}{}
+\kwic{}{PRTVEC - Prints a}{{\bf vector} in standard format}{}
+\kwic{}{VECCOP - Copies one}{{\bf vector} into another}{}
+\kwic{}{MATVEC - Multiplies a full matrix by a}{{\bf vector}}{}
+\kwic{}{- Multiplies a symmetric band matrix by a}{{\bf vector}}{MVSYB }
+\kwic{}{- Multiplies an unsymmetric band matrix by a}{{\bf vector}}{MVUSB }
+\kwic{}{NORM   - Computes the L*sub[2] norm of a}{{\bf vector}}{}
+\kwic{}{SELECT - Constructs an element solution}{{\bf vector}}{}
+\kwic{}{CVCNUL - Initialises a complex}{{\bf vector} to zero}{}
+\kwic{}{VECNUL - Initialises a}{{\bf vector} to zeros}{}
+\kwic{}{VECMAT - Pre-multiplies a full matrix by a}{{\bf vector}}{}
+\kwic{}{- Pre-multiplies a symmetric band matrix by a}{{\bf vector}}{VMSYB }
+\kwic{}{Pre-multiplies an unsymmetric band matrix by a}{{\bf vector}}{VMUSB  -}
+\kwic{}{UPDATE - Updates solution}{{\bf vector} with system solution}{}
+\kwic{}{DYAD   - Forms the dyad of two}{{\bf vectors}}{}
+\kwic{}{SCAPRD - Forms the scalar product of two}{{\bf vectors}}{}
+\kwic{}{VECADD - Adds two}{{\bf vectors} together}{}
+\kwic{by a vector}{}{{\bf VMSYB}  - Pre-multiplies a symmetric band matrix}{}
+\kwic{matrix by a vector}{}{{\bf VMUSB}  - Pre-multiplies an unsymmetric band}{}
+\kwic{wedge element}{}{{\bf WDG15}  - Shape functions for fifteen-noded}{}
+\kwic{element}{}{{\bf WDG6}   - Shape functions for six-noded wedge}{}
+\kwic{}{WDG15  - Shape functions for fifteen-noded}{{\bf wedge} element}{}
+\kwic{}{WDG6   - Shape functions for six-noded}{{\bf wedge} element}{}
+\kwic{}{QWDG6  - Six-point quadrature rule for}{{\bf wedge-shaped} region}{}
+\kwic{}{QWDG8  - Eight-point quadrature rule for}{{\bf wedge-shaped} region}{}
+\kwic{}{CMTNUL - Initialises a complex matrix to}{{\bf zero}}{}
+\kwic{}{CVCNUL - Initialises a complex vector to}{{\bf zero}}{}
+\kwic{}{MATNUL - Initialises a full matrix to}{{\bf zeros}}{}
+\kwic{}{VECNUL - Initialises a vector to}{{\bf zeros}}{}
+\end{document}

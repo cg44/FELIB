@@ -1,0 +1,88 @@
+C***********************************************************************
+.OHEADER /LEVEL 0/Stress-Strain Matrix/DISO/
+.EHEADER /DISO/Stress-Strain Matrix/LEVEL 0/
+.OFOOTER /FELIB-0:1 May 79//Page#/
+.EFOOTER /Page#//FELIB-0:1 May 79/
+.dn  {{Purpose}}
+.fill
+DISO forms the 6x6 stress-strain matrix for use in three
+dimensional isotropic problems.
+.nfill
+.dn  {{Specification}} (FORTRAN IV)
+_SUBROUTINE DISO(D,ID,JD,E,NU,NUMSS,ITEST)
+C_INTEGER ID,JD,NUMSS,ITEST
+C_{{real}} D,E,NU
+C_DIMENSION D(ID,JD)
+.dn  {{Description}}
+.fill
+The routine DISO forms the stress-strain matrix D for use
+in three dimensional isotropic problems. The matrix is 6x6
+and the elements are given below.
+.s14
+where E is the Young's Modulus and $ the Poisson's ratio for
+the problem.
+.nfill
+.dn  {{References}}
+[1]_BATHE, K-J., WILSON, E.L.
+_Numerical Methods in Finite Element Analysis, p 110
+_Prentice-Hall, 1976.
+.dn  {{Parameters}}
+D - __{{real}} array of DIMENSION (ID,JD) where ID${{>}}$6 and JD${{>}}$6.
+__On successful exit, D contains the stress-strain matrix.
+.s1
+ID - __INTEGER.
+__On entry, ID specifies the first dimension of array D as
+__declared in the calling (sub)program.
+__Unchanged on exit.
+.s1
+JD - __INTEGER.
+__On entry, JD specifies the second dimension of array D as
+__declared in the calling (sub)program.
+__Unchanged on exit.
+.s1
+E - __{{real}}.
+__On entry, E specifies the value of Young's Modulus to be
+__used in calculating the stress-strain matrix.
+__Unchanged on exit.
+.s1
+NU - __{{real}}.
+__On entry, NU specifies the value of Poisson's ratio to be
+__used in calculating the stress-strain matrix.
+__Unchanged on exit.
+.s1
+NUMSS - _INTEGER.
+__On successful exit, NUMSS specifies the order of the
+__stress-strain matrix. NUMSS = 6 in this case.
+.s1
+ITEST - _INTEGER.
+__Before entry, ITEST must be assigned a value. Users
+__not familiar with this parameter are advised to
+__assign ITEST to zero.
+.s1
+__The options are:
+.s1
+__0 - _hard fail option. An error message is printed and
+___processing terminated.
+.s1
+__1 - _soft fail option. On correct completion, ITEST is
+___set to zero on exit. If an error is detected then
+___ITEST is set to the appropriate value (see Section 6).
+.s1
+__-1 - _{{no checking is performed}}. ITEST is unchanged on exit.
+.dn  {{Error Indicators}}
+Errors detected by the routine:
+.s1
+_ITEST = 1  On entry, ID or JD < 6.
+.s1
+_ITEST = 2  On entry, 0${{<}}$NU${{<}}$0.5.
+.dn  {{Auxiliary Routines}}
+This routine uses the Level 0 Library routines MATNUL and ERRMES.
+.dn  {{Timing}}
+Not available.
+.dn  {{Storage}}
+There are no internally declared arrays.
+.dn  {{Accuracy}}
+{{Basic precision}} arithmetic is used.
+.dn  {{Further Comments}}
+None.
+C***********************************************************************

@@ -1,0 +1,393 @@
+% FELIB Level 0 Style File - 20 February 1989
+\typeout{Document Style FELIB Level 0. Released 1 January 1990}
+
+\def\@ptsize{0}\@namedef{ds@11pt}{\def\@ptsize{1}}
+               \@namedef{ds@12pt}{\def\@ptsize{2}} 
+
+\def\ds@twoside{\@twosidetrue \@mparswitchtrue}
+\def\ds@draft{\overfullrule 5pt} 
+
+\@options
+
+
+%\input felib1\@ptsize.sty\relax
+\input felib11.sty
+%\input felib10.sty
+
+\def\labelenumi{\arabic{enumi}.} 
+\def\theenumi{\arabic{enumi}} 
+\def\labelenumii{(\alph{enumii})}
+\def\theenumii{\alph{enumii}}
+\def\p@enumii{\theenumi}
+\def\labelenumiii{\roman{enumiii}.}
+\def\theenumiii{\roman{enumiii}}
+\def\p@enumiii{\theenumi(\theenumii)}
+\def\labelenumiv{\Alph{enumiv}.}
+\def\theenumiv{\Alph{enumiv}} 
+\def\p@enumiv{\p@enumiii\theenumiii}
+
+\def\labelitemi{$\bullet$}
+\def\labelitemii{\bf --}
+\def\labelitemiii{$\ast$}
+\def\labelitemiv{$\cdot$}
+
+\def\verse{\let\\=\@centercr 
+ \list{}{\itemsep\z@ \itemindent -1.5em\listparindent \itemindent 
+ \rightmargin\leftmargin\advance\leftmargin 1.5em}\item[]}
+\let\endverse\endlist
+
+\def\quotation{\list{}{\listparindent 1.5em
+ \itemindent\listparindent
+ \rightmargin\leftmargin \parsep 0pt plus 1pt}\item[]}
+\let\endquotation=\endlist
+
+\def\quote{\list{}{\rightmargin\leftmargin}\item[]}
+\let\endquote=\endlist
+
+%\def\descriptionlabel#1{\hspace\labelsep \bf #1}
+%\def\description{\list{}{\labelwidth\z@ \itemindent-\leftmargin
+% \let\makelabel\descriptionlabel}}
+%\let\enddescription\endlist
+
+
+\def\theequation{\arabic{equation}}
+
+
+\def\titlepage{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \else \newpage \fi \thispagestyle{empty}\c@page\z@}
+\def\endtitlepage{\if@restonecol\twocolumn \else \newpage \fi}
+
+\arraycolsep 5pt \tabcolsep 6pt \arrayrulewidth .4pt \doublerulesep 2pt 
+\tabbingsep \labelsep 
+
+\skip\@mpfootins = \skip\footins
+\fboxsep = 3pt \fboxrule = .4pt 
+
+\newcounter{part}
+\newcounter {section}
+\newcounter {subsection}[section]
+\newcounter {subsubsection}[subsection]
+\newcounter {paragraph}[subsubsection]
+\newcounter {subparagraph}[paragraph]
+
+\def\thepart{\Roman{part}} \def\thesection {\arabic{section}}
+\def\thesubsection {\thesection.\arabic{subsection}}
+\def\thesubsubsection {\thesubsection .\arabic{subsubsection}}
+\def\theparagraph {\thesubsubsection.\arabic{paragraph}}
+\def\thesubparagraph {\theparagraph.\arabic{subparagraph}}
+
+\def\@pnumwidth{1.55em}
+\def\@tocrmarg {2.55em}
+\def\@dotsep{4.5}
+\setcounter{tocdepth}{3}
+
+\def\tableofcontents{\section*{Contents\markboth{CONTENTS}{CONTENTS}}
+ \@starttoc{toc}}
+\def\l@part#1#2{\addpenalty{\@secpenalty}
+ \addvspace{2.25em plus 1pt} \begingroup
+ \@tempdima 3em \parindent \z@ \rightskip \@pnumwidth \parfillskip
+-\@pnumwidth 
+ {\large \bf \leavevmode #1\hfil \hbox to\@pnumwidth{\hss #2}}\par
+ \nobreak \endgroup}
+\def\l@section#1#2{\addpenalty{\@secpenalty} \addvspace{1.0em plus 1pt}
+\@tempdima 1.5em \begingroup
+ \parindent \z@ \rightskip \@pnumwidth 
+ \parfillskip -\@pnumwidth 
+ \bf \leavevmode #1\hfil \hbox to\@pnumwidth{\hss #2}\par
+ \endgroup}
+\def\l@subsection{\@dottedtocline{2}{1.5em}{2.3em}}
+\def\l@subsubsection{\@dottedtocline{3}{3.8em}{3.2em}}
+\def\l@paragraph{\@dottedtocline{4}{7.0em}{4.1em}}
+\def\l@subparagraph{\@dottedtocline{5}{10em}{5em}}
+\def\listoffigures{\section*{List of Figures\markboth
+ {LIST OF FIGURES}{LIST OF FIGURES}}\@starttoc{lof}}
+\def\l@figure{\@dottedtocline{1}{1.5em}{2.3em}}
+\def\listoftables{\section*{List of Tables\markboth
+ {LIST OF TABLES}{LIST OF TABLES}}\@starttoc{lot}}
+\let\l@table\l@figure
+
+
+\def\thebibliography#1{\section*{References\markboth
+ {REFERENCES}{REFERENCES}}\list
+ {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus -.07em}
+ \sloppy
+ \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
+ 
+
+\newif\if@restonecol
+\def\theindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\section*{Index}]
+ \markboth{INDEX}{INDEX}\thispagestyle{plain}\parindent\z@
+ \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\@idxitem{\par\hangindent 40pt}
+\def\subitem{\par\hangindent 40pt \hspace*{20pt}}
+\def\subsubitem{\par\hangindent 40pt \hspace*{30pt}}
+\def\endtheindex{\if@restonecol\onecolumn\else\clearpage\fi}
+\def\indexspace{\par \vskip 10pt plus 5pt minus 3pt\relax}
+
+\def\footnoterule{\kern-3\p@ 
+ \hrule width .4\columnwidth 
+ \kern 2.6\p@} 
+
+\long\def\@makefntext#1{\parindent 1em\noindent 
+ \hbox to 1.8em{\hss$^{\@thefnmark}$}#1}
+
+
+\setcounter{topnumber}{2}
+\def\topfraction{.7}
+\setcounter{bottomnumber}{1}
+\def\bottomfraction{.3}
+\setcounter{totalnumber}{3}
+\def\textfraction{.2}
+\def\floatpagefraction{.5}
+\setcounter{dbltopnumber}{2}
+\def\dbltopfraction{.7}
+\def\dblfloatpagefraction{.5}
+
+\long\def\@makecaption#1#2{
+ \vskip 10pt 
+ \setbox\@tempboxa\hbox{#1: #2}
+ \ifdim \wd\@tempboxa >\hsize \unhbox\@tempboxa\par \else \hbox
+to\hsize{\hfil\box\@tempboxa\hfil} 
+ \fi}
+
+
+\newcounter{figure}
+\def\thefigure{\@arabic\c@figure}
+\def\fps@figure{tbp}
+\def\ftype@figure{1}
+\def\ext@figure{lof}
+\def\fnum@figure{Figure \thefigure}
+\def\figure{\@float{figure}}
+\let\endfigure\end@float
+\@namedef{figure*}{\@dblfloat{figure}}
+\@namedef{endfigure*}{\end@dblfloat}
+\newcounter{table}
+\def\thetable{\@arabic\c@table}
+\def\fps@table{tbp}
+\def\ftype@table{2}
+\def\ext@table{lot}
+\def\fnum@table{Table \thetable}
+\def\table{\@float{table}}
+\let\endtable\end@float
+\@namedef{table*}{\@dblfloat{table}}
+\@namedef{endtable*}{\end@dblfloat}
+
+\mark{{}{}} 
+
+%\if@twoside 
+\def\ps@headings{\def\@oddfoot{}\def\@evenfoot{}\def\@evenhead{\rm
+\thepage\hfil \sl \leftmark}\def\@oddhead{\hbox{}\sl \rightmark \hfil
+\rm\thepage}\def\sectionmark##1{\markboth {\uppercase{\ifnum \c@secnumdepth
+>\z@
+ \thesection\hskip 1em\relax \fi ##1}}{}}\def\subsectionmark##1{\markright
+{\ifnum \c@secnumdepth >\@ne
+ \thesubsection\hskip 1em\relax \fi ##1}}}
+
+%\else 
+
+%\def\ps@headings{\def\@oddfoot{}\def\@evenfoot{}\def\@oddhead{\hbox
+%{}\sl \rightmark \hfil \rm\thepage}\def\sectionmark##1{\markright
+%{\uppercase{\ifnum \c@secnumdepth >\z@
+% \thesection\hskip 1em\relax \fi ##1}}}}
+%\fi
+
+\def\date#1{\def\datename{#1}}
+\def\routine#1{\def\routinename{#1}}
+\def\title#1{\def\titlename{#1}}
+\def\release#1{\def\releasenumber{#1}}
+
+\date{}
+\routine{Contents}
+\title{Table of Contents}
+\release{4}
+
+% Modified running headers and footers
+\def\ps@myheadings{
+\def\@oddhead{\hbox{}{\bf LEVEL 0}\hfil
+{\it \titlename}\hfil
+\rm{\bf \routinename}}
+\def\@oddfoot{\hbox{}{\it FELIB-0:Rel \releasenumber:\datename}\hfil {\it Page \thepage}}
+\def\@evenhead{\rm {\bf \routinename}\hfil
+{\it \titlename}\hfil
+{\bf LEVEL 0}\hbox{}}
+\def\@evenfoot{{\it Page \thepage}\hfil {\it FELIB-0:Rel \releasenumber:\datename}\hbox{}}
+
+\def\sectionmark##1{}\def\subsectionmark##1{}}
+
+\def\today{\ifcase\month\or
+ January\or February\or March\or April\or May\or June\or
+ July\or August\or September\or October\or November\or December\fi
+ \space\number\day, \number\year}
+
+\ps@plain \pagenumbering{arabic} \onecolumn 
+
+%\if@twoside\else\raggedbottom\fi 
+
+% Definitions of indentations
+\def\norefs{\item None.}
+\def\noerrors{\item None.}
+\def\text#1{\item #1 }
+\parindent 28pt
+\def\offset{15pt}
+\def\sectionindent{28pt}
+\def\sectionwidth{430pt}
+\def\specindent{\hspace*{\parindent}}
+
+% Italic real
+\def\real{{\boldmath$real$}}
+
+% Bold Italics
+\def\bit#1{{\mbox{\boldmath$#1$}}}
+
+% Header
+\def\header{\vskip 10pt\Large\bf
+            \begin{center}
+            \routinename \ -- Finite Element Library Routine\\
+            \vskip 10pt\small\noindent
+            \parbox[t]{125mm}{
+            NOTE: before using this routine, please read the
+            appropriate documentation to check the interpretation of 
+            \bit{\ bold \ italicised} terms and other implementation-
+              dependent details.
+            }
+            \end{center}
+            }
+
+% Purpose
+\def\purpose{\vskip 10pt\Large\bf
+             \noindent\large{\bf 1.\hskip \offset Purpose}
+             \hfil 
+             \vskip 5pt
+             \normalsize
+             \parindent=\sectionindent
+             \hangindent=\parindent
+             }
+\def\endpurpose{\vskip 5pt}
+
+% Specification
+\def\specification{\vskip 5pt
+             \noindent\large{\bf 2.\hskip \offset  Specification}
+              \hfil
+              \vskip 5pt\normalsize\tt
+              \obeyspaces
+             \parindent=\sectionindent
+             \hangindent=\parindent
+              }
+\def\endspecification{\rm\vskip 5pt}
+
+% Description
+\def\description{\vskip 5pt
+                 \noindent\large{\bf 3.\hskip \offset Description}
+                 \hfil\vskip 5pt
+                 \normalsize
+                 \list{}{\parsep 0pt plus 1pt}\item[]
+                 }
+\def\enddescription{\endlist\vskip 5pt}
+
+% References
+\def\refwidth{55pt}
+\def\refmargin{60pt}
+\def\ref#1{\item[{[#1]}]}
+\def\referencelabel#1{\hspace\sectionindent {\bf #1}\hfil}
+\def\references{\vskip 5pt\noindent\large{\bf 4.\hskip \offset References}
+                \hfil\vskip 5pt
+                \normalsize
+                \list{~}{\leftmargin\refmargin
+                \labelwidth\refwidth
+                \let\makelabel\referencelabel}
+                }
+\let\endreferences\endlist
+
+% Parameters
+\def\parwidth{105pt}
+\def\parmargin{110pt}
+\def\param#1{\item[#1]}
+\def\paramlabel#1{\hspace\sectionindent {\bf #1 --}\rm\hfil}
+\def\parameters{\vskip 5pt\noindent\large{\bf 5.\hskip \offset Parameters}
+                \hfil\vskip 5pt
+                \normalsize
+                \list{}{\leftmargin\parmargin
+                \labelwidth\parwidth
+                \let\makelabel\paramlabel}
+                }
+\let\endparameters\endlist
+
+% Error Indicators and Warnings
+\def\errorwidth{95pt}
+\def\errormargin{100pt}
+\def\error#1{\item[#1]}
+\def\errtxta{ITEST=}
+\def\errorlabel#1{\hspace\sectionindent {\errtxta #1}\rm\hfil}
+\def\noerrors{\def\errtxta{None.} \item ~~}
+\def\indicators{\vskip 5pt\noindent\large{\bf 6.\hskip \offset Error Indicators             and Warnings}\hfil\vskip 5pt\normalsize
+            Errors detected by the routine:
+            \list{}{\leftmargin\errormargin
+            \labelwidth\errorwidth
+            \let\makelabel\errorlabel}
+            }
+\let\endindicators\endlist
+
+% Auxilliary Routines
+\def\routines{\vskip 5pt\noindent\large{\bf 7.\hskip \offset Auxiliary Routines}
+               \hfil\vskip 5pt\normalsize\hangindent=\sectionindent
+               }
+\def\endroutines{\vskip 5pt}
+
+% Timing
+\def\timing{\vskip 5pt\noindent\large{\bf 8.\hskip \offset Timing}
+               \hfil\vskip 5pt\normalsize\hangindent=\sectionindent
+               }
+\def\endtiming{\vskip 5pt}
+
+% Storage
+\def\storage{\vskip 5pt\noindent\large{\bf 9.\hskip \offset Storage}
+             \hfil\vskip 5pt\normalsize\hangindent=\sectionindent
+             }
+\def\endstorage{\vskip 5pt}
+
+% Accuracy
+\def\accuracy{\vskip 5pt
+              \noindent\large{\bf 7.\hskip \offset Accuracy}
+              \hfil\vskip 5pt
+              \normalsize
+             \parindent=\sectionindent
+              \hangindent=\sectionindent
+              }
+\def\endaccuracy{\vskip 5pt}
+
+% Further Comments
+\def\comments{\vskip 5pt\Large\bf
+              \noindent\large{\bf 8.\hskip \offset Futher Comments}
+              \hfil
+              \vskip 5pt
+              \normalsize
+             \parindent=\sectionindent
+              \hangindent=\sectionindent
+              }
+\def\endcomments{\vskip 5pt}
+% Purpose
+\def\purpose{\vskip 10pt\Large\bf
+             \noindent\large{\bf 1.\hskip \offset Purpose}
+             \hfil 
+             \vskip 5pt
+             \normalsize
+             \parindent=\sectionindent
+             \hangindent=\parindent
+             }
+\def\endpurpose{\vskip 5pt}
+
+\pagestyle{myheadings}
+
+\font\tt=cmtt10 at 11pt
+\def\newline{\hfill\break}
+\def\newpar{\medskip\hfill\break}
+
+\newcommand{\gt}{>}
+\newcommand{\lt}{<}
+

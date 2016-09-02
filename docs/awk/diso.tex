@@ -1,0 +1,74 @@
+\documentstyle[twoside,11pt]{felib0}
+\release{4}
+\date{September 90}
+\newcommand{\gt}{>}
+\newcommand{\lt}{<}
+\routine{DISO}
+\title{Stress-Strain Matrix}
+\begin{document}
+\begin{purpose}
+DISO forms the 6x6 stress-strain matrix for use in three
+dimensional isotropic problems.
+\end{purpose}
+\begin{specification}
+      SUBROUTINE DISO(D,ID,JD,E,NU,NUMSS,ITEST)\\
+C     INTEGER ID,JD,NUMSS,ITEST\\
+C     \real D,E,NU\\
+C     DIMENSION D(ID,JD)\\
+\end{specification}
+\begin{description}
+The routine DISO forms the stress-strain matrix D for use
+in three dimensional isotropic problems. The matrix is 6x6
+and the elements are given below.
+where E is the Young's Modulus and   the Poisson's ratio for
+the problem.
+\end{description}
+\begin{references}
+\ref{1} BATHE, K-J., WILSON, E.L.\\
+      Numerical Methods in Finite Element Analysis, p 110
+      Prentice-Hall, 1976.
+\end{references}
+\begin{parameters}
+\param{D} {{real}} array of DIMENSION (ID,JD) where ID $\leq$ 6 and JD $\leq$ 6.\\
+      On successful exit, D contains the stress-strain matrix.
+\param{ID} INTEGER.\\
+      On entry, ID specifies the first dimension of array D as
+      declared in the calling (sub)program.
+      Unchanged on exit.
+\param{JD} INTEGER.\\
+      On entry, JD specifies the second dimension of array D as
+      declared in the calling (sub)program.
+      Unchanged on exit.
+\param{E} {{real}}.\\
+      On entry, E specifies the value of Young's Modulus to be
+      used in calculating the stress-strain matrix.
+      Unchanged on exit.
+\param{NU} {{real}}.\\
+      On entry, NU specifies the value of Poisson's ratio to be
+      used in calculating the stress-strain matrix.
+      Unchanged on exit.
+\param{NUMSS} INTEGER.\\
+      On successful exit, NUMSS specifies the order of the
+      stress-strain matrix. NUMSS = 6 in this case.
+\input itest.tex
+\end{parameters}
+\begin{indicators}
+\error{1} On entry, ID or JD $\lt$ 6.
+\error{2} On entry, 0 $\geq$ NU $\geq$ 0.5.
+\end{indicators}
+\begin{routines}
+This routine uses the Level 0 Library routines MATNUL and ERRMES.
+\end{routines}
+\begin{timing}
+Not available.
+\end{timing}
+\begin{storage}
+There are no internally declared arrays.
+\end{storage}
+\begin{accuracy}
+{{Basic precision}} arithmetic is used.
+\end{accuracy}
+\begin{comments}
+None.
+\end{comments}
+\end{document}

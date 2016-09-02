@@ -1,0 +1,446 @@
+This is TeX, Version 2.0 for Berkeley UNIX (preloaded format=lplain 88.1.20)  21 MAY 1990 14:33
+**direct 
+(direct.tex
+LaTeX Version 2.09 <3 Jan 1988>
+(/u/cg/tex/felib0.sty
+Document Style FELIB Level 0. Released 1 January 1990
+(/u/cg/tex/felib11.sty)
+\c@part=\count78
+\c@section=\count79
+\c@subsection=\count80
+\c@subsubsection=\count81
+\c@paragraph=\count82
+\c@subparagraph=\count83
+\c@figure=\count84
+\c@table=\count85
+) (direct.aux)
+Underfull \hbox (badness 10000) in paragraph at lines 11--17
+
+
+\hbox(0.0+0.0)x422.0
+.\glue(\rightskip) 0.0
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\endtrivlist ->\if@newlist \@noitemerr 
+                                       \fi \if@inlabel \indent \fi \ifhmode ...
+
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.42 \end{references}
+                     
+? q
+OK, entering \batchmode...
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@endparenv ->\addpenalty \@endparpenalty 
+                                          \addvspace \@topsepadd \@endpetrue 
+\endtrivlist ...vskip \@tempskipa \fi \@endparenv 
+                                                  \fi 
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.42 \end{references}
+                     
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@endparenv ...dparpenalty \addvspace \@topsepadd 
+                                                  \@endpetrue 
+\endtrivlist ...vskip \@tempskipa \fi \@endparenv 
+                                                  \fi 
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.42 \end{references}
+                     
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+ [1
+
+] (itest.tex)
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.91 \error{1}
+               On entry, NELE or DOFNOD {{<}} 0.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.91 \error{1}
+               On entry, NELE or DOFNOD {{<}} 0.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.91 \error{1}
+               On entry, NELE or DOFNOD {{<}} 0.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.92 \error{2}
+               On entry, IELTOP < NELE.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.92 \error{2}
+               On entry, IELTOP < NELE.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.92 \error{2}
+               On entry, IELTOP < NELE.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.93 \error{3}
+               On entry, JNF < DOFNOD.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.93 \error{3}
+               On entry, JNF < DOFNOD.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.93 \error{3}
+               On entry, JNF < DOFNOD.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.94 \error{4}
+               _ITEST = 4  Attempt to access element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.94 \error{4}
+               _ITEST = 4  Attempt to access element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.94 \error{4}
+               _ITEST = 4  Attempt to access element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+<to be read again> 
+                   _
+l.94 \error{4} _
+                ITEST = 4  Attempt to access element outside the
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.97 \error{5}
+               _ITEST = 5  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.97 \error{5}
+               _ITEST = 5  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.97 \error{5}
+               _ITEST = 5  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...tem \else \addpenalty \@beginparpenalty 
+                                                  \addvspace \@topsep \addvs...
+l.100 \error{6}
+                _ITEST = 6  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...y \@beginparpenalty \addvspace \@topsep 
+                                                  \addvspace {-\parskip }\fi...
+l.100 \error{6}
+                _ITEST = 6  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@item ...dvspace \@topsep \addvspace {-\parskip }
+                                                  \fi \else \addpenalty \@it...
+l.100 \error{6}
+                _ITEST = 6  Attempt to access an element outside the
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\endtrivlist ->\if@newlist \@noitemerr 
+                                       \fi \if@inlabel \indent \fi \ifhmode ...
+
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.104 \end{indicators}
+                      
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addpenalty ...kipb \fi \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@endparenv ->\addpenalty \@endparpenalty 
+                                          \addvspace \@topsepadd \@endpetrue 
+\endtrivlist ...vskip \@tempskipa \fi \@endparenv 
+                                                  \fi 
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.104 \end{indicators}
+                      
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX error.  See LaTeX manual for explanation.
+              Type  H <return>  for immediate help.
+! Something's wrong--perhaps a missing \item.
+\@latexerr ...for immediate help.}\errmessage {#1}
+                                                  
+\addvspace ...xaddvskip \fi \fi \else \@noitemerr 
+                                                  \fi 
+\@endparenv ...dparpenalty \addvspace \@topsepadd 
+                                                  \@endpetrue 
+\endtrivlist ...vskip \@tempskipa \fi \@endparenv 
+                                                  \fi 
+\end #1->\csname end#1\endcsname 
+                                 \if@endpe \global \let \@gtempa \@doendpe \...
+l.104 \end{indicators}
+                      
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+<to be read again> 
+                   \endgroup 
+\end ...global \let \@gtempa \relax \fi \endgroup 
+                                                  \@checkend {#1}\@gtempa \i...
+l.104 \end{indicators}
+                      
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (66.20753pt too wide) in paragraph at lines 90--105
+\elvrm en-try, JNF < DOFNOD. []$[]\elvmi TEST \elvrm = 4\elvmi Attempttoaccesse
+lementoutsidetheboundsofarrayELTOP:JELTOP <
+
+\hbox(7.60416+2.12917)x450.0, glue set - 1.0
+.\elvrm e
+.\discretionary replacing 2
+..\elvrm n
+..\elvrm -
+.\elvrm n
+.\kern-0.30418
+.\elvrm t
+.etc.
+
+
+Overfull \hbox (180.33551pt too wide) in paragraph at lines 90--105
+\elvmi m \elvrm + 2\elvmi wheremisthenumberofnodesintheelmentNELE:[][][][][]TES
+T \elvrm = 5\elvmi AttempttoaccessanelementoutsidetheboundsofarrayNF:INF <
+
+\hbox(7.60416+2.12917)x450.0, glue set - 1.0
+.\elvmi m
+.\glue(\medmuskip) 2.43329 plus 1.21664 minus 2.43329
+.\elvrm +
+.\penalty 700
+.\glue(\medmuskip) 2.43329 plus 1.21664 minus 2.43329
+.etc.
+
+
+Overfull \hbox (137.38113pt too wide) in paragraph at lines 90--105
+\elvmi p; wherepisthetotalnumberofnodes:[][][][][]TEST \elvrm = 6\elvmi Attempt
+toaccessanelementoutsidetheboundsofarraySTEER:ISTEER <
+
+\hbox(7.60416+2.12917)x450.0
+.\elvmi p
+.\elvmi ;
+.\glue(\thinmuskip) 1.82497
+.\elvmi w
+.\kern0.29465
+.etc.
+
+ [2] [3] (direct.aux)
+Output written on direct.dvi (3 pages, 7280 bytes).

@@ -1,0 +1,67 @@
+%-------------------------------------------------------------
+% Include for HTML output
+%-------------------------------------------------------------
+\documentstyle{article} %HTML
+\marginparsep 10pt      %HTML
+\topmargin -20pt        %HTML
+\headheight 12pt        %HTML
+\headsep 25pt           %HTML
+\footskip 50pt          %HTML
+\footheight 12pt        %HTML
+\textheight 646pt       %HTML
+\textwidth 450pt        %HTML
+\oddsidemargin 0pt      %HTML
+\evensidemargin 0pt     %HTML
+%
+%\documentstyle{felib0}   %PAPER
+\title{\Huge \bf NAG/SERC Finite Element Library\\
+ (Release 4.0)\\[10mm]
+Level~0 User Documentation}
+\author{\Large C.~Greenough\\
+               \it Rutherford Appleton Laboratory}
+\begin{document}
+\maketitle
+%\pagetitle{Finite Element Library} %PAPER
+\newpage                   
+%\addcontentsline{toc}{section}{Preface - Release 4} %PAPER
+%\routine{Preface}             %PAPER
+\input preface4.tex
+\newpage            
+%\routine{Contents}            %PAPER
+\begin{center}                                         %HTML
+\large\bf Contents                                         %HTML
+\end{center}                                         %HTML
+\section*{Finite Element Library - Subject Listing}     %HTML
+%\addcontentsline{toc}{section}{Finite Element Library - Subject Listing}           %PAPER
+%-------------------------------------------------------------
+% Page titles
+%-------------------------------------------------------------
+\vskip 10pt
+%\begin{center}                                          %PAPER
+%\Large\bf                                              %PAPER
+%Finite Element Library Subject Contents\              %PAPER
+\vskip 10pt\small\noindent                      
+%\end{center}                                           %PAPER
+\input subjects-body.tex
+\newpage
+%
+\section*{Finite Element Library - Alphabetic Listing}     %HTML
+%\addcontentsline{toc}{section}{Finite Element Library - Alphabetic Listing}             %PAPER
+%-------------------------------------------------------------
+% Page titles
+%-------------------------------------------------------------
+\vskip 10pt
+%\begin{center}                                          %PAPER
+%\Large\bf                                              %PAPER
+%Finite Element Library Alphabetic Contents             %PAPER
+\vskip 10pt\small\noindent                      
+%\end{center}                                            %PAPER
+\input alpha-body.tex
+%
+%\addtocontents{toc}{\medskip \noindent\large\bf Finite Element Library Routine Documents \medskip}        %PAPER
+%\newpage     %PAPER
+%\input asful     %PAPER
+%\newpage ~ \newpage     %PAPER
+%\input asful     %PAPER
+%
+\end{document}
