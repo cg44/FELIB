@@ -1,0 +1,132 @@
+           File under test  : seg3p1
+           Date of Analysis : Tue Aug 28 10:00:58 2001                          
+           by LDRA TESTBED  : Version 4.9                           
+
+
+
+ ==========================
+ PROCEDURE CALL INFORMATION
+ ==========================
+
+ ------------------------------
+
+ THE MAIN PROGRAM
+ BETWEEN LINES      7 AND    233
+ *MAIN
+
+ CALLS THE FOLLOWING PROCEDURES
+ MATNUL
+ FREDIF
+ VECNUL
+ QQUA4
+ ELGEOM
+ QUAM4
+ SCAPRD
+ MATMUL
+ MATINV
+ MATRAN
+ ABS
+ SRC
+ MATADD
+ VECADD
+ DIRECT
+ ASSYM
+ ASRHS
+ CHOSOL
+ PRTVAL
+
+ ------------------------------
+
+ PROCEDURE
+ SRC
+ BETWEEN LINES    249 AND    257
+
+ DOES NOT CALL ANY INTERNAL PROCEDURES
+
+ IS CALLED BY THE FOLLOWING PROCEDURES
+ *MAIN
+
+
+ ============================================================
+     THE FOLLOWING VARIABLES WERE DECLARED BUT NEVER USED
+ VARIABLE           DECLARED ON LINE                PROCEDURE
+ ============================================================
+ SRC                        46               *MAIN
+ ABS                        55               *MAIN
+
+
+
+ ======================================================
+                   TYPE UR ANOMALIES
+ VARIABLE    UNDEFINE                         REFERENCE
+ ======================================================
+ DET             28                             173                          
+ X               28                             166                          
+ Y               28                             168                          
+ DIF             29                             130                          
+ NQP             30                             144                          
+ ABSS            35                             144                          
+ BVAL            35                             222                          
+ COORD           35                             146                          
+ DTPD            36                             184                          
+ ELK             36                             152                          
+ ELQ             36                             153                          
+ FUN             37                             163                          
+ GDER            37                             175                          
+ GDERT           37                             182                          
+ GEOM            38                             146                          
+ JAC             38                             171                          
+ JACIN           38                             173                          
+ LDER            39                             163                          
+ P               39                              96                          
+ PD              40                             180                          
+ RHS             40                             141                          
+ SCVEC           40                             196                          
+ SYSK            40                             142                          
+ WGHT            41                             144                          
+ BNODE           42                             220                          
+ ELTOP           42                             130                          
+ NF              42                             130                          
+ STEER           43                             201                          
+
+
+
+ ===================================================
+                  TYPE DU ANOMALIES
+ VARIABLE    DEFINE                         UNDEFINE
+ ===================================================
+ SCALE           15                             233                          
+ QUOT           186                             233                          
+ DOFEL          143                             233                          
+ FIRST          128                             233                          
+ ELTOP           88                             233                          
+
+
+
+ ===================================================
+                  TYPE DD ANOMALIES
+ VARIABLE    DEFINE                         REDEFINE
+ ===================================================
+ QUOT           186                             186                          
+
+
+
+ ============================
+ PROCEDURE INTERFACE ANALYSIS
+ ============================
+
+ ------------------------
+ PROCEDURE *MAIN
+      HAS NO PARAMETERS
+ 
+      HAS NO GLOBALS
+
+ ------------------------
+ PROCEDURE SRC
+                            REFERENCES   DEFINES   CLEAR PATHS
+                            ----------   -------   -----------
+      PARAMETER X                *
+      PARAMETER Y                *
+      PARAMETER STRGTH           *                      *
+ 
+      HAS NO GLOBALS

@@ -1,0 +1,115 @@
+   57       ITEST = 0  
+   67       WRITE ( NOUT , FMT = 9040 )  
+   68       READ ( NIN , FMT = 9000 ) TOTNOD , DIMEN  
+   69       WRITE ( NOUT , FMT = 9050 ) TOTNOD , DIMEN  
+   70       DO 1000 I = 1 , TOTNOD  
+   71          READ ( NIN , FMT = 9010 ) NODNUM , ( COORD ( NODNUM , J ) , J =
+   72      *   1 , DIMEN )  
+   73          WRITE ( NOUT , FMT = 9060 ) NODNUM , ( COORD ( NODNUM , J ) , J
+   74      *   = 1 , DIMEN )  
+   75  1000 CONTINUE  
+   79       WRITE ( NOUT , FMT = 9070 )  
+   80       READ ( NIN , FMT = 9000 ) ELTYP , TOTELS , NODEL  
+   81       WRITE ( NOUT , FMT = 9050 ) ELTYP , TOTELS , NODEL  
+   82       DO 1010 I = 1 , TOTELS  
+   83          READ ( NIN , FMT = 9000 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) , J
+   84      *   = 1 , NODEL )  
+   85          WRITE ( NOUT , FMT = 9050 ) ELNUM , ( ELTOP ( ELNUM , J + 2 ) ,
+   86      *   J = 1 , NODEL )  
+   87          ELTOP ( ELNUM , 1 ) = ELTYP  
+   88          ELTOP ( ELNUM , 2 ) = NODEL  
+   89  1010 CONTINUE  
+   95       WRITE ( NOUT , FMT = 9080 )  
+   96       CALL MATNUL ( P , IP , JP , DIMEN , DIMEN , ITEST )  
+   97       READ ( NIN , FMT = 9020 ) ( P ( I , I ) , I = 1 , DIMEN )  
+   98       WRITE ( NOUT , FMT = 9090 ) ( P ( I , I ) , I = 1 , DIMEN )  
+  100       WRITE ( NOUT , FMT = 9100 )  
+  101       READ ( NIN , FMT = 9020 ) STRGTH  
+  102       WRITE ( NOUT , FMT = 9090 ) STRGTH  
+  109       WRITE ( NOUT , FMT = 9110 )  
+  110       READ ( NIN , FMT = 9000 ) DOFNOD  
+  111       WRITE ( NOUT , FMT = 9050 ) DOFNOD  
+  112       READ ( NIN , FMT = 9000 ) BNDNOD  
+  113       WRITE ( NOUT , FMT = 9050 ) BNDNOD  
+  114       DO 1020 I = 1 , BNDNOD  
+  115          READ ( NIN , FMT = 9030 ) BNODE ( I ) , BVAL ( I )  
+  116          WRITE ( NOUT , FMT = 9060 ) BNODE ( I ) , BVAL ( I )  
+  117  1020 CONTINUE  
+  118       TOTDOF = 0  
+  119       DO 1040 I = 1 , TOTNOD  
+  120          DO 1030 J = 1 , DOFNOD  
+  121             TOTDOF = TOTDOF + 1  
+  122             NF ( I , J ) = TOTDOF  
+  123  1030    CONTINUE  
+  124  1040 CONTINUE  
+  128       FIRST = .TRUE.  
+  129       DO 1050 NELE = 1 , TOTELS  
+  130          CALL FREDIF ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,
+  131      *   DOFNOD , FIRST , DIF , ITEST )  
+  132  1050 CONTINUE  
+  133       HBAND = DIF + 1  
+  141       CALL VECNUL ( RHS , IRHS , TOTDOF , ITEST )  
+  142       CALL MATNUL ( SYSK , ISYSK , JSYSK , TOTDOF , HBAND , ITEST )  
+  143       DOFEL = NODEL * DOFNOD  
+  144       CALL QQUA4 ( WGHT , IWGHT , ABSS , IABSS , JABSS , NQP , ITEST )  
+  145       DO 1090 NELE = 1 , TOTELS  
+  146          CALL ELGEOM ( NELE , ELTOP , IELTOP , JELTOP , COORD , ICOORD ,
+  147      *   JCOORD , GEOM , IGEOM , JGEOM , DIMEN , ITEST )  
+  152          CALL MATNUL ( ELK , IELK , JELK , DOFEL , DOFEL , ITEST )  
+  153          CALL VECNUL ( ELQ , IELQ , DOFEL , ITEST )  
+  154          DO 1080 IQUAD = 1 , NQP  
+  161             XI = ABSS ( 1 , IQUAD )  
+  162             ETA = ABSS ( 2 , IQUAD )  
+  163             CALL QUAM4 ( FUN , IFUN , LDER , ILDER , JLDER , XI , ETA , 
+  164      *      ITEST )  
+  166             CALL SCAPRD ( GEOM ( 1 , 1 ) , IGEOM , FUN , IFUN , NODEL , 
+  167      *      X , ITEST )  
+  168             CALL SCAPRD ( GEOM ( 1 , 2 ) , IGEOM , FUN , IFUN , NODEL , 
+  169      *      Y , ITEST )  
+  171             CALL MATMUL ( LDER , ILDER , JLDER , GEOM , IGEOM , JGEOM , 
+  172      *      JAC , IJAC , JJAC , DIMEN , NODEL , DIMEN , ITEST )  
+  173             CALL MATINV ( JAC , IJAC , JJAC , JACIN , IJACIN , JJACIN , 
+  174      *      DIMEN , DET , ITEST )  
+  175             CALL MATMUL ( JACIN , IJACIN , JJACIN , LDER , ILDER , JLDER
+  176      *      , GDER , IGDER , JGDER , DIMEN , DIMEN , NODEL , ITEST )  
+  180             CALL MATMUL ( P , IP , JP , GDER , IGDER , JGDER , PD , IPD 
+  181      *      , JPD , DIMEN , DIMEN , DOFEL , ITEST )  
+  182             CALL MATRAN ( GDER , IGDER , JGDER , GDERT , IGDERT , JGDERT
+  183      *      , DIMEN , DOFEL , ITEST )  
+  184             CALL MATMUL ( GDERT , IGDERT , JGDERT , PD , IPD , JPD ,  
+  185      *      DTPD , IDTPD , JDTPD , DOFEL , DIMEN , DOFEL , ITEST )  
+  186             QUOT = ABS ( DET ) * WGHT ( IQUAD )  
+  187             DO 1070 I = 1 , DOFEL  
+  188                DO 1060 J = 1 , DOFEL  
+  189                   DTPD ( I , J ) = DTPD ( I , J ) * QUOT  
+  190  1060          CONTINUE  
+  191                SCVEC ( I ) = FUN ( I ) * SRC  
+  192      *                                       ( X , Y , STRGTH ) * QUOT  
+  193  1070       CONTINUE  
+  194             CALL MATADD ( ELK , IELK , JELK , DTPD , IDTPD , JDTPD ,  
+  195      *      DOFEL , DOFEL , ITEST )  
+  196             CALL VECADD ( ELQ , IELQ , SCVEC , ISCVEC , DOFEL , ITEST ) 
+  197  1080    CONTINUE  
+  201          CALL DIRECT ( NELE , ELTOP , IELTOP , JELTOP , NF , INF , JNF ,
+  202      *   DOFNOD , STEER , ISTEER , ITEST )  
+  203          CALL ASSYM ( SYSK , ISYSK , JSYSK , ELK , IELK , JELK , STEER ,
+  204      *   ISTEER , HBAND , DOFEL , ITEST )  
+  205          CALL ASRHS ( RHS , IRHS , ELQ , IELQ , STEER , ISTEER , DOFEL ,
+  206      *   ITEST )  
+  207  1090 CONTINUE  
+  219       DO 1100 I = 1 , BNDNOD  
+  220          J = BNODE ( I )  
+  221          SYSK ( J , HBAND ) = SYSK ( J , HBAND ) * SCALE  
+  222          RHS ( J ) = SYSK ( J , HBAND ) * BVAL ( I )  
+  223  1100 CONTINUE  
+  228       CALL CHOSOL ( SYSK , ISYSK , JSYSK , RHS , IRHS , TOTDOF , HBAND ,
+  229      *ITEST )  
+  230       WRITE ( NOUT , FMT = 9120 )  
+  231       CALL PRTVAL ( RHS , IRHS , NF , INF , JNF , DOFNOD , TOTNOD , NOUT
+  232      *, ITEST )  
+  233       STOP  
+  253       SRC = 0.0D0  
+  254       IF ( ( X .GT. 1.0D0 ) .AND. ( X .LT. 2.0D0 ) .AND. ( Y .GT. 1.0D0 
+  255      *) .AND. ( Y .LT. 2.0D0 ) )  
+  256      *   SRC = STRGTH  
+  257       RETURN  
