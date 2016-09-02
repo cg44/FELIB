@@ -1,0 +1,69 @@
+C***********************************************************************
+C$SPLIT$ERRMES$*********************************************************
+C***********************************************************************
+      INTEGER FUNCTION ERRMES(ITEST, IERROR, SRNAME)
+C-----------------------------------------------------------------------
+C PURPOSE
+C      RETURNS THE VALUE OF IERROR OR TERMINATES THE PROGRAM,
+C      PRINTING A FAILURE MESSAGE
+C
+C HISTORY
+C
+C      COPYRIGHT (C) 1979 : SERC, RUTHERFORD APPLETON LABORATORY
+C                           CHILTON, DIDCOT, OXFORDSHIRE OX11 0QX
+C
+C      RELEASE 1.1  29 OCT 1979 (CG)
+C      COMMENTED    14 FEB 1980 (KR)
+C
+C ARGUMENTS IN
+C      ITEST   CONTAINS EITHER 0 (HARD FAIL) OR 1 (SOFT FAIL).
+C              ANY OTHER ENTRY GIVES HARD FAIL.
+C      IERROR  CONTAINS THE NUMBER OF THE DETECTED ERROR
+C      SRNAME  CONTAINS UP TO 8 CHARACTERS - USUALLY A LIBRARY
+C              ROUTINE NAME
+C
+C ARGUMENTS OUT
+C      ERRMES  ROUTINE NAME, CONTAINS THE VALUE OF IERROR
+C
+C ROUTINES CALLED
+C      CAN CALL AUXILIARY ROUTINE IN SOME VERSIONS OF LIBRARY
+C
+C
+C     INTEGER FUNCTION ERRMES(ITEST, IERROR, SRNAME)
+C***********************************************************************
+C
+      INTEGER IERROR, ITEST, UNIT
+      DOUBLE PRECISION SRNAME
+C
+C     PRIME
+C
+      DATA UNIT /1/
+C
+C     IBM
+C
+C     DATA UNIT /6/
+C
+C     GEC
+C
+C     DATA UNIT /2/
+C
+C     HARD FAILURE
+C
+      IF (ITEST.EQ.-99) GO TO 1020
+      IF (ITEST.EQ.1 .OR. IERROR.EQ.0) GO TO 1010
+      WRITE (UNIT,9010) SRNAME, IERROR
+      STOP
+C
+C     SOFT FAILURE
+C
+ 1010 ERRMES = IERROR
+      RETURN
+C
+C     TO RETURN RELEASE MESSAGE
+C
+ 1020 WRITE (UNIT,9020)
+      RETURN
+ 9010 FORMAT (43H ERROR DETECTED BY LEVEL 0 LIBRARY ROUTINE , A8,
+     *     11H - ITEST = , I5//)                                    
+ 9020 FORMAT (25H RELEASE 2.1  -  1 SEP 85)
+      END
