@@ -1,0 +1,31 @@
+      SUBROUTINE MVSLT(A, IA, JA, B, IB, C, IC, N, HBAND, ITEST)
+      INTEGER HBAND, I, IJ, J, JI, N, IERROR, ITEST, ERRMES
+      DOUBLE PRECISION A, B, C, X, SRNAME
+      DIMENSION A(IA,JA), B(IB), C(IC)
+      DATA SRNAME /8H MVSLT  /
+      IF(ITEST.EQ.-1) GO TO 999
+      IERROR=0
+      IF(IC.LT.N) IERROR=4
+      IF(IB.LT.N) IERROR=3
+      IF(IA.LT.N.OR.JA.LT.HBAND) IERROR=2
+      IF(N.LE.0) IERROR=1
+      ITEST=ERRMES(ITEST,IERROR,SRNAME)
+      IF(ITEST.NE.0) RETURN
+999   DO 1050 I=1,N
+      X = 0.0D0
+      J = HBAND
+ 1010 IF (I+J.LE.HBAND) GO TO 1020
+      IJ = I + J - HBAND
+      X = X + A(I,J)*B(IJ)
+ 1020 J = J - 1
+      IF (J.NE.0) GO TO 1010
+      J = HBAND - 1
+ 1030 IF (I-J.GE.N-HBAND+1) GO TO 1040
+      JI = I - J + HBAND
+      X = X + A(JI,J)*B(JI)
+ 1040 J = J - 1
+      IF (J.NE.0) GO TO 1030
+      C(I) = X
+ 1050 CONTINUE
+      RETURN
+      END

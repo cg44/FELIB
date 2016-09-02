@@ -1,0 +1,34 @@
+      SUBROUTINE WDG6(FUN, IFUN, DER, IDER, JDER, XI, ETA, ZETA,
+     *     ITEST)
+      INTEGER IDER, IFUN, ITEST, JDER
+      DOUBLE PRECISION DER, ETA, FUN, L1, L2, L3, XI, ZETA
+      DIMENSION DER(IDER,JDER), FUN(IFUN)
+      L1 = 1.0D0/3.0D0*(1.0D0+2.0D0*XI)
+      L2 = 1.0D0/3.0D0*(1.0D0-XI-DSQRT(3.0D0)*ETA)
+      L3 = 1.0D0/3.0D0*(1.0D0-XI+DSQRT(3.0D0)*ETA)
+      FUN(1) = 0.5D0*L1*(1.0D0-ZETA)
+      FUN(2) = 0.5D0*L2*(1.0D0-ZETA)
+      FUN(3) = 0.5D0*L3*(1.0D0-ZETA)
+      FUN(4) = 0.5D0*L1*(1.0D0+ZETA)
+      FUN(5) = 0.5D0*L2*(1.0D0+ZETA)
+      FUN(6) = 0.5D0*L3*(1.0D0+ZETA)
+      DER(1,1) = 1.0D0/3.0D0*(1.0D0-ZETA)
+      DER(2,1) = 0.0D0
+      DER(3,1) = -0.5D0*L1
+      DER(1,2) = -1.0D0/6.0D0*(1.0D0-ZETA)
+      DER(2,2) = -0.5D0/DSQRT(3.0D0)*(1.0D0-ZETA)
+      DER(3,2) = -0.5D0*L2
+      DER(1,3) = -1.0D0/6.0D0*(1.0D0-ZETA)
+      DER(2,3) = 0.5D0/DSQRT(3.0D0)*(1.0D0-ZETA)
+      DER(3,3) = -0.5D0*L3
+      DER(1,4) = 1.0D0/3.0D0*(1.0D0+ZETA)
+      DER(2,4) = 0.0D0
+      DER(3,4) = 0.5*L1
+      DER(1,5) = -1.0D0/6.0D0*(1.0D0+ZETA)
+      DER(2,5) = -0.5D0/DSQRT(3.0D0)*(1.0D0+ZETA)
+      DER(3,5) = 0.5D0*L2
+      DER(1,6) = -1.0D0/6.0D0*(1.0D0+ZETA)
+      DER(2,6) = 0.5D0/DSQRT(3.0D0)*(1.0D0+ZETA)
+      DER(3,6) = 0.5*L3
+      RETURN
+      END
