@@ -1,5 +1,3 @@
-#FELIB Master Site
-
 The Finite Element Library
 
 The Finite Element Library (FELIB) is a program subroutine library for the numerical solution of 
